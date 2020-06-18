@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:team_mobileforce_gong/UI/login.dart';
 
 void main() {
   runApp(MyApp());
@@ -60,6 +61,15 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
+            ),
+            RaisedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              },
+              child: const Text('Login', style: TextStyle(fontSize: 20)),
             ),
           ],
         ),
