@@ -1,7 +1,5 @@
 # team_mobileforce_gong
-
-
-team superman app To contribute to this repo:
+team_mobileforce_gong
 
 create a personal fork of the project repo on Github.
 
