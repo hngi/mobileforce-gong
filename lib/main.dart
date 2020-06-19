@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:team_mobileforce_gong/UI/login.dart';
+import 'package:team_mobileforce_gong/UI/password_reset.dart';
 
 void main() {
   runApp(MyApp());
@@ -69,7 +69,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   MaterialPageRoute(builder: (context) => LoginPage()),
                 );
               },
-              child: const Text('Login', style: TextStyle(fontSize: 20)),
+              color: Colors.blue,
+              padding: EdgeInsets.all(14),
+              child: const Text('Reset Password', style: TextStyle(fontSize: 20, color: Colors.white)),
             ),
           ],
         ),
