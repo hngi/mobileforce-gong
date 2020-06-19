@@ -1,3 +1,4 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthProvider{
@@ -18,6 +19,7 @@ class AuthProvider{
       await auth.signInWithEmailAndPassword(email: email, password: password);
     } catch (error) {
       print(error.toString());
+      
     }
   }
 
