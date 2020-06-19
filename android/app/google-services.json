@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "535823784264",
+    "firebase_url": "https://gong-cbefe.firebaseio.com",
+    "project_id": "gong-cbefe",
+    "storage_bucket": "gong-cbefe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:535823784264:android:d26a925727531dd355fb7d",
+        "android_client_info": {
+          "package_name": "com.example.team_mobileforce_gong"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "535823784264-pcgdkmoo3er4rf3tefuhnpjfrblh54mn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0A6Q-copEX_B5V-6gbqdMSVOwZAy5s0U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "535823784264-pcgdkmoo3er4rf3tefuhnpjfrblh54mn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
