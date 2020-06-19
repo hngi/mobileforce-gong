@@ -10,7 +10,7 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
-  int currentIndex;
+  int currentIndex = 0;
   SizeConfig size = SizeConfig();
   PageController _pageController = PageController();
 
