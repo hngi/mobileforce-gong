@@ -54,35 +54,35 @@ class _GongHomeScreenState extends State<GongHomeScreen> with TickerProviderStat
       // iconSize: 28,
       items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home),
+          icon: Icon(Icons.home,color: Colors.white70),
           title: Text(
             "Home",
-            style: TextStyle(fontWeight: FontWeight.normal),
+            style: TextStyle(fontWeight: FontWeight.normal,fontSize: 10),
           ),
         ),
         BottomNavigationBarItem(
           icon: Icon(
-            Icons.timer,
+            Icons.timer,color: Colors.white70
           ),
           title: Text(
-            "TodoLIst",
-            style: TextStyle(fontWeight: FontWeight.normal),
+            "Todo",
+            style: TextStyle(fontWeight: FontWeight.normal,fontSize: 10),
           ),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.note_add),
+          icon: Icon(Icons.note_add,color: Colors.white70),
           title: Text(
             "Notes",
-            style: TextStyle(fontWeight: FontWeight.normal),
+            style: TextStyle(fontWeight: FontWeight.normal,fontSize: 10),
             overflow: TextOverflow.clip,
             textAlign: TextAlign.center,
           ),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
+          icon: Icon(Icons.account_circle,color: Colors.white70),
           title: Text(
             "Profile",
-            style: TextStyle(fontWeight: FontWeight.normal),
+            style: TextStyle(fontWeight: FontWeight.normal,fontSize: 10),
           ),
         ),
       ],

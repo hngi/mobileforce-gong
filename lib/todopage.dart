@@ -16,7 +16,7 @@ class _todopageState extends State<todopage> {
       backgroundColor: Colors.white,
       appBar: AppBar(backgroundColor: Colors.lightGreenAccent,
         title: Text(
-          'ToDoList Page',
+          'ToDo',
           style: TextStyle(color: Colors.black87),
         ),
         centerTitle: false,
