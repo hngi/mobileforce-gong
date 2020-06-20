@@ -9,7 +9,7 @@ class ForwardAnimation extends StatefulWidget {
   final Widget child;
   final int milliseconds;
 
-  ForwardAnimation({this.child, this.milliseconds=200});
+  ForwardAnimation({this.child, this.milliseconds=3000});
   @override
   _ForwardAnimationState createState() => _ForwardAnimationState();
 }
@@ -114,6 +114,7 @@ class _LogoAnimationState extends State<LogoAnimation> with SingleTickerProvider
 }
 
 class BackwardAnimation extends StatefulWidget {
+
   final Widget child;
 
   BackwardAnimation({this.child});
@@ -128,7 +129,7 @@ class _BackwardAnimationState extends State<BackwardAnimation> with SingleTicker
 
   start(){
     animationController =
-        AnimationController(duration: Duration(milliseconds: 200), vsync: this);
+        AnimationController(duration: Duration(milliseconds: 3000), vsync: this);
     animation = Tween(begin: -1.0, end: 0.0).animate(CurvedAnimation(
         parent: animationController, curve: Curves.easeIn));
 
