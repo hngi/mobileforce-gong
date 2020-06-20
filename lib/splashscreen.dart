@@ -15,7 +15,7 @@ class SplashScreen extends StatefulWidget {
     void initState(){
     super.initState();
     Timer(
-      Duration(seconds:3),
+      Duration(seconds:7),
       () => Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (BuildContext context) => HomeScreen()
       )
@@ -28,8 +28,13 @@ class SplashScreen extends StatefulWidget {
      return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Image.asset('assets/images/gong.png')
-        ),  
+        child: Image.asset(
+          'assets/images/gongT.PNG',
+          scale: 1,
+          colorBlendMode: BlendMode.lighten
+          )
+          //Text('"Seize the day!"')
+        ),         
       );
     
   }
