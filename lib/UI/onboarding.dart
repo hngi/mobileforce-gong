@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:team_mobileforce_gong/UI/home_page.dart';
 import 'package:team_mobileforce_gong/const/constFile.dart';
 import 'package:team_mobileforce_gong/responsiveness/responsiveness.dart';
 
@@ -87,7 +88,7 @@ class _OnboardingState extends State<Onboarding> {
             child: FlatButton(
               onPressed: () {
                 Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => Home()));
+                    .push(MaterialPageRoute(builder: (context) => HomePage()));
               },
               child: Text(
                 'Skip',
