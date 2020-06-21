@@ -70,10 +70,11 @@ class _OnboardingState extends State<Onboarding> {
               bottom: 30,
               child: FlatButton(
                 onPressed: () {
-                  _pageController.nextPage(duration: duration, curve: curve);
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => Home()));
                 },
                 child: Text(
-                  'Next',
+                  'Skip',
                   style: TextStyle(
                     color: kBlack,
                     fontSize: 16,
@@ -86,11 +87,10 @@ class _OnboardingState extends State<Onboarding> {
             right: 0,
             child: FlatButton(
               onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => Home()));
+                _pageController.nextPage(duration: duration, curve: curve);
               },
               child: Text(
-                'Skip',
+                'Next',
                 style: TextStyle(
                   color: kBlack,
                   fontSize: 16,
