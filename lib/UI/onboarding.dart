@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:team_mobileforce_gong/UI/home_page.dart';
+import 'package:team_mobileforce_gong/UI/screens/home_page.dart';
 import 'package:team_mobileforce_gong/const/constFile.dart';
 import 'package:team_mobileforce_gong/responsiveness/responsiveness.dart';
 

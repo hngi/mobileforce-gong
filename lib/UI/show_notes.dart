@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:team_mobileforce_gong/UI/add_note.dart';
+import 'package:team_mobileforce_gong/UI/screens/add_note.dart';
 import 'package:team_mobileforce_gong/UI/theme_notifier.dart';
 import 'package:team_mobileforce_gong/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/styles/color.dart';
