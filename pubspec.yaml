@@ -24,6 +24,7 @@ dependencies:
   sqflite: any
   path_provider: any
   intl: ^0.15.7
+  google_fonts:
   flutter:
     sdk: flutter
 
