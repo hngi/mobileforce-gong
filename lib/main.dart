@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:team_mobileforce_gong/UI/edit_profile.dart';
 import 'package:team_mobileforce_gong/UI/password_reset.dart';
 
 void main() {
@@ -66,12 +67,12 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  MaterialPageRoute(builder: (context) => EditProfile()),
                 );
               },
               color: Colors.blue,
               padding: EdgeInsets.all(14),
-              child: const Text('Reset Password', style: TextStyle(fontSize: 20, color: Colors.white)),
+              child: const Text('Edit Profile', style: TextStyle(fontSize: 20, color: Colors.white)),
             ),
           ],
         ),

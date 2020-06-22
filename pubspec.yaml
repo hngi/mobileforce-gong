@@ -50,6 +50,7 @@ flutter:
      - assets/images/logo.png
      - assets/images/gong_text_logo.png
      - assets/images/badge_success.png
+     - assets/images/stock-photo.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
