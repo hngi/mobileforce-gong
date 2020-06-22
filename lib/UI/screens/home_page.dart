@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:team_mobileforce_gong/UI/screens/add_note.dart';
+import 'package:team_mobileforce_gong/UI/screens/add_todo.dart';
 import 'package:team_mobileforce_gong/UI/show_notes.dart';
 import 'package:team_mobileforce_gong/UI/theme_notifier.dart';
 import 'package:team_mobileforce_gong/UI/widgets/action_card.dart';
@@ -142,7 +143,13 @@ class _HomePageState extends State<HomePage> {
                                             ),
                                           ),
                                           GestureDetector(
-                                            onTap: (){},
+                                            onTap: (){
+                                              setState(() {
+                                                open = true;
+                                              });
+                                              Navigator.pop(context);
+                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddTodo()));
+                                            },
                                             child: Container(
                                               padding: EdgeInsets.symmetric(vertical: 15, horizontal: 8),
                                               child: Row(
@@ -220,13 +227,13 @@ Widget newActions(context) => Wrap(
         svg: 'assets/svgs/note.svg',
         title: 'Notes',
         text: '12 Saved',
-        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ShowNotes())),
+        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ShowNotes(name: 'note',))),
       ),
       ActionCard(
         svg: 'assets/svgs/todo.svg',
         title: 'Todo',
         text: '3 Pending',
-        onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => ShowNotes())),
+        onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => ShowNotes(name: 'todo',))),
       ),
       ActionCard(
         svg: 'assets/svgs/facts.svg',

@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:team_mobileforce_gong/UI/screens/add_note.dart';
+import 'package:team_mobileforce_gong/UI/screens/add_todo.dart';
 import 'package:team_mobileforce_gong/UI/theme_notifier.dart';
 import 'package:team_mobileforce_gong/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/styles/color.dart';
 
 class ShowNotes extends StatelessWidget {
+  final String name;
+
+  const ShowNotes({Key key, this.name}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +80,7 @@ class ShowNotes extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddNote())),
+        onPressed: () => name == 'note' ? Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddNote())) : Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddTodo())),
       ),
     );
   }
