@@ -212,7 +212,7 @@ class _HomePageState extends State<HomePage> {
 
 
 Widget newActions(context) => Wrap(
-    alignment: WrapAlignment.center,
+    alignment: WrapAlignment.start,
     spacing: SizeConfig().xMargin(context, 8.5),
     runSpacing: SizeConfig().yMargin(context, 2.1),
     children: <Widget>[
@@ -236,6 +236,11 @@ Widget newActions(context) => Wrap(
       ActionCard(
         svg: 'assets/svgs/motivation.svg',
         title: 'Motivation',
+        text: '12 Saved',
+      ),
+      ActionCard(
+        svg: 'assets/svgs/calendar.svg',
+        title: 'View Reminder',
         text: '12 Saved',
       ),
     ],

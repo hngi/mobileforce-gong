@@ -121,7 +121,7 @@ class _OnboardingState extends State<Onboarding> {
           style: TextStyle(
               decoration: TextDecoration.none,
               fontFamily: 'Gilroy',
-              fontSize: size.textSize(context, 6),
+              fontSize: size.textSize(context, 4.5),
               color: kPrimaryColor),
         ),
         SizedBox(
@@ -132,7 +132,7 @@ class _OnboardingState extends State<Onboarding> {
           textAlign: TextAlign.center,
           style: TextStyle(
               decoration: TextDecoration.none,
-              fontSize: 16,
+              fontSize: size.textSize(context, 2),
               fontWeight: FontWeight.w500,
               fontFamily: 'Gilroy',
               color: kBlack),
