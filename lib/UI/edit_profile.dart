@@ -79,7 +79,7 @@ class _EditProfileState extends State<EditProfile> {
                           _editTextField(fieldHintText: 'Last Name', fieldController: lastNameController, yMarginTop: 2.5),
                           _editTextField(fieldHintText: 'Email', fieldController: emailController, yMarginTop: 2.5),
                           _editTextField(fieldHintText: 'Password', fieldController: passwordController, yMarginTop: 2.5,
-                              yMarginBottom: 2.5),
+                              yMarginBottom: 2.5), // Append 'isObscured: true' to hide password text
                         ],
                       ),
                     ),
@@ -129,10 +129,11 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Widget _editTextField({String fieldHintText, TextEditingController fieldController,
-      double yMarginTop = 0.0, double yMarginBottom = 0.0}) {
+      double yMarginTop = 0.0, double yMarginBottom = 0.0, bool isObscured = false}) {
     return Container(
     margin: EdgeInsets.only(top: sizeConfig.yMargin(context, yMarginTop), bottom: sizeConfig.yMargin(context, yMarginBottom)),
       child: TextField(
+        obscureText: isObscured,
         controller: fieldController,
         decoration: InputDecoration(
           hintText: fieldHintText,
@@ -225,6 +226,8 @@ class _EditProfileState extends State<EditProfile> {
 
 }
 
+
+///Helper class for debugging purposes.
 class GongUser {
   String _firstName = '';
   String _lastName = '';

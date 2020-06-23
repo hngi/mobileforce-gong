@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:team_mobileforce_gong/UI/edit_profile.dart';
 import 'package:team_mobileforce_gong/UI/password_reset.dart';
 
 void main() {
@@ -12,9 +11,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        
+
         primarySwatch: Colors.blue,
-        
+
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
@@ -37,23 +36,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     setState(() {
-     
+
       _counter++;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-   
+
     return Scaffold(
       appBar: AppBar(
-  
+
         title: Text(widget.title),
       ),
       body: Center(
-        
+
         child: Column(
-        
+
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
@@ -67,12 +66,12 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => EditProfile()),
+                  MaterialPageRoute(builder: (context) => LoginPage()),
                 );
               },
               color: Colors.blue,
               padding: EdgeInsets.all(14),
-              child: const Text('Edit Profile', style: TextStyle(fontSize: 20, color: Colors.white)),
+              child: const Text('Reset Password', style: TextStyle(fontSize: 20, color: Colors.white)),
             ),
           ],
         ),
