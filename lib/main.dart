@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:team_mobileforce_gong/UI/password_reset.dart';
 
 void main() {
   runApp(MyApp());
@@ -61,17 +60,6 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
-            ),
-            RaisedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                );
-              },
-              color: Colors.blue,
-              padding: EdgeInsets.all(14),
-              child: const Text('Reset Password', style: TextStyle(fontSize: 20, color: Colors.white)),
             ),
           ],
         ),
