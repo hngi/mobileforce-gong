@@ -1,22 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:team_mobileforce_gong/UI/onboarding.dart';
+import 'package:team_mobileforce_gong/UI/theme_notifier.dart';
+import 'package:team_mobileforce_gong/styles/color.dart';
 
-void main() {
-  runApp(MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent
+  ));
+  
+  runApp(
+    ChangeNotifierProvider<ThemeNotifier>(
+      child: MyApp(),
+      create: (BuildContext context) {
+        return ThemeNotifier();
+      },
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        fontFamily: 'Gilroy',
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: Onboarding()
+    Provider.of<ThemeNotifier>(context).loadThemeData(context);
+    return Consumer<ThemeNotifier>(
+      builder: (context, value, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Gong',
+          theme: Provider.of<ThemeNotifier>(context).currentThemeData,
+          home: Onboarding()
+        );
+      },
     );
   }
 }
