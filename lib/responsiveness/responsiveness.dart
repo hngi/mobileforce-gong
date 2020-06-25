@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 ///Custom class for scaling text sizes, margins and everything that needs to be responsive across different screens
+//use this class for dimensions
 class SizeConfig{
 
   double yMargin(BuildContext context, double height){
