@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:team_mobileforce_gong/UI/screens/home_page.dart';
 import 'package:team_mobileforce_gong/const/constFile.dart';
 import 'package:team_mobileforce_gong/responsiveness/responsiveness.dart';
 
@@ -10,7 +11,7 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
-  int currentIndex;
+  int currentIndex = 0;
   SizeConfig size = SizeConfig();
   PageController _pageController = PageController();
 
@@ -70,10 +71,11 @@ class _OnboardingState extends State<Onboarding> {
               bottom: 30,
               child: FlatButton(
                 onPressed: () {
-                  _pageController.nextPage(duration: duration, curve: curve);
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => Home()));
                 },
                 child: Text(
-                  'Next',
+                  'Skip',
                   style: TextStyle(
                     color: kBlack,
                     fontSize: 16,
@@ -86,11 +88,13 @@ class _OnboardingState extends State<Onboarding> {
             right: 0,
             child: FlatButton(
               onPressed: () {
+
                 Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => Home()));
+                    .push(MaterialPageRoute(builder: (context) => HomePage()));
+
               },
               child: Text(
-                'Skip',
+                'Next',
                 style: TextStyle(
                   color: kBlack,
                   fontSize: 16,
@@ -120,7 +124,7 @@ class _OnboardingState extends State<Onboarding> {
           style: TextStyle(
               decoration: TextDecoration.none,
               fontFamily: 'Gilroy',
-              fontSize: size.textSize(context, 6),
+              fontSize: size.textSize(context, 4.5),
               color: kPrimaryColor),
         ),
         SizedBox(
@@ -131,7 +135,7 @@ class _OnboardingState extends State<Onboarding> {
           textAlign: TextAlign.center,
           style: TextStyle(
               decoration: TextDecoration.none,
-              fontSize: 16,
+              fontSize: size.textSize(context, 2),
               fontWeight: FontWeight.w500,
               fontFamily: 'Gilroy',
               color: kBlack),
