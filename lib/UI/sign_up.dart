@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:team_mobileforce_gong/sign_in.dart';
+import 'package:team_mobileforce_gong/UI/sign_in.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key, this.title}) : super(key: key);

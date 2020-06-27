@@ -1,4 +1,3 @@
-/*
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
@@ -34,6 +33,13 @@ class NoteDbhelper {
 
     var dbNotes = await openDatabase(path, version: 1, onCreate: _createDb);
     return dbNotes;
+  }
+
+  Future<List> searchTodo(String query) async {
+    Database db = await this.db;
+    var result = await db.rawQuery
+      ("SELECT * FROM $tblNotes WHERE $colDescription LIKE '%$query%' UNION  SELECT * FROM $tblNotes WHERE $colTitle LIKE '%$query%' ");
+    return result;
   }
 
   void _createDb(Database db, int newVersion) async {
@@ -78,4 +84,4 @@ class NoteDbhelper {
   }
 
 
-}*/
+}

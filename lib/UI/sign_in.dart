@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:team_mobileforce_gong/sign_up.dart';
-import 'package:team_mobileforce_gong/profile_pag.dart';
+import 'package:team_mobileforce_gong/UI/sign_up.dart';
 
 
 class LoginPage extends StatefulWidget {
