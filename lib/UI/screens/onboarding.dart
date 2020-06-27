@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:team_mobileforce_gong/UI/screens/home_page.dart';
-import 'package:team_mobileforce_gong/const/constFile.dart';
-import 'package:team_mobileforce_gong/responsiveness/responsiveness.dart';
+import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
+import 'package:team_mobileforce_gong/util/const/constFile.dart';
 
-import 'home.dart';
+import '../home.dart';
+
+
 
 class Onboarding extends StatefulWidget {
   @override

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:team_mobileforce_gong/UI/onboarding.dart';
 import 'package:team_mobileforce_gong/UI/theme_notifier.dart';
-import 'package:team_mobileforce_gong/styles/color.dart';
+
+import 'UI/screens/splashscreen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Gong',
           theme: Provider.of<ThemeNotifier>(context).currentThemeData,
-          home: Onboarding()
+          home: SplashScreen()
         );
       },
     );

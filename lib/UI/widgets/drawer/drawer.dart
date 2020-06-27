@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:team_mobileforce_gong/responsiveness/responsiveness.dart';
+import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 
 class HomeDrawer extends StatelessWidget {
   SizeConfig config = SizeConfig();
