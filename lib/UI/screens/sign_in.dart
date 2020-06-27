@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:team_mobileforce_gong/UI/screens/sign_up.dart';
+import 'package:team_mobileforce_gong/services/auth/auth.dart';
 import 'package:team_mobileforce_gong/services/auth/util.dart';
 import 'package:team_mobileforce_gong/services/auth/validator.dart';
 import 'package:team_mobileforce_gong/services/snackbarService.dart';
@@ -16,6 +17,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  AuthStatus status;
+
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -93,34 +96,41 @@ class _LoginPageState extends State<LoginPage> {
           padding: EdgeInsets.only(top: 20),
           child: new Column(
             children: <Widget>[
-              new Container(
-                width: 180.0,
-                height: 50.0,
-                child: new RaisedButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  child: new Text('LOG IN',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: "Gilroy",
-                          fontWeight: FontWeight.bold)),
-                  color: Colors.blue,
-                  onPressed: () {
-                    final form = _formKey.currentState;
-                    form.save();
-                    if (form.validate()) {
-                      try {
-                        Provider.of<AuthenticationState>(context, listen: false)
-                            .login(
-                                _emailController.text, _passwordController.text)
-                            .then((signInUser) => gotoHomeScreen(context));
-                      } catch (e) {
-                        print(e);
-                      }
-                    }
-                  },
-                ),
+              Consumer<AuthenticationState>(
+                builder: (_context, state, child) {
+                  return Container(
+                    width: 180.0,
+                    height: 50.0,
+                    child: status == AuthStatus.Authenticating
+                        ? CircularProgressIndicator()
+                        : RaisedButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: new Text('LOG IN',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: "Gilroy",
+                                    fontWeight: FontWeight.bold)),
+                            color: Colors.blue,
+                            onPressed: () {
+                              final form = _formKey.currentState;
+                              form.save();
+                              if (form.validate()) {
+                                try {
+                                  state
+                                      .login(_emailController.text,
+                                          _passwordController.text)
+                                      .then((signInUser) =>
+                                          gotoHomeScreen(context));
+                                } catch (e) {
+                                  print(e);
+                                }
+                              }
+                            },
+                          ),
+                  );
+                },
               ),
             ],
           ));

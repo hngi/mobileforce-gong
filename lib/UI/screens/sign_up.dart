@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:team_mobileforce_gong/UI/screens/sign_in.dart';
+import 'package:team_mobileforce_gong/services/auth/auth.dart';
 import 'package:team_mobileforce_gong/services/auth/util.dart';
 import 'package:team_mobileforce_gong/services/auth/validator.dart';
 import 'package:team_mobileforce_gong/services/snackbarService.dart';
@@ -16,6 +17,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  AuthStatus status;
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -27,7 +29,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _logo(BuildContext context) {
     return new Container(
-      // color: Colors.red,felix
+        // color: Colors.red,felix
         padding: EdgeInsets.all(50),
         child: Image(image: AssetImage('assets/images/Gong (3).png')));
   }
@@ -64,7 +66,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _emailPasswordWidget() {
     return Form(
       key: _formKey,
-          child: Column(
+      child: Column(
         children: <Widget>[
           _entryField("Full Name", "your name", _usernameController,
               UsernameValidator.validate),
@@ -85,41 +87,47 @@ class _SignUpPageState extends State<SignUpPage> {
           padding: EdgeInsets.only(top: 20),
           child: new Column(
             children: <Widget>[
-              new Container(
-                width: 180.0,
-                height: 50.0,
-                child: new RaisedButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  child: new Text('SIGN UP',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: "Gilroy",
-                          fontWeight: FontWeight.bold)),
-                  color: Colors.blue,
-                  onPressed: () {
-                    final form = _formKey.currentState;
-                    form.save();
-                    if (form.validate()) {
-                      try {
-                        Provider.of<AuthenticationState>(_context,
-                                listen: false)
-                            .signup(
-                                _emailController.text,
-                                _passwordController.text,
-                                _usernameController.text)
-                            .then((signInUser) => gotoHomeScreen(_context));
-                        // gotoHomeScreen(context);
-                        // print('signed up');
-                        // Navigator.push(context,
-                        //   MaterialPageRoute(builder: (context) => Feedss()));
-                      } catch (e) {
-                        print(e);
-                      }
-                    }
-                  },
-                ),
+              Consumer<AuthenticationState>(
+                builder: (_context, state, child) {
+                  return Container(
+                    width: 180.0,
+                    height: 50.0,
+                    child: status == AuthStatus.Authenticating
+                        ? CircularProgressIndicator()
+                        : RaisedButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: new Text('SIGN UP',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: "Gilroy",
+                                    fontWeight: FontWeight.bold)),
+                            color: Colors.blue,
+                            onPressed: () {
+                              final form = _formKey.currentState;
+                              form.save();
+                              if (form.validate()) {
+                                try {
+                                  state
+                                      .signup(
+                                          _emailController.text,
+                                          _passwordController.text,
+                                          _usernameController.text)
+                                      .then((signInUser) =>
+                                          gotoHomeScreen(_context));
+                                  // gotoHomeScreen(context);
+                                  // print('signed up');
+                                  // Navigator.push(context,
+                                  //   MaterialPageRoute(builder: (context) => Feedss()));
+                                } catch (e) {
+                                  print(e);
+                                }
+                              }
+                            },
+                          ),
+                  );
+                },
               ),
             ],
           ));

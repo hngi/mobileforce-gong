@@ -91,9 +91,8 @@ class AuthenticationState with ChangeNotifier {
     return getUserId();
   }
 
-  void forgotPassword(email) {
-    sendPasswordResetEmail(email);
-    notifyListeners();
+  Future<void> forgotPassword(email) async {
+   return sendPasswordResetEmail(email);
   }
 
 }

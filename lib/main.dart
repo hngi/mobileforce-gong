@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:team_mobileforce_gong/UI/theme_notifier.dart';
+import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 
 import 'UI/screens/splashscreen.dart';
 import 'state/authProvider.dart';
