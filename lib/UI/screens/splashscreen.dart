@@ -44,6 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
         body: Center(
       child: Padding(
         padding: const EdgeInsets.only(top: 300, bottom: 30),
@@ -67,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   style: TextStyle(
                     fontFamily: 'Gilroy',
                     color: Color(0xff0984E3),
-                    fontSize: config.textSize(context, 6),
+                    fontSize: config.textSize(context, 3),
                     fontWeight: FontWeight.w300,
                   ),
                 ),

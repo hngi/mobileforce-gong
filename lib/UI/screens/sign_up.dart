@@ -27,8 +27,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _logo(BuildContext context) {
     return new Container(
+      // color: Colors.red,felix
         padding: EdgeInsets.all(50),
-        child: Image(image: AssetImage('assets/logo.png')));
+        child: Image(image: AssetImage('assets/images/Gong (3).png')));
   }
 
   Widget _signInText(BuildContext context) {
@@ -61,16 +62,19 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _emailPasswordWidget() {
-    return Column(
-      children: <Widget>[
-        _entryField("Full Name", "your name", _usernameController,
-            UsernameValidator.validate),
-        _entryField("Email Address", "example@user.com", _emailController,
-            EmailValidator.validate),
-        _entryField("Password", "password", _passwordController,
-            PasswordValidator.validate,
-            isPassword: true),
-      ],
+    return Form(
+      key: _formKey,
+          child: Column(
+        children: <Widget>[
+          _entryField("Full Name", "your name", _usernameController,
+              UsernameValidator.validate),
+          _entryField("Email Address", "example@user.com", _emailController,
+              EmailValidator.validate),
+          _entryField("Password", "password", _passwordController,
+              PasswordValidator.validate,
+              isPassword: true),
+        ],
+      ),
     );
   }
 
@@ -159,6 +163,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Container(
         height: height,
         child: Stack(

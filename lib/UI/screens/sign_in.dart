@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _logo(BuildContext context) {
     return new Container(
         padding: EdgeInsets.all(50),
-        child: Image(image: AssetImage('assets/logo.png')));
+        child: Image(image: AssetImage('assets/images/Gong (3).png')));
   }
 
   Widget _signInText(BuildContext context) {
