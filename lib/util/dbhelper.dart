@@ -12,7 +12,6 @@ class DbHelper {
   String colDescription = "description";
   String colPriority = "priority";
   String colDate = "date";
-
   DbHelper._internal();
 
   factory DbHelper() {
@@ -42,6 +41,14 @@ class DbHelper {
             "$colDescription TEXT, $colPriority INTEGER, $colDate TEXT)");
 
   }
+
+  Future<List> searchTodo(String query) async {
+    Database db = await this.db;
+    var result = await db.rawQuery
+      ("SELECT * FROM $tblTodo WHERE $colDescription LIKE '%$query%' UNION  SELECT * FROM $tblTodo WHERE $colTitle LIKE '%$query%' ");
+    return result;
+  }
+
 
   Future<int> insertTodo(Todo todo) async {
     Database db = await this.db;
