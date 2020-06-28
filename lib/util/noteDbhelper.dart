@@ -35,7 +35,7 @@ class NoteDbhelper {
     return dbNotes;
   }
 
-  Future<List> searchTodo(String query) async {
+  Future<List> searchNotes(String query) async {
     Database db = await this.db;
     var result = await db.rawQuery
       ("SELECT * FROM $tblNotes WHERE $colDescription LIKE '%$query%' UNION  SELECT * FROM $tblNotes WHERE $colTitle LIKE '%$query%' ");
