@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:team_mobileforce_gong/UI/screens/home_page.dart';
-import 'package:team_mobileforce_gong/const/constFile.dart';
-import 'package:team_mobileforce_gong/responsiveness/responsiveness.dart';
+import 'package:team_mobileforce_gong/UI/screens/sign_in.dart';
+import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
+import 'package:team_mobileforce_gong/util/const/constFile.dart';
 
-import 'home.dart';
+
+
 
 class Onboarding extends StatefulWidget {
   @override
@@ -11,9 +13,14 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
+  
   int currentIndex = 0;
   SizeConfig size = SizeConfig();
   PageController _pageController = PageController();
+
+  void _bottomTapped(int page) {
+    _pageController.jumpToPage(page);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +79,7 @@ class _OnboardingState extends State<Onboarding> {
               child: FlatButton(
                 onPressed: () {
                   Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => Home()));
+                      .push(MaterialPageRoute(builder: (context) => LoginPage()));
                 },
                 child: Text(
                   'Skip',
@@ -87,12 +94,7 @@ class _OnboardingState extends State<Onboarding> {
             bottom: 30,
             right: 0,
             child: FlatButton(
-              onPressed: () {
-
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => HomePage()));
-
-              },
+              onPressed: ()=> _bottomTapped(currentIndex++),
               child: Text(
                 'Next',
                 style: TextStyle(

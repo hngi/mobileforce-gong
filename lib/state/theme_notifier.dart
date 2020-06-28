@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:team_mobileforce_gong/styles/color.dart';
+import 'package:team_mobileforce_gong/util/styles/color.dart';
 
 enum MyThemes {light, dark}
 class ThemeNotifier with ChangeNotifier {
