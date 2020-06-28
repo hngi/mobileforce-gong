@@ -124,7 +124,7 @@ class _AddTodoState extends State<AddTodo> {
                           value: _selectedcategory,
                           items: _dropdownMenuItems,
                           onChanged: onChangedDropdownItem,
-                          style: Theme.of(context).textTheme.headline5.copyWith(fontSize: 18, fontWeight: FontWeight.w500),
+                          style: Theme.of(context).textTheme.headline5.copyWith(fontSize: 18),
                         )
                       ),
                       Container(
