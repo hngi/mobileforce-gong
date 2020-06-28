@@ -9,7 +9,7 @@ class ForwardAnimation extends StatefulWidget {
   final Widget child;
   final int milliseconds;
 
-  ForwardAnimation({this.child, this.milliseconds=3000});
+  ForwardAnimation({this.child, this.milliseconds=1000});
   @override
   _ForwardAnimationState createState() => _ForwardAnimationState();
 }

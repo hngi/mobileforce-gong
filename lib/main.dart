@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:team_mobileforce_gong/UI/onboarding.dart';
-import 'package:team_mobileforce_gong/UI/theme_notifier.dart';
-import 'package:team_mobileforce_gong/styles/color.dart';
+import 'package:team_mobileforce_gong/state/theme_notifier.dart';
+
+import 'UI/screens/splashscreen.dart';
+import 'state/authProvider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,11 +28,16 @@ class MyApp extends StatelessWidget {
     Provider.of<ThemeNotifier>(context).loadThemeData(context);
     return Consumer<ThemeNotifier>(
       builder: (context, value, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Gong',
-          theme: Provider.of<ThemeNotifier>(context).currentThemeData,
-          home: Onboarding()
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => AuthenticationState()),
+          ],
+                  child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Gong',
+            theme: Provider.of<ThemeNotifier>(context).currentThemeData,
+            home: SplashScreen()
+          ),
         );
       },
     );
