@@ -23,6 +23,47 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Container(
+        height: height,
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+              top: -MediaQuery.of(context).size.height * .15,
+              right: -MediaQuery.of(context).size.width * .4,
+              child: BezierContainer(),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: 5),
+                    _logo(context),
+                    _signInText(context),
+                    SizedBox(height: 10),
+                    _emailPasswordWidget(),
+                    SizedBox(height: 10),
+                    _resetAccountLabel(),
+                    _submitButton(),
+                    SizedBox(height: 10),
+                    _freeUserAccountLabel()
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
   void _toSignup() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => SignUpPage()));
@@ -30,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _logo(BuildContext context) {
     return new Container(
-        padding: EdgeInsets.all(50),
+        padding: EdgeInsets.only(top:50,right: 50.0,left: 50.0,bottom: 25.0),
         child: Image(image: AssetImage('assets/images/Gong (3).png')));
   }
 
@@ -41,9 +82,7 @@ class _LoginPageState extends State<LoginPage> {
             style: TextStyle(fontSize: 30.0, fontFamily: "Gilroy")));
   }
 
-  Widget _entryField(String title, String hint,
-      TextEditingController controller, Function(String) validate,
-      {bool isPassword = false}) {
+  Widget _entryField(String title, String hint, TextEditingController controller, Function(String) validate, {bool isPassword = false}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -68,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
     return InkWell(
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 20),
-        padding: EdgeInsets.all(15),
+        padding: EdgeInsets.all(10),
         alignment: Alignment.bottomCenter,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -94,7 +133,6 @@ class _LoginPageState extends State<LoginPage> {
     return Builder(builder: (BuildContext _context) {
       SnackBarService.instance.buildContext = _context;
       return Container(
-          padding: EdgeInsets.only(top: 20),
           child: new Column(
             children: <Widget>[
               Consumer<AuthenticationState>(
@@ -183,46 +221,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: Container(
-        height: height,
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              top: -MediaQuery.of(context).size.height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer(),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 30),
-                    _logo(context),
-//                    SizedBox(height: height * .2),
-                    _signInText(context),
-                    SizedBox(height: 20),
-                    _emailPasswordWidget(),
-                    SizedBox(height: 20),
-                    _resetAccountLabel(),
-                    _submitButton(),
-                    SizedBox(height: 50),
-                    _freeUserAccountLabel()
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
 }
 
 void signupPressed() {

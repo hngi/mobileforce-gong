@@ -18,32 +18,6 @@ class _AddTodoState extends State<AddTodo> {
   bool checkedValue = false;
 
   @override
-  void initState() { 
-    super.initState();
-    _dropdownMenuItems = buildDropdownMenuItems(_category);
-  }
-
-  List<DropdownMenuItem<Category>> buildDropdownMenuItems(List category) {
-    List <DropdownMenuItem<Category>> items = List();
-    for (Category category in category) {
-      print(category);
-      items.add(
-        DropdownMenuItem(
-          value: category,
-          child: Text(category.name,)
-        ),
-      );
-    }
-    return items;
-  }
-
-  onChangedDropdownItem(Category selectedcategory) {
-    setState(() {
-      _selectedcategory = selectedcategory;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -208,4 +182,62 @@ class _AddTodoState extends State<AddTodo> {
       ),
     );
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _dropdownMenuItems = buildDropdownMenuItems(_category);
+  }
+
+  List<DropdownMenuItem<Category>> buildDropdownMenuItems(List category) {
+    List <DropdownMenuItem<Category>> items = List();
+    for (Category category in category) {
+      print(category);
+      items.add(
+        DropdownMenuItem(
+            value: category,
+            child: Text(category.name,)
+        ),
+      );
+    }
+    return items;
+  }
+
+  onChangedDropdownItem(Category selectedcategory) {
+    setState(() {
+      _selectedcategory = selectedcategory;
+    });
+  }
+
+  Color getBackgroundColor(int backgroundColor) {
+    switch(backgroundColor){
+      case 1:
+        return Colors.white;
+        break;
+      case 2:
+        return Colors.red;
+        break;
+      case 3:
+        return Colors.yellow;
+        break;
+      case 4:
+        return Colors.lightBlue;
+        break;
+      default:
+        return Colors.white;
+    }
+  }
+
+/*  void changeColor(int value) {
+    setState(() {
+      todo.backgroundColor = value;
+    });
+    if (todo.id != null) {
+      helper.updateTodo(todo);
+    }
+    else {
+      helper.insertTodo(todo);
+    }
+
+  }*/
 }
