@@ -196,7 +196,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     _emailPasswordWidget(),
                     SizedBox(height: 20),
                     _submitButton(),
-                    SizedBox(height: 50),
+                    SizedBox(height: 10),
                     _freeUserAccountLabel()
                   ],
                 ),
