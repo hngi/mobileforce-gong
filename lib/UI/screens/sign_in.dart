@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:team_mobileforce_gong/UI/screens/password_reset.dart';
 import 'package:team_mobileforce_gong/UI/screens/sign_up.dart';
 import 'package:team_mobileforce_gong/services/auth/auth.dart';
 import 'package:team_mobileforce_gong/services/auth/util.dart';
@@ -76,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(fontFamily: "Gilroy")),
             new GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, "ResetPag");
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPassword()));
                 },
                 child: new Text("here",
                     style: TextStyle(

@@ -10,16 +10,16 @@ import 'password_reset_success.dart';
 
 //import 'Widget/bezierContainer.dart';
 
-class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.title}) : super(key: key);
+class ResetPassword extends StatefulWidget {
+  ResetPassword({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _ResetPasswordState createState() => _ResetPasswordState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _ResetPasswordState extends State<ResetPassword> {
   // Create a text controller and use it to retrieve the current value
   // of the TextField.
   final textController = TextEditingController();
