@@ -1,22 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:team_mobileforce_gong/UI/onboarding.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 
-void main() {
-  runApp(MyApp());
+import 'UI/screens/splashscreen.dart';
+import 'state/authProvider.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent
+  ));
+  
+  runApp(
+    ChangeNotifierProvider<ThemeNotifier>(
+      child: MyApp(),
+      create: (BuildContext context) {
+        return ThemeNotifier();
+      },
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        fontFamily: 'Gilroy',
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: Onboarding()
+    Provider.of<ThemeNotifier>(context).loadThemeData(context);
+    return Consumer<ThemeNotifier>(
+      builder: (context, value, child) {
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => AuthenticationState()),
+          ],
+                  child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Gong',
+            theme: Provider.of<ThemeNotifier>(context).currentThemeData,
+            home: SplashScreen()
+          ),
+        );
+      },
     );
   }
 }
