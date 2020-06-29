@@ -1,12 +1,11 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-const config = require('./DB/config');
+const config = require('./db/config');
 const mongoose = require('mongoose');
 require("dotenv").config();
 // const morgan = require('morgan');
 const app = express();
-const port = 3000;
-const dbUrl = config.url;
+const port = process.env.PORT || 3000;
 const route = require('./routes');
 
 
@@ -20,16 +19,18 @@ mongoose.Promise = global.Promise;
 //Connecting to database
 
 
-mongoose.connect(process.env.MONGOURI, {
-    useFindAndModify : false,
+mongoose.connect(encodeURI(process.env.MONGOLABURI, {
     useUnifiedTopology: true,
     useNewUrlParser: true
-}).then(() => {
+})).then(() => {
     console.log('Successfully Connected');
 }).catch(err => {
     console.log('could not connect');
     process.exit();
 })
+
+mongoose.set("useFindAndModify", false);
+mongoose.set('useCreateIndex', true);
 
 // define a simple route
 
