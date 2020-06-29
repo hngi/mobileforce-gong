@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:team_mobileforce_gong/UI/profile.dart';
 import 'package:team_mobileforce_gong/const/constFile.dart';
 import 'package:team_mobileforce_gong/responsiveness/responsiveness.dart';
 
@@ -20,9 +21,9 @@ class _OnboardingState extends State<Onboarding> {
         color: Colors.white,
         child: Stack(children: [
           PageView(
-            onPageChanged: (index){
+            onPageChanged: (index) {
               setState(() {
-                currentIndex=index;
+                currentIndex = index;
               });
             },
             controller: _pageController,
@@ -71,7 +72,7 @@ class _OnboardingState extends State<Onboarding> {
               child: FlatButton(
                 onPressed: () {
                   Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => Home()));
+                      .push(MaterialPageRoute(builder: (context) => Profile()));
                 },
                 child: Text(
                   'Skip',
@@ -156,7 +157,7 @@ class Indicator extends StatelessWidget {
       width: 12,
       height: 12,
       decoration: BoxDecoration(
-          color: positionIndex == currentIndex+1
+          color: positionIndex == currentIndex + 1
               ? kPrimaryColor
               : kGrey.withOpacity(0.5),
           shape: BoxShape.circle),
