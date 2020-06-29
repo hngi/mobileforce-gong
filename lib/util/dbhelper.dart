@@ -1,3 +1,4 @@
+
 import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
@@ -12,6 +13,7 @@ class DbHelper {
   String colDescription = "description";
   String colPriority = "priority";
   String colDate = "date";
+  String colBackgroundColor = "backgroundcolor";
 
   DbHelper._internal();
 
@@ -36,11 +38,11 @@ class DbHelper {
     return dbTodos;
   }
 
-  void _createDb(Database db, int newVersion) async {
+  void _createDb(Database db, int newVersion) async
+  {
     await db.execute(
         "CREATE TABLE $tblTodo($colId INTEGER PRIMARY KEY, $colTitle TEXT, " +
-            "$colDescription TEXT, $colPriority INTEGER, $colDate TEXT)");
-
+            "$colDescription TEXT, $colPriority INTEGER, $colBackgroundColor INTEGER, $colDate TEXT)");
   }
 
   Future<int> insertTodo(Todo todo) async {
@@ -55,6 +57,13 @@ class DbHelper {
     return result;
   }
 
+  Future<List> searchTodo(String query) async {
+    Database db = await this.db;
+    var result = await db.rawQuery
+      ("SELECT * FROM $tblTodo WHERE $colDescription LIKE '%$query%' UNION  SELECT * FROM $tblTodo WHERE $colTitle LIKE '%$query%' ");
+    return result;
+  }
+
   Future<int> getCount() async {
     Database db = await this.db;
     var result = Sqflite.firstIntValue(
@@ -65,6 +74,7 @@ class DbHelper {
 
   Future<int> updateTodo(Todo todo) async {
     var db = await this.db;
+    print("Color/Updated: "+ todo.backgroundColor.toString()+ "");
     var result = await db.update(tblTodo, todo.toMap(),
         where: "$colId = ?", whereArgs: [todo.id]);
     return result;

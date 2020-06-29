@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:team_mobileforce_gong/UI/theme_notifier.dart';
+import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/models/category.dart';
-import 'package:team_mobileforce_gong/responsiveness/responsiveness.dart';
-import 'package:team_mobileforce_gong/styles/color.dart';
+import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
+import 'package:team_mobileforce_gong/util/styles/color.dart';
 
 class AddTodo extends StatefulWidget {
   @override
@@ -16,32 +16,6 @@ class _AddTodoState extends State<AddTodo> {
   List<DropdownMenuItem<Category>> _dropdownMenuItems;
   Category _selectedcategory;
   bool checkedValue = false;
-
-  @override
-  void initState() { 
-    super.initState();
-    _dropdownMenuItems = buildDropdownMenuItems(_category);
-  }
-
-  List<DropdownMenuItem<Category>> buildDropdownMenuItems(List category) {
-    List <DropdownMenuItem<Category>> items = List();
-    for (Category category in category) {
-      print(category);
-      items.add(
-        DropdownMenuItem(
-          value: category,
-          child: Text(category.name,)
-        ),
-      );
-    }
-    return items;
-  }
-
-  onChangedDropdownItem(Category selectedcategory) {
-    setState(() {
-      _selectedcategory = selectedcategory;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -208,4 +182,62 @@ class _AddTodoState extends State<AddTodo> {
       ),
     );
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _dropdownMenuItems = buildDropdownMenuItems(_category);
+  }
+
+  List<DropdownMenuItem<Category>> buildDropdownMenuItems(List category) {
+    List <DropdownMenuItem<Category>> items = List();
+    for (Category category in category) {
+      print(category);
+      items.add(
+        DropdownMenuItem(
+            value: category,
+            child: Text(category.name,)
+        ),
+      );
+    }
+    return items;
+  }
+
+  onChangedDropdownItem(Category selectedcategory) {
+    setState(() {
+      _selectedcategory = selectedcategory;
+    });
+  }
+
+  Color getBackgroundColor(int backgroundColor) {
+    switch(backgroundColor){
+      case 1:
+        return Colors.white;
+        break;
+      case 2:
+        return Colors.red;
+        break;
+      case 3:
+        return Colors.yellow;
+        break;
+      case 4:
+        return Colors.lightBlue;
+        break;
+      default:
+        return Colors.white;
+    }
+  }
+
+/*  void changeColor(int value) {
+    setState(() {
+      todo.backgroundColor = value;
+    });
+    if (todo.id != null) {
+      helper.updateTodo(todo);
+    }
+    else {
+      helper.insertTodo(todo);
+    }
+
+  }*/
 }

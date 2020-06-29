@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:team_mobileforce_gong/UI/theme_notifier.dart';
-import 'package:team_mobileforce_gong/responsiveness/responsiveness.dart';
-import 'package:team_mobileforce_gong/styles/color.dart';
+import 'package:team_mobileforce_gong/state/theme_notifier.dart';
+import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
+import 'package:team_mobileforce_gong/util/styles/color.dart';
 
-class AddNote extends StatelessWidget {
+class AddNote extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _AddNoteState();
+
+}
+
+class _AddNoteState extends State<AddNote> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,16 +47,16 @@ class AddNote extends StatelessWidget {
                     children: <Widget>[
                       Container(
                         child: Text(
-                          'New Note',
-                          style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.7), color: Colors.white, fontWeight: FontWeight.w600)
+                            'New Note',
+                            style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.7), color: Colors.white, fontWeight: FontWeight.w600)
                         ),
                       ),
                       GestureDetector(
                         onTap: (){},
                         child: Container(
                           child: Text(
-                            'Save',
-                            style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.1), color: Colors.white, fontWeight: FontWeight.w300)
+                              'Save',
+                              style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.1), color: Colors.white, fontWeight: FontWeight.w300)
                           ),
                         ),
                       )
@@ -121,12 +127,12 @@ class AddNote extends StatelessWidget {
             Container(
               padding: EdgeInsets.only(top: 10, left: 12, right: 12, bottom: MediaQuery.of(context).viewInsets.bottom,),
               decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide( //                    <--- top side
-                    color: lightwhite,
-                    width: 1.0,
-                  ),
-                )
+                  border: Border(
+                    top: BorderSide( //                    <--- top side
+                      color: lightwhite,
+                      width: 1.0,
+                    ),
+                  )
               ),
               child: GestureDetector(
                 onTap: (){},
@@ -141,8 +147,8 @@ class AddNote extends StatelessWidget {
                     Container(
                       margin: EdgeInsets.only(left: 15),
                       child: Text(
-                        'Add image',
-                        style: Theme.of(context).textTheme.headline4.copyWith(fontSize: SizeConfig().textSize(context, 1.9))
+                          'Add image',
+                          style: Theme.of(context).textTheme.headline4.copyWith(fontSize: SizeConfig().textSize(context, 1.9))
                       ),
                     )
                   ],
@@ -154,4 +160,37 @@ class AddNote extends StatelessWidget {
       ),
     );
   }
+
+  Color getBackgroundColor(int backgroundColor) {
+    switch(backgroundColor){
+      case 1:
+        return Colors.white;
+        break;
+      case 2:
+        return Colors.red;
+        break;
+      case 3:
+        return Colors.yellow;
+        break;
+      case 4:
+        return Colors.lightBlue;
+        break;
+      default:
+        return Colors.white;
+    }
+  }
 }
+
+//This method deals with changing backgroundColor of the Note.
+/*  void changeColor(int value) {
+    setState(() {
+      todo.backgroundColor = value;
+    });
+    if (todo.id != null) {
+      helper.updateTodo(todo);
+    }
+    else {
+      helper.insertTodo(todo);
+    }
+
+  }*/
