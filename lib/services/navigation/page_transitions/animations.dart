@@ -102,7 +102,7 @@ class _LogoAnimationState extends State<LogoAnimation>
         animation: animationController,
         builder: (context, child) {
           return Material(
-            color: widget.color ?? Color(0xff2dbfc3),
+            color: widget.color ?? Colors.white,
             child: Transform(
                 transform:
                     Matrix4.translationValues(0, animation.value * width, 0),
