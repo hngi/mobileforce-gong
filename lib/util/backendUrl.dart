@@ -15,17 +15,17 @@ String getAllImportantNotesOfAUser = 'gonghng.herokuapp.com/important'; //post
 String getAllNotesOfAUser =  'gonghng.herokuapp.com/notes/user'; //post request with ID
 
 //get details about a note
-String getANoteBYNoteID = 'gonghng.herokuapp.com/notes/$noteID'; //get request. replace noteID with the ID of the note
+String getANoteBYNoteID = 'gonghng.herokuapp.com/notes/noteID'; //get request. replace noteID with the ID of the note
 
 //delete
-String deleteNote = 'gonghng.herokuapp.com/note/$noteID'; //delete request
+String deleteNote = 'gonghng.herokuapp.com/note/noteID'; //delete request
 
 
 String createTodo = 'gonghng.herokuapp.com/todo'; //post
 
 String getCompletedTodoOfAUser = 'gonghng.herokuapp.com/completed'; //completed todo. get
 
-String updateTodo = 'gonghng.herokuapp.com/todo/$todoID'; //put request
+String updateTodo = 'gonghng.herokuapp.com/todo/todoID'; //put request
 
-String getAllTodoOfAUser = 'gonghng.herokuapp.com/todo/$userID';
+String getAllTodoOfAUser = 'gonghng.herokuapp.com/todo/userID';
 

@@ -7,6 +7,8 @@ class SizeConfig{
   double yMargin(BuildContext context, double height){
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     if(isPortrait) {
+      //print(MediaQuery.of(context).size.height.toString());
+      //print(MediaQuery.of(context).size.width.toString());
       double screenHeight =  MediaQuery.of(context).size.height/ 100;
       return height * screenHeight;
     } else {

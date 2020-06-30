@@ -15,7 +15,7 @@ exports.create = (req, res) => {
         content: req.body.content,
         userID: req.body.userID,
         important: req.body.important,
-        date: req.body.date
+        //date: req.body.date
     });
 
     // Save Note in the database

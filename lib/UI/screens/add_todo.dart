@@ -55,7 +55,7 @@ class _AddTodoState extends State<AddTodo> {
         child: Column(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.only(left: 25, right: 25, top: 30, bottom: 15),
+              padding: EdgeInsets.only(left: SizeConfig().xMargin(context, 5.9), right: SizeConfig().xMargin(context, 5.9), top: SizeConfig().yMargin(context, 3.0), bottom: SizeConfig().yMargin(context, 1.6)),
               width: MediaQuery.of(context).size.width,
               height: SizeConfig().yMargin(context, 15.1),
               color: blue,
@@ -66,7 +66,7 @@ class _AddTodoState extends State<AddTodo> {
                   GestureDetector(
                     onTap: (){Navigator.pop(context);},
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 8),
+                      padding: EdgeInsets.symmetric(vertical: SizeConfig().yMargin(context, 2.1), horizontal: SizeConfig().xMargin(context, 1.9)),
                       child: SvgPicture.asset(
                         'assets/svgs/backarrow.svg',
                         width: 25,
