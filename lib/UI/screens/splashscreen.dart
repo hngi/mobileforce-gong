@@ -27,14 +27,11 @@ class _SplashScreenState extends State<SplashScreen> {
           .then((currentUser) => {
                 if (currentUser == null)
                   {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Onboarding()))
+                    navigation.pushToAndReplace(context, Onboarding())
                   }
                 else
                   {
-                    Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => HomePage()))
-                        .catchError((e) => print(e))
+                    navigation.pushToAndReplace(context, HomePage())
                   }
               })
           .catchError((e) => print(e));

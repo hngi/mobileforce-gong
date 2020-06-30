@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:team_mobileforce_gong/UI/screens/home_page.dart';
 import 'package:team_mobileforce_gong/UI/screens/sign_in.dart';
 import 'package:team_mobileforce_gong/services/auth/auth.dart';
 import 'package:team_mobileforce_gong/services/auth/util.dart';
 import 'package:team_mobileforce_gong/services/auth/validator.dart';
+import 'package:team_mobileforce_gong/services/navigation/app_navigation/navigation.dart';
+import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/services/snackbarService.dart';
 import 'package:team_mobileforce_gong/state/authProvider.dart';
 
@@ -18,6 +21,8 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   AuthStatus status;
+
+  SizeConfig config = SizeConfig();
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -30,7 +35,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _logo(BuildContext context) {
     return new Container(
         // color: Colors.red,felix
-        padding: EdgeInsets.all(50),
+        padding: EdgeInsets.all(config.yMargin(context, 6)),
         child: Image(image: AssetImage('assets/images/Gong (3).png')));
   }
 
@@ -38,7 +43,9 @@ class _SignUpPageState extends State<SignUpPage> {
     return new Container(
         alignment: Alignment.centerLeft,
         child: Text("Sign Up",
-            style: TextStyle(fontSize: 30.0, fontFamily: "Gilroy")));
+            style: TextStyle(
+                fontSize: config.textSize(context, 4.3),
+                fontFamily: "Gilroy")));
   }
 
   Widget _entryField(String title, String hint,
@@ -66,16 +73,18 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _emailPasswordWidget() {
     return Form(
       key: _formKey,
-      child: Column(
-        children: <Widget>[
-          _entryField("Full Name", "your name", _usernameController,
-              UsernameValidator.validate),
-          _entryField("Email Address", "example@user.com", _emailController,
-              EmailValidator.validate),
-          _entryField("Password", "password", _passwordController,
-              PasswordValidator.validate,
-              isPassword: true),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            _entryField("Full Name", "your name", _usernameController,
+                UsernameValidator.validate),
+            _entryField("Email Address", "example@user.com", _emailController,
+                EmailValidator.validate),
+            _entryField("Password", "password", _passwordController,
+                PasswordValidator.validate,
+                isPassword: true),
+          ],
+        ),
       ),
     );
   }
@@ -156,10 +165,15 @@ class _SignUpPageState extends State<SignUpPage> {
                               fontFamily: "Gilroy",
                               decoration: TextDecoration.underline))))
             ]),
-            SizedBox(height: 20),
-            Text(
-              'Continue as free user.',
-              style: TextStyle(fontFamily: "Gilroy", color: Colors.blue),
+            SizedBox(height: config.yMargin(context, 2)),
+            GestureDetector(
+              onTap: (){
+                Navigation().pushToAndReplace(context, HomePage());
+              },
+                          child: Text(
+                'Continue as free user.',
+                style: TextStyle(fontFamily: "Gilroy", color: Colors.blue),
+              ),
             ),
           ],
         ),
@@ -188,15 +202,15 @@ class _SignUpPageState extends State<SignUpPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: 30),
+                    SizedBox(height: config.yMargin(context, 5)),
                     _logo(context),
 //                    SizedBox(height: height * .2),
                     _signInText(context),
-                    SizedBox(height: 20),
+                    SizedBox(height: config.yMargin(context, 3)),
                     _emailPasswordWidget(),
-                    SizedBox(height: 20),
+                    SizedBox(height: config.yMargin(context, 3)),
                     _submitButton(),
-                    SizedBox(height: 10),
+                    SizedBox(height: config.yMargin(context, 3)),
                     _freeUserAccountLabel()
                   ],
                 ),
