@@ -37,6 +37,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: Colors.white,
         body: Container(
       height: height,
       child: Container(
@@ -57,7 +58,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                 child: Text(
                   'Reset Password',
                   style: TextStyle(
-                      fontSize: sizeConfig.textSize(context, 7),
+                      fontSize: sizeConfig.textSize(context, 5),
                       fontFamily: 'Gilroy'),
                 ),
               ),
@@ -72,7 +73,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                    left: 0.0, top: sizeConfig.yMargin(context, 2.0)),
+                    left: 0.0, top: sizeConfig.yMargin(context, 5.0)),
                 child: Text(
                   'Email Address',
                   style: TextStyle(
@@ -111,7 +112,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                       color: Colors.blue,
                       textColor: Colors.white,
                       child: Text(
-                        'Log in'.toUpperCase(),
+                        'Reset'.toUpperCase(),
                         style: TextStyle(
                             fontFamily: 'Gilroy', fontWeight: FontWeight.w800),
                       ),
@@ -119,7 +120,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                   ),
                 ),
               ),
-              _bottomText(),
+              _bottomText(context),
             ],
           ),
         ),
@@ -161,9 +162,9 @@ class _ResetPasswordState extends State<ResetPassword> {
     );
   }
 
-  Widget _bottomText() {
+  Widget _bottomText(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 200),
+      margin: EdgeInsets.only(top: sizeConfig.yMargin(context, 6)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
