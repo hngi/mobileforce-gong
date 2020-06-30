@@ -9,7 +9,7 @@ import 'state/authProvider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent
+    statusBarColor: Color(0xff0984E3),
   ));
   
   runApp(

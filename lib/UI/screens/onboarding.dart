@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:team_mobileforce_gong/UI/screens/home_page.dart';
 import 'package:team_mobileforce_gong/UI/screens/sign_in.dart';
+import 'package:team_mobileforce_gong/services/navigation/app_navigation/navigation.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/util/const/constFile.dart';
 
@@ -19,6 +20,9 @@ class _OnboardingState extends State<Onboarding> {
   PageController _pageController = PageController();
 
   void _bottomTapped(int page) {
+    if(page > 2){
+      Navigation().pushToAndReplace(context, LoginPage());
+    }
     _pageController.jumpToPage(page);
   }
 
@@ -50,7 +54,7 @@ class _OnboardingState extends State<Onboarding> {
             ],
           ),
           Positioned(
-              bottom: size.yMargin(context, 24),
+              bottom: size.yMargin(context, 12),
               left: size.xMargin(context, 100 / 2.5),
               child: Row(
                 children: [
@@ -94,7 +98,7 @@ class _OnboardingState extends State<Onboarding> {
             bottom: 30,
             right: 0,
             child: FlatButton(
-              onPressed: ()=> _bottomTapped(currentIndex++),
+              onPressed: ()=> _bottomTapped(currentIndex+1),
               child: Text(
                 'Next',
                 style: TextStyle(

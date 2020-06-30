@@ -3,38 +3,40 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:team_mobileforce_gong/UI/screens/add_note.dart';
 import 'package:team_mobileforce_gong/UI/screens/add_todo.dart';
+import 'package:team_mobileforce_gong/services/navigation/app_navigation/navigation.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/util/styles/color.dart';
 
+import 'home_page.dart';
+
 class ShowNotes extends StatelessWidget {
   final String name;
+  final String username;
 
-  const ShowNotes({Key key, this.name}) : super(key: key);
+  const ShowNotes({Key key, this.name, this.username}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         title: Text(
-          'Hey Tayo',
+          'Hey ${username ?? 'There'}',
           style: Theme.of(context).textTheme.headline6.copyWith(
                 fontSize: SizeConfig().textSize(context, 3),
               ),
         ),
-        leading: GestureDetector(
-          onTap: () {},
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.0),
-            child: SvgPicture.asset(
-              'assets/svgs/ham.svg',
+        leading: IconButton(
+            onPressed: () {
+              Navigation().pushFrom(context, HomePage());
+            },
+            icon: Icon(
+              Icons.arrow_back,
               color: Provider.of<ThemeNotifier>(context, listen: false)
                       .isDarkModeOn
                   ? Colors.white
                   : Colors.black,
-            ),
-          ),
-        ),
+            )),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
