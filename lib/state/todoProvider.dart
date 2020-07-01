@@ -22,12 +22,18 @@ class TodoProvider with ChangeNotifier{
 
   void setValue(DateTime date, TimeOfDay time, BuildContext context){
     final MaterialLocalizations localizations = MaterialLocalizations.of(context);
+    value = null;
     if(dformat.format(date) == dformat.format(DateTime.now())) {
       //print(localizations.formatTimeOfDay(time));
       hValue = 'Remind me at '+localizations.formatTimeOfDay(time);
     } else {
       hValue = 'Reminder for '+dformat.format(date).toString()+' '+localizations.formatTimeOfDay(time);
     }
+  }
+
+  void setVal(String val) {
+    value = val;
+    notifyListeners();
   }
 
   void fetch(String uid) async{
@@ -45,20 +51,21 @@ class TodoProvider with ChangeNotifier{
   }
 
   void createTodo(String title, String uid, String content, DateTime date, TimeOfDay time) async {
-    print(title);
+    print(time);
     await post(
       'http://gonghng.herokuapp.com/todo',
       body: jsonEncode({
         'title': title,
         'userID': uid,
-        'time': time.hour.toString()+':'+time.minute.toString(),
-        'completed': 'false',
+        'time': time != null ? time.hour.toString()+':'+time.minute.toString() : null,
+        'completed': false,
         'date': dformat.format(date).toString()
       }),
       headers: headers
     ).then((value){
       print(value.body);
       hValue = null;
+      value = null;
       fetch(uid);
     });
   }

@@ -197,11 +197,21 @@ class _AddTodoState extends State<AddTodo> {
                           hint: widget.sdate != null && widget.stime != null ? 
                           model.dformat.format(DateTime.now()).toString() == widget.sdate ? 
                           Text(
-                            'Remind me at '+widget.stime
+                            'Remind me at '+widget.stime,
+                            style: Theme.of(context)
+                              .textTheme
+                              .headline5
+                              .copyWith(
+                                  fontSize: SizeConfig().textSize(context, 2.4), fontWeight: FontWeight.w400),
                           )
                            : 
                           Text(
-                            'Reminder for '+widget.sdate+' '+widget.stime
+                            'Reminder for '+widget.sdate+' '+widget.stime,
+                            style: Theme.of(context)
+                              .textTheme
+                              .headline5
+                              .copyWith(
+                                  fontSize: SizeConfig().textSize(context, 2.4), fontWeight: FontWeight.w400),
                           )
                           : 
                           model.hValue == null ? Text(
@@ -220,6 +230,11 @@ class _AddTodoState extends State<AddTodo> {
                                         : Colors.grey[500]),
                           ) : Text(
                             model.hValue,
+                            style: Theme.of(context)
+                              .textTheme
+                              .headline5
+                              .copyWith(
+                                  fontSize: SizeConfig().textSize(context, 2.4), fontWeight: FontWeight.w400),
                           ),
                           value: model.value,
                           items: model.drop.map<DropdownMenuItem<String>>((String value) {
@@ -255,23 +270,30 @@ class _AddTodoState extends State<AddTodo> {
                               setState(() {
                                 print(value);
                                 _sdate = DateTime.now();
-                                _stime = TimeOfDay.now().replacing(hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 10);
+                                _stime = TimeOfDay.fromDateTime(DateTime.now().add(Duration(minutes: 10)));
                               });
-                              model.setValue(DateTime.now(), TimeOfDay.now().replacing(hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 10), context);
+                              model.setValue(DateTime.now(), TimeOfDay.fromDateTime(DateTime.now().add(Duration(minutes: 10))), context);
                             }else if(value == 'Next 30 mins'){
                               setState(() {
                                 print(value);
                                 _sdate = DateTime.now();
-                                _stime = TimeOfDay.now().replacing(hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 30);
+                                _stime = TimeOfDay.fromDateTime(DateTime.now().add(Duration(minutes: 30)));
                               });
-                              model.setValue(DateTime.now(), TimeOfDay.now().replacing(hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 30), context);
-                            }else{
+                              model.setValue(DateTime.now(), TimeOfDay.fromDateTime(DateTime.now().add(Duration(minutes: 30))), context);
+                            }else if(value == 'Next 1 hour'){
                               setState(() {
                                 print(value);
                                 _sdate = DateTime.now();
-                                _stime = TimeOfDay.now().replacing(hour: TimeOfDay.now().hour + 1, minute: TimeOfDay.now().minute);
+                                _stime = TimeOfDay.fromDateTime(DateTime.now().add(Duration(hours: 1)));
                               });
-                              model.setValue(DateTime.now(), TimeOfDay.now().replacing(hour: TimeOfDay.now().hour + 1, minute: TimeOfDay.now().minute), context);
+                              model.setValue(DateTime.now(), TimeOfDay.fromDateTime(DateTime.now().add(Duration(hours: 1))), context);
+                            } else {
+                              setState(() {
+                                print(value);
+                                _sdate = DateTime.now();
+                                _stime = null;
+                              });
+                              model.setVal(value);
                             }
                           },
                           style: Theme.of(context)

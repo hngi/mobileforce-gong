@@ -43,7 +43,7 @@ class NotesProvider with ChangeNotifier{
         'title': title,
         'content': content,
         'userID': uid,
-        'important': 'false',
+        'important': important,
         'date': dateFormat.format(DateTime.now()).toString()
       }),
       headers: headers

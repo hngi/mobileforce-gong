@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
         leading: GestureDetector(
           onTap: () => scaffoldKey.currentState.openDrawer(),
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
+            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
             child: SvgPicture.asset(
               'assets/svgs/ham.svg',
               color: Provider.of<ThemeNotifier>(context, listen: false)
@@ -275,13 +275,13 @@ Widget newActions(context) => Wrap(
       ActionCard(
         svg: 'assets/svgs/note.svg',
         title: 'Notes',
-        text: Provider.of<NotesProvider>(context).notes.length != 0 ? Provider.of<NotesProvider>(context, listen: true).notes.length.toString() + ' saved' : '',
+        text: Provider.of<NotesProvider>(context).notes.length != 0 ? Provider.of<NotesProvider>(context, listen: true).notes.length.toString() + ' saved' : '0 saved',
         onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DispatchPage(name: 'note',))),
       ),
       ActionCard(
         svg: 'assets/svgs/todo.svg',
         title: 'Todo',
-        text:  Provider.of<TodoProvider>(context).todos.length != 0 ? Provider.of<TodoProvider>(context, listen: true).todos.length.toString() + ' Pending' : '',
+        text:  Provider.of<TodoProvider>(context).todos.length != 0 ? Provider.of<TodoProvider>(context, listen: true).todos.length.toString() + ' Pending' : '0 Pending',
         onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => DispatchPage(name: 'todo',))),
       ),
       ActionCard(
