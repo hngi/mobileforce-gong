@@ -23,7 +23,9 @@ environment:
 dependencies:
   sqflite: any
   path_provider: any
-  intl: ^0.15.7
+  intl: ^0.16.1
+  http: ^0.12.1
+  device_preview: ^0.4.5
 
   google_fonts:
   http:

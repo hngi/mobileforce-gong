@@ -3,9 +3,12 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:team_mobileforce_gong/state/notesProvider.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
+import 'package:team_mobileforce_gong/state/todoProvider.dart';
 
 import 'UI/screens/splashscreen.dart';
 import 'services/quotes/quoteState.dart';

@@ -132,7 +132,7 @@ class _OnboardingState extends State<Onboarding> {
           style: TextStyle(
               decoration: TextDecoration.none,
               fontFamily: 'Gilroy',
-              fontSize: size.textSize(context, 4.5),
+              fontSize: size.textSize(context, 4),
               color: kPrimaryColor),
         ),
         SizedBox(
