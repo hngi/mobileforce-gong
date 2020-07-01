@@ -36,7 +36,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
         // ),
         Expanded(
             child: Container(
-          color: darktheme ? Color(0xff0D141A) : Colors.white,
+          color: darktheme ? Colors.black : Colors.white,
           //padding: EdgeInsets.symmetric(vertical: 20),
           // color: Colors.red,
           child: ListView(
@@ -47,61 +47,61 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 thickness: 1,
                 color: Color.fromRGBO(9, 132, 227, 0.4),
               ),
-              createDrawerBodyItem(
-                  context: context,
-                  text: 'View All Notes',
-                  onTap: () => Navigation().pushTo(
-                      context,
-                      DispatchPage(
-                        username: widget.username,
-                        name: 'note',
-                      ))),
-              Divider(
-                thickness: 1,
-                color: Color.fromRGBO(9, 132, 227, 0.4),
-              ),
-              createDrawerBodyItem(
-                  context: context,
-                  text: 'View To-Dos',
-                  onTap: () => Navigation().pushTo(
-                      context,
-                      DispatchPage(
-                        username: widget.username,
-                        name: 'todo',
-                      ))),
-              Divider(
-                thickness: 1,
-                color: Color.fromRGBO(9, 132, 227, 0.4),
-              ),
-              createDrawerBodyItem(context: context, text: 'View Categories'),
-              Divider(
-                thickness: 1,
-                color: Color.fromRGBO(9, 132, 227, 0.4),
-              ),
+              // createDrawerBodyItem(
+              //     context: context,
+              //     text: 'View All Notes',
+              //     onTap: () => Navigation().pushTo(
+              //         context,
+              //         DispatchPage(
+              //           username: widget.username,
+              //           name: 'note',
+              //         ))),
+              // Divider(
+              //   thickness: 1,
+              //   color: Color.fromRGBO(9, 132, 227, 0.4),
+              // ),
+              // createDrawerBodyItem(
+              //     context: context,
+              //     text: 'View To-Dos',
+              //     onTap: () => Navigation().pushTo(
+              //         context,
+              //         DispatchPage(
+              //           username: widget.username,
+              //           name: 'todo',
+              //         ))),
+              // Divider(
+              //   thickness: 1,
+              //   color: Color.fromRGBO(9, 132, 227, 0.4),
+              // ),
+              // createDrawerBodyItem(context: context, text: 'View Categories'),
+              // Divider(
+              //   thickness: 1,
+              //   color: Color.fromRGBO(9, 132, 227, 0.4),
+              // ),
               createDrawerBodyItem(context: context, text: 'See Quotes'),
               Divider(
                 thickness: 1,
                 color: Color.fromRGBO(9, 132, 227, 0.4),
               ),
-              createDrawerBodyItem(context: context, text: 'Auto System'),
-              Divider(
-                thickness: 1,
-                color: Color.fromRGBO(9, 132, 227, 0.4),
-              ),
-              createDrawerBodyItem(
-                context: context,
-                text: 'Dark Mode',
-                onTap: () {
-                  Provider.of<ThemeNotifier>(context, listen: false)
-                      .switchTheme(
-                          !Provider.of<ThemeNotifier>(context, listen: false)
-                              .isDarkModeOn);
-                },
-              ),
-              Divider(
-                thickness: 1,
-                color: Color.fromRGBO(9, 132, 227, 0.4),
-              ),
+              //createDrawerBodyItem(context: context, text: 'Auto System'),
+              // Divider(
+              //   thickness: 1,
+              //   color: Color.fromRGBO(9, 132, 227, 0.4),
+              // ),
+              // createDrawerBodyItem(
+              //   context: context,
+              //   text: 'Dark Mode',
+              //   onTap: () {
+              //     Provider.of<ThemeNotifier>(context, listen: false)
+              //         .switchTheme(
+              //             !Provider.of<ThemeNotifier>(context, listen: false)
+              //                 .isDarkModeOn);
+              //   },
+              // ),
+              // Divider(
+              //   thickness: 1,
+              //   color: Color.fromRGBO(9, 132, 227, 0.4),
+              // ),
               createDrawerBodyItem(context: context, text: 'Setting'),
               Divider(
                 thickness: 1,
@@ -131,14 +131,18 @@ class _HomeDrawerState extends State<HomeDrawer> {
   Widget createDrawerBodyItem(
       {BuildContext context, String text, GestureTapCallback onTap}) {
     return ListTile(
-      title: Padding(
-        padding: EdgeInsets.only(left: config.xMargin(context, config.getXSize(context, 68)), top: config.yMargin(context, config.getYSize(context, 14))),
-        child: Text(text,
-        style: GoogleFonts.roboto(
+      leading: SizedBox(),
+      title: Container(
+        padding: EdgeInsets.only(top: config.yMargin(context, 2.5)),
+        child: Text(
+          text,
+          style: GoogleFonts.roboto(
             fontStyle: FontStyle.normal,
             color: darktheme ? Colors.white : Color(0xff312E2E),
             fontSize: config.textSize(context, 2.3),
-            fontWeight: FontWeight.w400)),
+            fontWeight: FontWeight.w600),
+          textAlign: TextAlign.left,
+        ),
       ),
       onTap: onTap,
     );
@@ -147,12 +151,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
   Widget createDrawerHeader(BuildContext context) {
     return Container(
       //height: config.yMargin(context, 18),
-      color: Color(0xff0984E3),
-      padding: EdgeInsets.only(top: config.yMargin(context, config.getYSize(context, 25)), bottom: config.xMargin(context, config.getXSize(context, 15))),
+      color: Theme.of(context).scaffoldBackgroundColor,
+      padding: EdgeInsets.only(top: config.yMargin(context, 5), bottom: config.xMargin(context, 1.8)),
       child: Center(
         child: Column(
           children: <Widget>[
             Container(
+              margin: EdgeInsets.only(bottom: config.yMargin(context, 1)),
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.white, width: 3),
                   shape: BoxShape.circle),
@@ -164,10 +169,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             ),
             Text(
               widget.username ?? 'User',
-              style: GoogleFonts.roboto(
-                  fontSize: config.textSize(context, config.getYSize(context, 18)),
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xffFBFBF8)),
+              style: Theme.of(context).textTheme.headline6.copyWith(fontSize: config.textSize(context, 3), fontWeight: FontWeight.w600),
             )
             // RichText(
             //   text: TextSpan(

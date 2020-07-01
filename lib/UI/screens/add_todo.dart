@@ -110,10 +110,10 @@ class _AddTodoState extends State<AddTodo> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Container(
+                      widget.stitle != null ? SizedBox() : Container(
                         margin: EdgeInsets.only(bottom: 30),
                         child: Text(
-                          widget.stitle != null ? '' : 'Create A Todo',
+                          'Create A Todo',
                           style: Theme.of(context).textTheme.headline6.copyWith(
                               fontSize: SizeConfig().yMargin(context, 4.5)),
                         ),
@@ -195,7 +195,14 @@ class _AddTodoState extends State<AddTodo> {
                               color: Colors.black.withOpacity(0.4)),
                           isExpanded: true,
                           hint: widget.sdate != null && widget.stime != null ? 
-                          model.dformat.format(DateTime.now()).toString() == widget.sdate ? 'Remind me at '+widget.stime : 'Reminder for '+widget.sdate+' '+widget.stime
+                          model.dformat.format(DateTime.now()).toString() == widget.sdate ? 
+                          Text(
+                            'Remind me at '+widget.stime
+                          )
+                           : 
+                          Text(
+                            'Reminder for '+widget.sdate+' '+widget.stime
+                          )
                           : 
                           model.hValue == null ? Text(
                             'Set Reminder',
@@ -244,6 +251,27 @@ class _AddTodoState extends State<AddTodo> {
                                   model.setValue(value, val, context);
                                 });
                               });
+                            } else if(value == 'Next 10 mins'){
+                              setState(() {
+                                print(value);
+                                _sdate = DateTime.now();
+                                _stime = TimeOfDay.now().replacing(hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 10);
+                              });
+                              model.setValue(DateTime.now(), TimeOfDay.now().replacing(hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 10), context);
+                            }else if(value == 'Next 30 mins'){
+                              setState(() {
+                                print(value);
+                                _sdate = DateTime.now();
+                                _stime = TimeOfDay.now().replacing(hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 30);
+                              });
+                              model.setValue(DateTime.now(), TimeOfDay.now().replacing(hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 30), context);
+                            }else{
+                              setState(() {
+                                print(value);
+                                _sdate = DateTime.now();
+                                _stime = TimeOfDay.now().replacing(hour: TimeOfDay.now().hour + 1, minute: TimeOfDay.now().minute);
+                              });
+                              model.setValue(DateTime.now(), TimeOfDay.now().replacing(hour: TimeOfDay.now().hour + 1, minute: TimeOfDay.now().minute), context);
                             }
                           },
                           style: Theme.of(context)

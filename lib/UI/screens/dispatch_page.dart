@@ -40,7 +40,7 @@ class DispatchPage extends StatelessWidget {
             Navigation().pushFrom(context, HomePage());
           },
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.0),
+            padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
             child: SvgPicture.asset(
               'assets/svgs/backarrow.svg',
               color: Provider.of<ThemeNotifier>(context, listen: false)

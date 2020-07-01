@@ -30,6 +30,16 @@ class TodoProvider with ChangeNotifier{
     }
   }
 
+  void setValueq(DateTime date, TimeOfDay time, BuildContext context){
+    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
+    if(dformat.format(date) == dformat.format(DateTime.now())) {
+      //print(localizations.formatTimeOfDay(time));
+      hValue = 'Remind me at '+localizations.formatTimeOfDay(time);
+    } else {
+      hValue = 'Reminder for '+dformat.format(date).toString()+' '+localizations.formatTimeOfDay(time);
+    }
+  }
+
   void fetch(String uid) async{
     await http.post(
       'http://gonghng.herokuapp.com/todo/user',
