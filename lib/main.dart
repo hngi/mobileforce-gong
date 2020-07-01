@@ -17,15 +17,18 @@ Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Color(0xff0984E3),
   ));
-
-  runApp(DevicePreview(
+  
+  runApp(
+    DevicePreview(
       enabled: !kReleaseMode,
       builder: (context) => ChangeNotifierProvider<ThemeNotifier>(
-            child: MyApp(),
-            create: (BuildContext context) {
-              return ThemeNotifier();
-            },
-          )));
+      child: MyApp(),
+      create: (BuildContext context) {
+        return ThemeNotifier();
+      },
+    ),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -42,12 +45,13 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => TodoProvider())
           ],
           child: MaterialApp(
-              locale: DevicePreview.of(context).locale,
-              builder: DevicePreview.appBuilder,
-              debugShowCheckedModeBanner: false,
-              title: 'Gong',
-              theme: Provider.of<ThemeNotifier>(context).currentThemeData,
-              home: SplashScreen()),
+            locale: DevicePreview.of(context).locale,
+            builder: DevicePreview.appBuilder,
+            debugShowCheckedModeBanner: false,
+            title: 'Gong',
+            theme: Provider.of<ThemeNotifier>(context).currentThemeData,
+            home: SplashScreen()
+          ),
         );
       },
     );

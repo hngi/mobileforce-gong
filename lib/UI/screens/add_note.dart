@@ -19,7 +19,6 @@ class AddNote extends StatefulWidget {
 
 class _AddNoteState extends State<AddNote> {
   String _title;
-
   String _content;
 
   @override
