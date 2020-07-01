@@ -11,6 +11,7 @@ class NoteDbhelper {
   String colTitle = "title";
   String colDescription = "description";
   String colDate = "date";
+  String colBackgroundColor = "backgroundcolor";
 
   NoteDbhelper._internal();
 
@@ -35,18 +36,20 @@ class NoteDbhelper {
     return dbNotes;
   }
 
-  Future<List> searchNotes(String query) async {
+  Future<List> searchNotes(String query) async
+  {
     Database db = await this.db;
     var result = await db.rawQuery
       ("SELECT * FROM $tblNotes WHERE $colDescription LIKE '%$query%' UNION  SELECT * FROM $tblNotes WHERE $colTitle LIKE '%$query%' ");
     return result;
   }
 
-  void _createDb(Database db, int newVersion) async {
+
+  void _createDb(Database db, int newVersion) async
+  {
     await db.execute(
         "CREATE TABLE $tblNotes($colId INTEGER PRIMARY KEY, $colTitle TEXT, " +
-            "$colDescription TEXT, $colDate TEXT)");
-
+            "$colDescription TEXT, $colBackgroundColor INTEGER, $colDate TEXT)");
   }
 
   Future<int> insertNote(Note note) async {

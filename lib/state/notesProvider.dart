@@ -12,23 +12,24 @@ import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
 class NotesProvider with ChangeNotifier{
-  List<Notes> notes;
+  List<Notes> notes = [];
   var dateFormat = DateFormat("dd/MM/yy");
 
   // NotesProvider() {
   //   fetch();
   // }
 
-  void fetch(String uid, BuildContext context) async{
-    var res = await http.post(
+  void fetch(String uid) async{
+    await http.post(
       'http://gonghng.herokuapp.com/notes/user',
       body: {
-        'userId': '1234'
+        'userId': uid
       }
-    );
-    var jsonres = res.body as List;
-    print(res.body);
-    notes = jsonres.map((e) => Notes.fromJson(e)).toList();
+    ).then((value){
+      var jsonres = convert.jsonDecode(value.body) as List;
+      notes = jsonres.map((e) => Notes.fromJson(e)).toList();
+    });
+    
   }
 
   void createNote(String uid, String title, String content, bool important) async{
@@ -42,6 +43,8 @@ class NotesProvider with ChangeNotifier{
         'important': 'false',
         'date': dateFormat.format(DateTime.now()).toString()
       }
-    );
+    ).then((value){
+      fetch(uid);
+    });
   }
 }

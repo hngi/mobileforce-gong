@@ -12,7 +12,7 @@ class UsernameValidator {
     if (value.isEmpty) {
       return "Username cannot be empty";
     }
-    if (value.length < 2) {
+    if (value.length < 4) {
       return "Username is too short";
     }
     return null;

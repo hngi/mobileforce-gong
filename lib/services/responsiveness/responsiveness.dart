@@ -38,4 +38,22 @@ class SizeConfig{
     }
   }
 
+  double getYSize(BuildContext context, double size) {
+    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    if(isPortrait) {
+      return size / (MediaQuery.of(context).size.height/ 100);
+    } else {
+      return size / (MediaQuery.of(context).size.width/ 100);
+    }
+  }
+
+  double getXSize(BuildContext context, double size) {
+    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    if(isPortrait) {
+      return size / (MediaQuery.of(context).size.width/ 100);
+    } else {
+      return size / (MediaQuery.of(context).size.height/ 100);
+    }
+  }
+
 }

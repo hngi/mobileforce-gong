@@ -20,6 +20,8 @@ class ThemeNotifier with ChangeNotifier {
           headline4: TextStyle(color: lighttext),
           headline6: TextStyle(color: Colors.black)
         ),
+        cardColor: Colors.white,
+        cardTheme: CardTheme(color: Colors.white),
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
@@ -43,6 +45,8 @@ class ThemeNotifier with ChangeNotifier {
         iconTheme: IconThemeData(
           color: Colors.white,
         ),
+        cardColor: Colors.black,
+        cardTheme: CardTheme(color: Colors.black),
         fontFamily: 'Gilroy'
       ),
   ];

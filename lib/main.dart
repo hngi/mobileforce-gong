@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:team_mobileforce_gong/state/notesProvider.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
+import 'package:team_mobileforce_gong/state/todoProvider.dart';
 
 import 'UI/screens/splashscreen.dart';
 import 'state/authProvider.dart';
@@ -12,7 +13,7 @@ import 'state/authProvider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent
+    statusBarColor: Color(0xff0984E3),
   ));
   
   runApp(
@@ -38,8 +39,11 @@ class MyApp extends StatelessWidget {
           providers: [
             ChangeNotifierProvider(create: (_) => AuthenticationState()),
             ChangeNotifierProvider(create: (_) => NotesProvider()),
+            ChangeNotifierProvider(create: (_) => TodoProvider()),
           ],
-                  child: MaterialApp(
+          child: MaterialApp(
+            locale: DevicePreview.of(context).locale, // <--- Add the locale
+            builder: DevicePreview.appBuilder,
             debugShowCheckedModeBanner: false,
             title: 'Gong',
             theme: Provider.of<ThemeNotifier>(context).currentThemeData,

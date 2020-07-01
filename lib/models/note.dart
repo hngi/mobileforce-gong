@@ -3,10 +3,11 @@ class Note{
   String _title;
   String _description;
   String _date;
+  int _backgroundcolor;
 
 
-  Note (this._title,  this._date, [this._description]);
-  Note.withId(this._id, this._title,  this._date, [this._description]);
+  Note (this._title,  this._date, this._backgroundcolor, [this._description]);
+  Note.withId(this._id, this._title,  this._date,this._backgroundcolor, [this._description]);
   int get id => _id;
   String get title => _title;
   String get description => _description;
@@ -31,7 +32,7 @@ class Note{
     var map = Map<String, dynamic>();
     map["title"] = _title;
     map["description"] = _description;
-
+    map["backgroundcolor"] = _backgroundcolor;
     map["date"] = _date;
     if (_id != null) {
       map["id"] = _id;
@@ -44,5 +45,6 @@ class Note{
     this._title = o["title"];
     this._description = o["description"];
     this._date = o["date"];
+    this._backgroundcolor = o["backgroundcolor"];
   }
 }
