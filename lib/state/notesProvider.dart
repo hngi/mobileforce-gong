@@ -14,6 +14,7 @@ import 'dart:convert' as convert;
 class NotesProvider with ChangeNotifier{
   List<Notes> notes = [];
   var dateFormat = DateFormat("dd/MM/yy");
+  Map<String,String> headers = {'Content-type': 'application/json','Accept': 'application/json'};
 
   // NotesProvider() {
   //   fetch();
@@ -22,12 +23,14 @@ class NotesProvider with ChangeNotifier{
   void fetch(String uid) async{
     await http.post(
       'http://gonghng.herokuapp.com/notes/user',
-      body: {
+      body: jsonEncode({
         'userId': uid
-      }
+      }),
+      headers: headers
     ).then((value){
       var jsonres = convert.jsonDecode(value.body) as List;
       notes = jsonres.map((e) => Notes.fromJson(e)).toList();
+      notifyListeners();
     });
     
   }
@@ -36,13 +39,14 @@ class NotesProvider with ChangeNotifier{
     print(title);
     await post(
       'http://gonghng.herokuapp.com/notes',
-      body: {
+      body: jsonEncode({
         'title': title,
         'content': content,
         'userID': uid,
         'important': 'false',
         'date': dateFormat.format(DateTime.now()).toString()
-      }
+      }),
+      headers: headers
     ).then((value){
       fetch(uid);
     });

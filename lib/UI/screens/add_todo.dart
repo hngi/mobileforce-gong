@@ -10,6 +10,13 @@ import 'package:team_mobileforce_gong/state/todoProvider.dart';
 import 'package:team_mobileforce_gong/util/styles/color.dart';
 
 class AddTodo extends StatefulWidget {
+  final String stitle;
+  //final String scontent;
+  final String sdate;
+  final String stime;
+
+  const AddTodo({Key key, this.stitle, this.sdate, this.stime}) : super(key: key);
+
   @override
   _AddTodoState createState() => _AddTodoState();
 }
@@ -61,7 +68,7 @@ class _AddTodoState extends State<AddTodo> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Container(
-                        child: Text('New Todo',
+                        child: Text(widget.stitle != null ? 'Edit Todo' : 'New Todo',
                             style: Theme.of(context)
                                 .textTheme
                                 .headline6
@@ -106,7 +113,7 @@ class _AddTodoState extends State<AddTodo> {
                       Container(
                         margin: EdgeInsets.only(bottom: 30),
                         child: Text(
-                          'Create A Todo',
+                          widget.stitle != null ? '' : 'Create A Todo',
                           style: Theme.of(context).textTheme.headline6.copyWith(
                               fontSize: SizeConfig().yMargin(context, 4.5)),
                         ),
@@ -134,6 +141,7 @@ class _AddTodoState extends State<AddTodo> {
                           keyboardType: TextInputType.multiline,
                           style: TextStyle(
                               fontSize: SizeConfig().textSize(context, 2.4)),
+                          initialValue: widget.stitle == null ? null : widget.stitle,
                           decoration: InputDecoration(
                             hintText: 'Enter Title',
                             hintStyle: TextStyle(
@@ -160,6 +168,7 @@ class _AddTodoState extends State<AddTodo> {
                           keyboardType: TextInputType.multiline,
                           style: TextStyle(
                               fontSize: SizeConfig().textSize(context, 2.4)),
+                          //initialValue: widget.scontent == null ? null : widget.scontent,
                           decoration: InputDecoration(
                             hintText: 'Enter note (optional)',
                             hintStyle: TextStyle(
@@ -185,7 +194,10 @@ class _AddTodoState extends State<AddTodo> {
                               height: 0.9,
                               color: Colors.black.withOpacity(0.4)),
                           isExpanded: true,
-                          hint: model.hValue == null ? Text(
+                          hint: widget.sdate != null && widget.stime != null ? 
+                          model.dformat.format(DateTime.now()).toString() == widget.sdate ? 'Remind me at '+widget.stime : 'Reminder for '+widget.sdate+' '+widget.stime
+                          : 
+                          model.hValue == null ? Text(
                             'Set Reminder',
                             style: Theme.of(context)
                                 .textTheme
