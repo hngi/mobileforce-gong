@@ -36,6 +36,7 @@ class AuthenticationState with ChangeNotifier {
         _authStatus = kAuthSuccess;
         _username = user[kUsername];
         _uid = user[kUID];
+        //print(user);
         _email = user[email];
       } else {
         clearState();

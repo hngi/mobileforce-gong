@@ -24,7 +24,7 @@ AuthStatus status;
 
 Map<String, String> exposeUser({@required kUsername, @required kUID}) {
   print(kUID);
-  return {kUsername: kUsername, kUID: kUID};
+  return {'Username': kUsername, 'uid': kUID};
 }
 
 
