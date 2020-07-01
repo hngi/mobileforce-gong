@@ -12,6 +12,7 @@ import 'package:team_mobileforce_gong/services/navigation/app_navigation/navigat
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/UI/widgets/action_card.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
+import 'package:team_mobileforce_gong/test.dart';
 import 'package:team_mobileforce_gong/util/styles/color.dart';
 
 import 'show_notes.dart';
@@ -134,155 +135,163 @@ class _HomePageState extends State<HomePage> {
                       return null;
                     },
                     child: Center(
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(
-                            height: SizeConfig().yMargin(
-                                context,
-                                MediaQuery.of(context).orientation ==
-                                        Orientation.portrait
-                                    ? 75.7
-                                    : 25.7),
-                          ),
-                          Container(
-                            width: SizeConfig().xMargin(context, 35.3),
-                            height: SizeConfig().yMargin(context, 20.2),
-                            child: Stack(
-                              overflow: Overflow.visible,
-                              children: <Widget>[
-                                Container(
-                                  width: SizeConfig().xMargin(context, 35.3),
-                                  height: SizeConfig().yMargin(context, 19.2),
-                                  padding: EdgeInsets.only(
-                                      left: 20, right: 20, top: 10, bottom: 30),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: Colors.white,
-                                  ),
-                                  child: Column(
-                                    children: <Widget>[
-                                      Expanded(
-                                        flex: 1,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              open = true;
-                                            });
-                                            Navigator.pop(context);
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AddNote()));
-                                          },
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 15, horizontal: 8),
-                                            child: Row(
-                                              children: <Widget>[
-                                                Container(
-                                                  child: SvgPicture.asset(
-                                                    'assets/svgs/createnote.svg',
-                                                    width: 15,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(
+                              height: SizeConfig().yMargin(
+                                  context,
+                                  MediaQuery.of(context).orientation ==
+                                          Orientation.portrait
+                                      ? 75.7
+                                      : 25.7),
+                            ),
+                            Container(
+                              width: SizeConfig().xMargin(context, 35.3),
+                              height: SizeConfig().yMargin(context, 20.2),
+                              child: Stack(
+                                overflow: Overflow.visible,
+                                children: <Widget>[
+                                  Container(
+                                    width: SizeConfig().xMargin(context, 35.3),
+                                    height: SizeConfig().yMargin(context, 19.2),
+                                    padding: EdgeInsets.only(
+                                        left: 20,
+                                        right: 20,
+                                        top: 10,
+                                        bottom: 30),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: Colors.white,
+                                    ),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 1,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                open = true;
+                                              });
+                                              Navigator.pop(context);
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AddNote()));
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 15, horizontal: 8),
+                                              child: Row(
+                                                children: <Widget>[
+                                                  Container(
+                                                    child: SvgPicture.asset(
+                                                      'assets/svgs/createnote.svg',
+                                                      width: 15,
+                                                    ),
                                                   ),
-                                                ),
-                                                Expanded(
-                                                  child: Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 10),
-                                                    child: Text('Create Note',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline6
-                                                            .copyWith(
-                                                                fontSize: SizeConfig()
-                                                                    .textSize(
-                                                                        context,
-                                                                        1.5),
-                                                                color: blue)),
-                                                  ),
-                                                )
-                                              ],
+                                                  Expanded(
+                                                    child: Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: 10),
+                                                      child: Text('Create Note',
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .headline6
+                                                              .copyWith(
+                                                                  fontSize: SizeConfig()
+                                                                      .textSize(
+                                                                          context,
+                                                                          1.5),
+                                                                  color: blue)),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              open = true;
-                                            });
-                                            Navigator.pop(context);
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AddTodo()));
-                                          },
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 15, horizontal: 8),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: <Widget>[
-                                                Container(
-                                                  child: SvgPicture.asset(
-                                                    'assets/svgs/addtodo.svg',
-                                                    width: 15,
+                                        Expanded(
+                                          flex: 1,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                open = true;
+                                              });
+                                              Navigator.pop(context);
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AddTodo()));
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 15, horizontal: 8),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Container(
+                                                    child: SvgPicture.asset(
+                                                      'assets/svgs/addtodo.svg',
+                                                      width: 15,
+                                                    ),
                                                   ),
-                                                ),
-                                                Expanded(
-                                                  child: Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 10),
-                                                    child: Text('Add To Do',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline6
-                                                            .copyWith(
-                                                                fontSize: SizeConfig()
-                                                                    .textSize(
-                                                                        context,
-                                                                        1.5),
-                                                                color: blue)),
-                                                  ),
-                                                )
-                                              ],
+                                                  Expanded(
+                                                    child: Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: 10),
+                                                      child: Text('Add To Do',
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .headline6
+                                                              .copyWith(
+                                                                  fontSize: SizeConfig()
+                                                                      .textSize(
+                                                                          context,
+                                                                          1.5),
+                                                                  color: blue)),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Positioned(
-                                  top: SizeConfig().yMargin(context, 14.4),
-                                  left: SizeConfig().xMargin(context, 11.7),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        open = true;
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                    child: Container(
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: blue,
-                                      ),
-                                      child: Center(
-                                          child: SvgPicture.asset(
-                                              'assets/svgs/cancel.svg')),
+                                        )
+                                      ],
                                     ),
                                   ),
-                                )
-                              ],
+                                  Positioned(
+                                    top: SizeConfig().yMargin(context, 14.4),
+                                    left: SizeConfig().xMargin(context, 11.7),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          open = true;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                      child: Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          color: blue,
+                                        ),
+                                        child: Center(
+                                            child: SvgPicture.asset(
+                                                'assets/svgs/cancel.svg')),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -323,6 +332,7 @@ Widget newActions(context, String username) => Wrap(
           svg: 'assets/svgs/facts.svg',
           title: 'View Facts',
           text: '12 Saved',
+          onPressed: () => Navigation().pushTo(context, Test()),
         ),
         ActionCard(
           svg: 'assets/svgs/motivation.svg',

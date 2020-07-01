@@ -26,8 +26,10 @@ dependencies:
   intl: ^0.15.7
 
   google_fonts:
+  http:
 
   flutter_svg:
+  device_preview:
   
 
   flutter:
