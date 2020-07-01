@@ -5,10 +5,7 @@ const NoteSchema = mongoose.Schema({
     content: String,
     userID: String,
     important: Boolean,
-    date: {
-        type: Date,
-        default: Date.now
-    }
+    date: String
 }, {
     timestamps: true
 });

@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +14,7 @@ class TodoProvider with ChangeNotifier{
   List<String> drop = ['No Reminder', 'Next 10 mins', 'Next 30 mins', 'Next 1 hour', 'Custom Reminder'];
   final dformat = new DateFormat('dd/MM/yy');
   List<Todos> todos = [];
+  Map<String,String> headers = {'Content-type': 'application/json','Accept': 'application/json'};
 
   void completed(bool val, int index) {
     todos[index].completed = !val;
@@ -30,12 +33,14 @@ class TodoProvider with ChangeNotifier{
   void fetch(String uid) async{
     await http.post(
       'http://gonghng.herokuapp.com/todo/user',
-      body: {
+      body: jsonEncode({
         'userId': uid
-      }
+      }),
+      headers:headers
     ).then((value){
       var jsonRes = convert.jsonDecode(value.body) as List;
       todos = jsonRes.map((e) => Todos.fromJson(e)).toList();
+      notifyListeners();
     });
   }
 
@@ -43,13 +48,14 @@ class TodoProvider with ChangeNotifier{
     print(title);
     await post(
       'http://gonghng.herokuapp.com/todo',
-      body: {
+      body: jsonEncode({
         'title': title,
         'userID': uid,
         'time': time.hour.toString()+':'+time.minute.toString(),
         'completed': 'false',
         'date': dformat.format(date).toString()
-      }
+      }),
+      headers: headers
     ).then((value){
       print(value.body);
       hValue = null;
