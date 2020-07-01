@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:team_mobileforce_gong/UI/screens/add_todo.dart';
 import 'package:team_mobileforce_gong/models/todo.dart';
 import 'package:team_mobileforce_gong/models/todos.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
@@ -23,6 +24,8 @@ class ShowTodos extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: (){
+                      Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => AddTodo(stitle: todos[index].title, sdate: todos[index].date, stime: todos[index].time,)));
                     },
                     child: Card(
                       elevation: 1,
