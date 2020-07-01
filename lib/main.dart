@@ -17,15 +17,12 @@ Future<void> main() async {
   ));
   
   runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => ChangeNotifierProvider<ThemeNotifier>(
+    ChangeNotifierProvider<ThemeNotifier>(
       child: MyApp(),
       create: (BuildContext context) {
         return ThemeNotifier();
       },
     ),
-    )
   );
 }
 
@@ -42,8 +39,6 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => TodoProvider()),
           ],
           child: MaterialApp(
-            locale: DevicePreview.of(context).locale, // <--- Add the locale
-            builder: DevicePreview.appBuilder,
             debugShowCheckedModeBanner: false,
             title: 'Gong',
             theme: Provider.of<ThemeNotifier>(context).currentThemeData,

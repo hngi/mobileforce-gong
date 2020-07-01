@@ -19,7 +19,6 @@ class ShowNotes extends StatelessWidget {
       List<Notes> notes = Provider.of<NotesProvider>(context).notes;
 
     return Scaffold(
-
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Column(
