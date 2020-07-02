@@ -10,6 +10,8 @@ import 'package:team_mobileforce_gong/services/navigation/page_transitions/anima
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/state/authProvider.dart';
 
+import 'home_wrapper.dart';
+
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -29,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 if (currentUser == null)
                   {navigation.pushToAndReplace(context, Onboarding())}
                 else
-                  {navigation.pushToAndReplace(context, HomePage())}
+                  {navigation.pushToAndReplace(context, HomeWrapper())}
               })
           .catchError((e) => print(e));
     });

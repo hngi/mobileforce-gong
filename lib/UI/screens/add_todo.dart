@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:team_mobileforce_gong/state/authProvider.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/models/category.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
+import 'package:team_mobileforce_gong/state/todoProvider.dart';
 import 'package:team_mobileforce_gong/util/styles/color.dart';
 
 class AddTodo extends StatefulWidget {
+  final String stitle;
+  //final String scontent;
+  final String sdate;
+  final String stime;
+
+  const AddTodo({Key key, this.stitle, this.sdate, this.stime}) : super(key: key);
+
   @override
   _AddTodoState createState() => _AddTodoState();
 }
@@ -16,9 +26,14 @@ class _AddTodoState extends State<AddTodo> {
   List<DropdownMenuItem<Category>> _dropdownMenuItems;
   Category _selectedcategory;
   bool checkedValue = false;
+  String _stitle;
+  String _scontent;
+  DateTime _sdate;
+  TimeOfDay _stime;
 
   @override
   Widget build(BuildContext context) {
+    var model = Provider.of<TodoProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: false,
@@ -29,8 +44,7 @@ class _AddTodoState extends State<AddTodo> {
         child: Column(
           children: <Widget>[
             Container(
-              padding:
-                  EdgeInsets.only(left: 25, right: 25, top: 30, bottom: 15),
+              padding: EdgeInsets.only(left: SizeConfig().xMargin(context, 5.9), right: SizeConfig().xMargin(context, 5.9), top: SizeConfig().yMargin(context, 3.0), bottom: SizeConfig().yMargin(context, 1.6)),
               width: MediaQuery.of(context).size.width,
               height: SizeConfig().yMargin(context, 18),
               color: blue,
@@ -43,8 +57,7 @@ class _AddTodoState extends State<AddTodo> {
                       Navigator.pop(context);
                     },
                     child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 20, horizontal: 8),
+                      padding: EdgeInsets.symmetric(vertical: SizeConfig().yMargin(context, 2.1), horizontal: SizeConfig().xMargin(context, 1.9)),
                       child: SvgPicture.asset(
                         'assets/svgs/backarrow.svg',
                         width: 25,
@@ -55,7 +68,7 @@ class _AddTodoState extends State<AddTodo> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Container(
-                        child: Text('New Todo',
+                        child: Text(widget.stitle != null ? 'Edit Todo' : 'New Todo',
                             style: Theme.of(context)
                                 .textTheme
                                 .headline6
@@ -66,15 +79,19 @@ class _AddTodoState extends State<AddTodo> {
                                     fontWeight: FontWeight.w600)),
                       ),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Provider.of<TodoProvider>(context, listen: false).createTodo(_stitle, Provider.of<AuthenticationState>(context, listen: false).uid, _scontent, _sdate, _stime);
+                          Navigator.pop(context);
+                        },
                         child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                           child: Text('Save',
                               style: Theme.of(context)
                                   .textTheme
                                   .headline6
                                   .copyWith(
                                       fontSize:
-                                          SizeConfig().textSize(context, 2.1),
+                                          SizeConfig().textSize(context, 2.3),
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600)),
                         ),
@@ -96,42 +113,26 @@ class _AddTodoState extends State<AddTodo> {
                       Container(
                         margin: EdgeInsets.only(bottom: 30),
                         child: Text(
-                          'Create A Todo',
+                          widget.stitle != null ? '' : 'Create A Todo',
                           style: Theme.of(context).textTheme.headline6.copyWith(
                               fontSize: SizeConfig().yMargin(context, 4.5)),
                         ),
                       ),
-                      Container(
-                          margin: EdgeInsets.only(bottom: 25),
-                          child: DropdownButton(
-                            underline: Container(
-                                height: 0.9,
-                                color: Colors.black.withOpacity(0.4)),
-                            isExpanded: true,
-                            hint: Text(
-                              'Choose Category',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6
-                                  .copyWith(
-                                      fontSize:
-                                          SizeConfig().textSize(context, 2.1),
-                                      fontWeight: FontWeight.w200,
-                                      color: Provider.of<ThemeNotifier>(context,
-                                                  listen: false)
-                                              .isDarkModeOn
-                                          ? Colors.grey[400]
-                                          : Colors.grey[500]),
-                            ),
-                            value: _selectedcategory,
-                            items: _dropdownMenuItems,
-                            onChanged: onChangedDropdownItem,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(
-                                    fontSize: 18, fontWeight: FontWeight.w500),
-                          )),
+                       Container(
+                         margin: EdgeInsets.only(bottom: 25),
+                        child: DropdownButton(
+                          underline: Container(height: 0.9, color: Colors.black.withOpacity(0.4)),
+                          isExpanded: true,
+                          hint: Text(
+                            'Choose Category',
+                            style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.4), fontWeight: FontWeight.w200, color: Provider.of<ThemeNotifier>(context, listen: false).isDarkModeOn ? Colors.grey[400] : Colors.grey[500]),
+                          ),
+                          value: _selectedcategory,
+                          items: _dropdownMenuItems,
+                          onChanged: onChangedDropdownItem,
+                          style: Theme.of(context).textTheme.headline5.copyWith(fontSize: SizeConfig().textSize(context, 2.4),),
+                        )
+                      ),
                       Container(
                         margin: EdgeInsets.only(bottom: 25),
                         child: TextFormField(
@@ -139,11 +140,12 @@ class _AddTodoState extends State<AddTodo> {
                           maxLengthEnforced: false,
                           keyboardType: TextInputType.multiline,
                           style: TextStyle(
-                              fontSize: SizeConfig().textSize(context, 2.1)),
+                              fontSize: SizeConfig().textSize(context, 2.4)),
+                          initialValue: widget.stitle == null ? null : widget.stitle,
                           decoration: InputDecoration(
                             hintText: 'Enter Title',
                             hintStyle: TextStyle(
-                                fontSize: SizeConfig().textSize(context, 2.1),
+                                fontSize: SizeConfig().textSize(context, 2.4),
                                 fontWeight: FontWeight.w200,
                                 color: Provider.of<ThemeNotifier>(context,
                                             listen: false)
@@ -153,70 +155,11 @@ class _AddTodoState extends State<AddTodo> {
                             contentPadding: new EdgeInsets.symmetric(
                                 vertical: 1.0, horizontal: 10.0),
                           ),
+                          onChanged: (val) {
+                            _stitle = val;
+                          },
                         ),
                       ),
-                      Container(
-                          margin: EdgeInsets.only(bottom: 25),
-                          child: DropdownButton(
-                            underline: Container(
-                                height: 0.9,
-                                color: Colors.black.withOpacity(0.4)),
-                            isExpanded: true,
-                            hint: Text(
-                              'Start Date',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6
-                                  .copyWith(
-                                      fontSize:
-                                          SizeConfig().textSize(context, 2.1),
-                                      fontWeight: FontWeight.w200,
-                                      color: Provider.of<ThemeNotifier>(context,
-                                                  listen: false)
-                                              .isDarkModeOn
-                                          ? Colors.grey[400]
-                                          : Colors.grey[500]),
-                            ),
-                            value: _selectedcategory,
-                            items: _dropdownMenuItems,
-                            onChanged: onChangedDropdownItem,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(
-                                    fontSize: 18, fontWeight: FontWeight.w500),
-                          )),
-                      Container(
-                          margin: EdgeInsets.only(bottom: 25),
-                          child: DropdownButton(
-                            underline: Container(
-                                height: 0.9,
-                                color: Colors.black.withOpacity(0.4)),
-                            isExpanded: true,
-                            hint: Text(
-                              'End Date',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6
-                                  .copyWith(
-                                      fontSize:
-                                          SizeConfig().textSize(context, 2.1),
-                                      fontWeight: FontWeight.w200,
-                                      color: Provider.of<ThemeNotifier>(context,
-                                                  listen: false)
-                                              .isDarkModeOn
-                                          ? Colors.grey[400]
-                                          : Colors.grey[500]),
-                            ),
-                            value: _selectedcategory,
-                            items: _dropdownMenuItems,
-                            onChanged: onChangedDropdownItem,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(
-                                    fontSize: 18, fontWeight: FontWeight.w500),
-                          )),
                       Container(
                         margin: EdgeInsets.only(bottom: 25),
                         child: TextFormField(
@@ -224,11 +167,12 @@ class _AddTodoState extends State<AddTodo> {
                           maxLengthEnforced: false,
                           keyboardType: TextInputType.multiline,
                           style: TextStyle(
-                              fontSize: SizeConfig().textSize(context, 2.1)),
+                              fontSize: SizeConfig().textSize(context, 2.4)),
+                          //initialValue: widget.scontent == null ? null : widget.scontent,
                           decoration: InputDecoration(
                             hintText: 'Enter note (optional)',
                             hintStyle: TextStyle(
-                                fontSize: SizeConfig().textSize(context, 2.1),
+                                fontSize: SizeConfig().textSize(context, 2.4) ,
                                 fontWeight: FontWeight.w200,
                                 color: Provider.of<ThemeNotifier>(context,
                                             listen: false)
@@ -238,19 +182,88 @@ class _AddTodoState extends State<AddTodo> {
                             contentPadding: new EdgeInsets.symmetric(
                                 vertical: 1.0, horizontal: 10.0),
                           ),
+                          onChanged: (val) {
+                            _scontent = val;
+                          },
                         ),
                       ),
                       Container(
-                        child: CheckboxListTile(
-                          title: Text('Make this To-Do reoccurring'),
-                          value: checkedValue,
-                          onChanged: (newValue) {
-                            setState(() {
-                              checkedValue = newValue;
-                            });
+                        margin: EdgeInsets.only(bottom: 25),
+                        child: DropdownButton<String>(
+                          underline: Container(
+                              height: 0.9,
+                              color: Colors.black.withOpacity(0.4)),
+                          isExpanded: true,
+                          hint: widget.sdate != null && widget.stime != null ? 
+                          model.dformat.format(DateTime.now()).toString() == widget.sdate ? 'Remind me at '+widget.stime : 'Reminder for '+widget.sdate+' '+widget.stime
+                          : 
+                          model.hValue == null ? Text(
+                            'Set Reminder',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(
+                                    fontSize:
+                                        SizeConfig().textSize(context, 2.4),
+                                    fontWeight: FontWeight.w200,
+                                    color: Provider.of<ThemeNotifier>(context,
+                                                listen: false)
+                                            .isDarkModeOn
+                                        ? Colors.grey[400]
+                                        : Colors.grey[500]),
+                          ) : Text(
+                            model.hValue,
+                          ),
+                          value: model.value,
+                          items: model.drop.map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value,
+                                ),
+                              );
+                            })
+                            .toList(),
+                          onChanged: (value) async{
+                            if(value == 'Custom Reminder') {
+                              await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(int.parse(DateFormat('yyyy').format(DateTime.now())), int.parse(DateFormat('MM').format(DateTime.now())), int.parse(DateFormat('dd').format(DateTime.now()))),
+                                lastDate: DateTime(2025)
+                              ).then((value) async{
+                                await showTimePicker(
+                                  context: context,
+                                  initialTime: TimeOfDay.now(),
+                                ).then((val) {
+                                  setState(() {
+                                    print(value);
+                                    _sdate = value;
+                                    _stime = val;
+                                  });
+                                  model.setValue(value, val, context);
+                                });
+                              });
+                            }
                           },
-                        ),
-                      )
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline5
+                              .copyWith(
+                                  fontSize: SizeConfig().textSize(context, 2.4), fontWeight: FontWeight.w400),
+                        )
+                      ),
+                      // Container(
+                      //   child: CheckboxListTile(
+                      //     title: Text('Make this To-Do reoccurring'),
+                      //     value: checkedValue,
+                      //     onChanged: (newValue) {
+                      //       setState(() {
+                      //         checkedValue = newValue;
+                      //       });
+                      //     },
+                      //   ),
+                      // )
                     ],
                   ),
                 ),

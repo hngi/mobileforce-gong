@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
 import 'package:team_mobileforce_gong/UI/screens/password_reset.dart';
 import 'package:team_mobileforce_gong/UI/screens/sign_up.dart';
@@ -11,6 +13,7 @@ import 'package:team_mobileforce_gong/services/snackbarService.dart';
 import 'package:team_mobileforce_gong/state/authProvider.dart';
 
 import 'home_page.dart';
+import 'home_wrapper.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -31,6 +34,7 @@ class _LoginPageState extends State<LoginPage> {
   SizeConfig config = SizeConfig();
   @override
   Widget build(BuildContext context) {
+    final state = Provider.of<AuthenticationState>(context);
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -60,7 +64,15 @@ class _LoginPageState extends State<LoginPage> {
                     _resetAccountLabel(),
                     _submitButton(),
                     SizedBox(height: config.yMargin(context, 2)),
-                    _freeUserAccountLabel()
+                    _freeUserAccountLabel(),
+                    SignInButton(
+                      Buttons.Google,
+                      onPressed: () {
+                        state
+                            .googleSignin()
+                            .then((value) => gotoHomeScreen(context));
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -78,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _logo(BuildContext context) {
     return new Container(
-        padding: EdgeInsets.all(config.yMargin(context, 6)),
+        padding: EdgeInsets.all(config.yMargin(context, 3)),
         child: Image(image: AssetImage('assets/images/Gong (3).png')));
   }
 
@@ -191,7 +203,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _freeUserAccountLabel() {
     return InkWell(
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 20),
+        margin: EdgeInsets.symmetric(vertical: 5),
         padding: EdgeInsets.all(15),
         alignment: Alignment.bottomCenter,
         child: Column(
@@ -213,7 +225,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: config.yMargin(context, 2)),
             GestureDetector(
               onTap: () {
-                Navigation().pushToAndReplace(context, HomePage());
+                Navigation().pushToAndReplace(context, HomeWrapper());
               },
               child: Text(
                 'Continue as free user.',
@@ -227,15 +239,18 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _emailPasswordWidget() {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          _entryField("Email Address", "example@user.com", _emailController,
-              EmailValidator.validate),
-          _entryField("Password", "password", _passwordController,
-              PasswordValidator.validate,
-              isPassword: true),
-        ],
+    return Form(
+      key: _formKey,
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            _entryField("Email Address", "example@user.com", _emailController,
+                EmailValidator.validate),
+            _entryField("Password", "password", _passwordController,
+                PasswordValidator.validate,
+                isPassword: true),
+          ],
+        ),
       ),
     );
   }

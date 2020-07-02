@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 
-class ActionCard extends StatelessWidget {
+class ActionCard extends StatefulWidget {
   final String svg;
   final String title;
   final String text;
@@ -13,17 +13,25 @@ class ActionCard extends StatelessWidget {
   const ActionCard({Key key, this.svg, this.title, this.text, this.onPressed}) : super(key: key);
 
   @override
+  _ActionCardState createState() => _ActionCardState();
+}
+
+class _ActionCardState extends State<ActionCard> {
+  var darktheme;
+
+  @override
   Widget build(BuildContext context) {
+    darktheme = Provider.of<ThemeNotifier>(context).isDarkModeOn ?? false;
     return InkWell(
-      onTap: onPressed,
+      onTap: widget.onPressed,
       child: AnimatedContainer(
         duration: Duration(milliseconds: 500),
         decoration: BoxDecoration(
-          color: Provider.of<ThemeNotifier>(context, listen: false).isDarkModeOn ? Colors.black : Colors.white,
+          color: darktheme ? Colors.black : Colors.white,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Ink(
-          height: SizeConfig().yMargin(context, 16.1),
+          height: SizeConfig().yMargin(context, 18),
           width: SizeConfig().xMargin(context, 40.3),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
@@ -33,7 +41,7 @@ class ActionCard extends StatelessWidget {
               children: <Widget>[
                 Container(
                   child: SvgPicture.asset(
-                    svg,
+                    widget.svg,
                     width: SizeConfig().yMargin(context, 4.9),
                   ),
                 ),
@@ -44,14 +52,14 @@ class ActionCard extends StatelessWidget {
                     Container(
                       margin: EdgeInsets.only(bottom: 3),
                       child: Text(
-                        title,
+                        widget.title,
                         style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.1), fontWeight: FontWeight.bold),
                       ),
                     ),
                     Container(
                       child: Text(
-                        text,
-                        style: Theme.of(context).textTheme.headline4.copyWith(fontSize: SizeConfig().textSize(context, 1.5)),
+                        widget.text,
+                        style: Theme.of(context).textTheme.headline4.copyWith(fontSize: SizeConfig().textSize(context, 2)),
                       ),
                     )
                   ],
