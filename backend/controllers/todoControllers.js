@@ -5,16 +5,14 @@ exports.create = (req, res) => {
     // Validate request
     if (!req.body.title) {
         return res.status(400).send({
-            message: "Todo title can not be empty"
+            message: "Todo content can not be empty"
         });
     }
 
     // Create a Todo
     const todo = new Todo({
-        title: req.body.title,
-        content: req.body.content,
+        title: req.body.title || "Untitled Todo",
         userID: req.body.userID,
-        category: req.body.category,
         time: req.body.time,
         completed: req.body.completed,
         date: req.body.date
@@ -35,7 +33,7 @@ exports.create = (req, res) => {
 // Retrieve and return all reminders from the database.
 exports.findAll = (req, res) => {
     var query = {userID : req.body.userId}
-    Todo.find(query, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
+    Todo.find(query)
         .then(reminders => {
             res.send(reminders);
         }).catch(err => {
@@ -48,7 +46,7 @@ exports.findAll = (req, res) => {
 
 exports.findImportant = (req, res) => {
     var query = {userID: req.body.userId, important: true};
-    Todo.find(query, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
+    Todo.find(query)
         .then(reminders => {
             res.send(reminders);
         }).catch(err => {
@@ -60,7 +58,7 @@ exports.findImportant = (req, res) => {
 
 // Find a single todo with a reminderId
 exports.findOne = (req, res) => {
-    Todo.findById(req.params.reminderId, {createdAt: 0, updatedAt: 0, __v: 0})
+    Todo.findById(req.params.reminderId)
         .then(todo => {
             if (!todo) {
                 return res.status(404).send({
@@ -81,7 +79,7 @@ exports.findOne = (req, res) => {
 };
 
 exports.findOneByUser = (req, res) => {
-    Todo.findById(req.params.userId, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
+    Todo.findById(req.params.userId)
         .then(todo => {
             if (!todo) {
                 return res.status(404).send({
@@ -104,19 +102,16 @@ exports.findOneByUser = (req, res) => {
 // Update a todo identified by the reminderId in the request
 exports.update = (req, res) => {
     // Validate Request
-    if (!req.body.title && !req.body.content) {
+    if (!req.body.content) {
         return res.status(400).send({
-            message: "todo title can not be empty"
+            message: "todo content can not be empty"
         });
     }
     //The {new: true} option in the findByIdAndUpdate() method is used to return the modified document to the then() function instead of the original
     // Find todo and update it with the request body
     Todo.findByIdAndUpdate(req.params.reminderId, {
-        title: req.body.title,
-        content: req.body.content,
-        category: req.body.category,
-        date: req.body.date,
-        time: req.body.time
+        title: req.body.title || "Untitled todo",
+        content: req.body.content
     }, { new: true })
         .then(todo => {
             if (!todo) {

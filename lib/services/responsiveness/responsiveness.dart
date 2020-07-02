@@ -7,8 +7,6 @@ class SizeConfig{
   double yMargin(BuildContext context, double height){
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     if(isPortrait) {
-      //print(MediaQuery.of(context).size.height.toString());
-      //print(MediaQuery.of(context).size.width.toString());
       double screenHeight =  MediaQuery.of(context).size.height/ 100;
       return height * screenHeight;
     } else {
@@ -35,24 +33,6 @@ class SizeConfig{
     } else {
       double screenHeight =  MediaQuery.of(context).size.width/ 100;
       return textSize * screenHeight;
-    }
-  }
-
-  double getYSize(BuildContext context, double size) {
-    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    if(isPortrait) {
-      return size / (MediaQuery.of(context).size.height/ 100);
-    } else {
-      return size / (MediaQuery.of(context).size.width/ 100);
-    }
-  }
-
-  double getXSize(BuildContext context, double size) {
-    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    if(isPortrait) {
-      return size / (MediaQuery.of(context).size.width/ 100);
-    } else {
-      return size / (MediaQuery.of(context).size.height/ 100);
     }
   }
 

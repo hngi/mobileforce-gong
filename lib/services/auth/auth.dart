@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 import '../snackbarService.dart';
 
@@ -16,8 +15,6 @@ enum AuthStatus {
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final _firestore = Firestore.instance;
 
-GoogleSignIn googleSignIn = GoogleSignIn();
-
 String error;
 String bio = "Hi, I'm new here";
 AuthStatus status;
@@ -27,16 +24,18 @@ AuthStatus status;
 
 Map<String, String> exposeUser({@required kUsername, @required kUID}) {
   print(kUID);
-  return {'Username': kUsername, 'uid': kUID};
+  return {kUsername: kUsername, kUID: kUID};
 }
+
 
 Future getUser() async {
   final FirebaseUser user = await _auth.currentUser();
-  if (user != null) {
+  if(user != null){
     return user;
   }
-  return null;
+    return null;
 }
+
 
 signOut() {
   try {
@@ -56,11 +55,7 @@ void onAuthenticationChange(Function isLogin) {
   });
 }
 
-Future<Map<String, String>> signUp(
-  String email,
-  String password,
-  String name,
-) async {
+Future<Map<String, String>> signUp(String email, String password, String name,) async {
   status = AuthStatus.Authenticating;
   try {
     AuthResult result = await _auth.createUserWithEmailAndPassword(
@@ -68,20 +63,20 @@ Future<Map<String, String>> signUp(
     final FirebaseUser user = result.user;
     // user1 = result.user;
     status = AuthStatus.Authenticated;
-    SnackBarService.instance
-        .showSnackBarSuccess('Account Created for ${user.email}');
+    SnackBarService.instance.showSnackBarSuccess('Account Created for ${user.email}');
     assert(user != null);
     assert(await user.getIdToken() != null);
 
     var userUpdateInfo = UserUpdateInfo();
     userUpdateInfo.displayName = name;
-
+    
     userUpdateInfo.photoUrl =
         'https://www.kindpng.com/picc/b/78-785827_avatar-png-icon.png';
     await user.updateProfile(userUpdateInfo).then((user) {
       _auth.currentUser().then((user) {
-        final DocumentReference _documentReference =
-            _firestore.collection('userData').document(user.uid);
+        final DocumentReference _documentReference = _firestore
+            .collection('userData')
+            .document(user.uid);
         _documentReference.setData({
           'email': user.email,
           'username': user.displayName,
@@ -111,6 +106,7 @@ Future<Map<String, String>> signUp(
   }
 }
 
+
 Future<Map<String, String>> signIn(
   String email,
   String password,
@@ -136,16 +132,19 @@ Future<Map<String, String>> signIn(
     status = AuthStatus.Error;
     error = e.message;
     SnackBarService.instance.showSnackBarError(error);
-
+    
     print(error);
     return null;
   }
 }
 
+
 Future sendPasswordResetEmail(String email) async {
   SnackBarService.instance.showSnackBarSuccess(
-      'A link to reset your password has been sent to ${email}');
+    'A link to reset your password has been sent to ${email}'
+    );
   return _auth.sendPasswordResetEmail(email: email.trim());
+  
 }
 
 Future<String> getUserId() async {
@@ -164,70 +163,4 @@ Future<void> sendEmailVerification() async {
 Future<bool> isEmailVerified() async {
   FirebaseUser user = await _auth.currentUser();
   return user.isEmailVerified;
-}
-
-//Google signup
-Future<String> signInWithGoogle() async {
-  try {
-    status = AuthStatus.Authenticating;
-    final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
-    final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
-
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleSignInAuthentication.accessToken,
-      idToken: googleSignInAuthentication.idToken,
-    );
-
-    final AuthResult authResult = await _auth.signInWithCredential(credential);
-    final FirebaseUser user = authResult.user;
-
-    assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
-
-    final FirebaseUser currentUser = await _auth.currentUser();
-    assert(user.uid == currentUser.uid);
-    status = AuthStatus.Authenticated;
-    SnackBarService.instance.showSnackBarSuccess('Welcome, ${user.email}');
-
-    var userUpdateInfo = UserUpdateInfo();
-    userUpdateInfo.displayName = user.displayName;
-
-    await user.updateProfile(userUpdateInfo).then((user) {
-      _auth.currentUser().then((user) {
-        final DocumentReference _documentReference =
-            _firestore.collection('userData').document(user.uid);
-        _documentReference.setData({
-          'email': user.email,
-          'username': user.displayName,
-          'photoUrl': user.photoUrl,
-          'uid': user.uid,
-          'createdAt': Timestamp.now(),
-          'documentId': _documentReference.documentID,
-        }).catchError((e) {
-          print(e);
-        });
-      }).catchError((e) {
-        print(e);
-      });
-    }).catchError((e) {
-      print(e);
-    });
-    await user.reload();
-
-    return 'signInWithGoogle succeeded: $user';
-  } catch (e) {
-    status = AuthStatus.Error;
-    error = e.message;
-    SnackBarService.instance.showSnackBarError(error);
-
-    print(error);
-    return null;
-  }
-}
-
-void signOutGoogle() async {
-  await googleSignIn.signOut();
-
-  print("User Sign Out");
 }

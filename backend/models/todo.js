@@ -2,12 +2,10 @@ const mongoose = require('mongoose')
 
 const TodoSchema = mongoose.Schema({
     title: String,
-    content: String,
     userID: String,
     time: String,
     completed: Boolean,
-    date: String,
-    category: String
+    date: String
 }, {
     timestamps: true
 });

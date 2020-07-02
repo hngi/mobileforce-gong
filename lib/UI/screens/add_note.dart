@@ -1,26 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:team_mobileforce_gong/state/authProvider.dart';
-import 'package:team_mobileforce_gong/state/notesProvider.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/util/styles/color.dart';
 
 class AddNote extends StatefulWidget {
-  final String stitle;
-  final String scontent;
-
-  AddNote({Key key, this.stitle, this.scontent}) : super(key: key);
-
   @override
-  _AddNoteState createState() => _AddNoteState();
+  State<StatefulWidget> createState() => _AddNoteState();
 }
 
 class _AddNoteState extends State<AddNote> {
-  String _title;
-  String _content;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +23,8 @@ class _AddNoteState extends State<AddNote> {
         child: Column(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.only(left: SizeConfig().xMargin(context, 5.9), right: SizeConfig().xMargin(context, 5.9), top: SizeConfig().yMargin(context, 3.0), bottom: SizeConfig().yMargin(context, 1.6)),
+              padding:
+                  EdgeInsets.only(left: 25, right: 25, top: 30, bottom: 15),
               width: MediaQuery.of(context).size.width,
               height: SizeConfig().yMargin(context, 18),
               color: blue,
@@ -46,36 +37,45 @@ class _AddNoteState extends State<AddNote> {
                       Navigator.pop(context);
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(vertical: SizeConfig().yMargin(context, 2.1), horizontal: SizeConfig().xMargin(context, 1.9)),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 20, horizontal: 8),
                       child: SvgPicture.asset(
                         'assets/svgs/backarrow.svg',
                         width: 25,
                       ),
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Container(
-                        child: Text(
-                          widget.stitle == null ? 'New Note' : 'Edit Note',
-                          style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.7), color: Colors.white, fontWeight: FontWeight.w600)
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          child: Text('New Note',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(
+                                      fontSize:
+                                          SizeConfig().textSize(context, 2.7),
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600)),
                         ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          print(_title);
-                          Provider.of<NotesProvider>(context, listen: false).createNote(Provider.of<AuthenticationState>(context, listen: false).uid, _title, _content, false);
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          child: Text(
-                            'Save',
-                            style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.1), color: Colors.white, fontWeight: FontWeight.w300)
+                        GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            child: Text('Save',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    .copyWith(
+                                        fontSize:
+                                            SizeConfig().textSize(context, 2.1),
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500)),
                           ),
                         )
-                      ),
-                    ],
+                      ],
+                    ),
                   )
                 ],
               ),
@@ -101,8 +101,9 @@ class _AddNoteState extends State<AddNote> {
                                     maxLines: null,
                                     maxLengthEnforced: false,
                                     keyboardType: TextInputType.multiline,
-                                    style: TextStyle(fontSize: SizeConfig().textSize(context, 3.5)),
-                                    initialValue: widget.stitle == null ? null : widget.stitle,
+                                    style: TextStyle(
+                                        fontSize: SizeConfig()
+                                            .textSize(context, 3.5)),
                                     decoration: InputDecoration(
                                       hintText: 'Enter Title',
                                       hintStyle: TextStyle(
@@ -123,11 +124,6 @@ class _AddNoteState extends State<AddNote> {
                                       errorBorder: InputBorder.none,
                                       disabledBorder: InputBorder.none,
                                     ),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _title = value;
-                                      });
-                                    }
                                   ),
                                   TextFormField(
                                     maxLines: null,
@@ -136,13 +132,14 @@ class _AddNoteState extends State<AddNote> {
                                         .round(),
                                     maxLengthEnforced: false,
                                     keyboardType: TextInputType.multiline,
-                                    style: TextStyle(fontSize: SizeConfig().textSize(context, 2.4)),
-                                    initialValue: widget.scontent == null ? null : widget.scontent,
+                                    style: TextStyle(
+                                        fontSize: SizeConfig()
+                                            .textSize(context, 2.1)),
                                     decoration: InputDecoration(
                                       hintText: 'Enter your note here...',
                                       hintStyle: TextStyle(
                                           fontSize: SizeConfig()
-                                              .textSize(context, 2.4),
+                                              .textSize(context, 2.1),
                                           color: Provider.of<ThemeNotifier>(
                                                       context,
                                                       listen: false)
@@ -157,11 +154,6 @@ class _AddNoteState extends State<AddNote> {
                                       errorBorder: InputBorder.none,
                                       disabledBorder: InputBorder.none,
                                     ),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _content = value;
-                                      });
-                                    },
                                   ),
                                 ],
                               ),
@@ -175,15 +167,20 @@ class _AddNoteState extends State<AddNote> {
               ),
             ),
             Container(
-              padding: EdgeInsets.only(top: 10, left: 12, right: 12, bottom: MediaQuery.of(context).viewInsets.bottom,),
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(
-                    color: lightwhite,
-                    width: 1.0,
-                  ),
-                )
+              padding: EdgeInsets.only(
+                top: 10,
+                left: 12,
+                right: 12,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
+              decoration: BoxDecoration(
+                  border: Border(
+                top: BorderSide(
+                  //                    <--- top side
+                  color: lightwhite,
+                  width: 1.0,
+                ),
+              )),
               child: GestureDetector(
                 onTap: () {},
                 child: Row(

@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:team_mobileforce_gong/UI/screens/home_page.dart';
-import 'package:team_mobileforce_gong/UI/screens/home_wrapper.dart';
 import 'package:team_mobileforce_gong/UI/screens/sign_in.dart';
 import 'package:team_mobileforce_gong/state/authProvider.dart';
 
@@ -16,7 +15,7 @@ void gotoHomeScreen(BuildContext context) {
       kAuthSuccess){
         // var user = Provider.of<AuthenticationState>(context, listen: false).exposeUser();
         Navigator.push(context, 
-              MaterialPageRoute(builder: (context) => HomeWrapper()));
+              MaterialPageRoute(builder: (context) => HomePage()));
       }
   });
 }
