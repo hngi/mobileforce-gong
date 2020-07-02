@@ -83,6 +83,7 @@ class AuthenticationState with ChangeNotifier {
 
   Future<void> logout() async {
     clearState();
+    // await signOutGoogle();
     await signOut();
     notifyListeners();
   }

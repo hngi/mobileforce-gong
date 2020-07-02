@@ -14,8 +14,8 @@ class RateAppState extends State<RateApp> {
   WidgetBuilder builder = buildProgressIndicator;
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-    home: Scaffold(
+  Widget build(BuildContext context) {
+    return Scaffold(
       appBar: AppBar(
         title: const Text('Rate my app Demo'),
       ),
@@ -41,9 +41,8 @@ class RateAppState extends State<RateApp> {
           }
         },
       ),
-    ),
   );
-
+  }
   /// Builds the progress indicator, allowing to wait for Rate my app to initialize.
   static Widget buildProgressIndicator(BuildContext context) => const Center(
       child: CircularProgressIndicator()
