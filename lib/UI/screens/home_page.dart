@@ -45,13 +45,14 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     getUser();
+    Provider.of<NotesProvider>(context, listen: false).fetch(uid);
+    Provider.of<TodoProvider>(context, listen: false).fetch(uid);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<NotesProvider>(context).fetch(uid);
-    Provider.of<TodoProvider>(context).fetch(uid);
+    
     return Scaffold(
         key: scaffoldKey,
         drawer: HomeDrawer(
