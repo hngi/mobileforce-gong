@@ -5,8 +5,13 @@ import 'package:team_mobileforce_gong/UI/screens/sign_up.dart';
 import 'package:team_mobileforce_gong/services/auth/auth.dart';
 import 'package:team_mobileforce_gong/services/auth/util.dart';
 import 'package:team_mobileforce_gong/services/auth/validator.dart';
+import 'package:team_mobileforce_gong/services/navigation/app_navigation/navigation.dart';
+import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/services/snackbarService.dart';
 import 'package:team_mobileforce_gong/state/authProvider.dart';
+
+import 'home_page.dart';
+import 'home_wrapper.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -23,6 +28,50 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  SizeConfig config = SizeConfig();
+  @override
+  Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Container(
+        height: height,
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+              top: -MediaQuery.of(context).size.height * .15,
+              right: -MediaQuery.of(context).size.width * .4,
+              child: BezierContainer(),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: config.yMargin(context, 5)),
+                    _logo(context),
+                    SizedBox(height: config.yMargin(context, 1)),
+                    _signInText(context),
+                    SizedBox(height: config.yMargin(context, 2)),
+                    _emailPasswordWidget(),
+                    SizedBox(height: config.yMargin(context, 2)),
+                    _resetAccountLabel(),
+                    _submitButton(),
+                    SizedBox(height: config.yMargin(context, 2)),
+                    _freeUserAccountLabel()
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _toSignup() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => SignUpPage()));
@@ -30,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _logo(BuildContext context) {
     return new Container(
-        padding: EdgeInsets.all(50),
+        padding: EdgeInsets.all(config.yMargin(context, 6)),
         child: Image(image: AssetImage('assets/images/Gong (3).png')));
   }
 
@@ -38,7 +87,9 @@ class _LoginPageState extends State<LoginPage> {
     return new Container(
         alignment: Alignment.centerLeft,
         child: Text("Sign In",
-            style: TextStyle(fontSize: 30.0, fontFamily: "Gilroy")));
+            style: TextStyle(
+                fontSize: config.textSize(context, 4.3),
+                fontFamily: "Gilroy")));
   }
 
   Widget _entryField(String title, String hint,
@@ -68,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
     return InkWell(
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 20),
-        padding: EdgeInsets.all(15),
+        padding: EdgeInsets.all(10),
         alignment: Alignment.bottomCenter,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -77,7 +128,8 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(fontFamily: "Gilroy")),
             new GestureDetector(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPassword()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ResetPassword()));
                 },
                 child: new Text("here",
                     style: TextStyle(
@@ -94,47 +146,46 @@ class _LoginPageState extends State<LoginPage> {
     return Builder(builder: (BuildContext _context) {
       SnackBarService.instance.buildContext = _context;
       return Container(
-          padding: EdgeInsets.only(top: 20),
           child: new Column(
-            children: <Widget>[
-              Consumer<AuthenticationState>(
-                builder: (_context, state, child) {
-                  return Container(
-                    width: 180.0,
-                    height: 50.0,
-                    child: status == AuthStatus.Authenticating
-                        ? CircularProgressIndicator()
-                        : RaisedButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            child: new Text('LOG IN',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: "Gilroy",
-                                    fontWeight: FontWeight.bold)),
-                            color: Colors.blue,
-                            onPressed: () {
-                              final form = _formKey.currentState;
-                              form.save();
-                              if (form.validate()) {
-                                try {
-                                  state
-                                      .login(_emailController.text,
-                                          _passwordController.text)
-                                      .then((signInUser) =>
-                                          gotoHomeScreen(context));
-                                } catch (e) {
-                                  print(e);
-                                }
-                              }
-                            },
-                          ),
-                  );
-                },
-              ),
-            ],
-          ));
+        children: <Widget>[
+          Consumer<AuthenticationState>(
+            builder: (_context, state, child) {
+              return Container(
+                width: 180.0,
+                height: 50.0,
+                child: status == AuthStatus.Authenticating
+                    ? CircularProgressIndicator()
+                    : RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        child: new Text('LOG IN',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: "Gilroy",
+                                fontWeight: FontWeight.bold)),
+                        color: Colors.blue,
+                        onPressed: () {
+                          final form = _formKey.currentState;
+                          form.save();
+                          if (form.validate()) {
+                            try {
+                              state
+                                  .login(_emailController.text,
+                                      _passwordController.text)
+                                  .then(
+                                      (signInUser) => gotoHomeScreen(context));
+                            } catch (e) {
+                              print(e);
+                            }
+                          }
+                        },
+                      ),
+              );
+            },
+          ),
+        ],
+      ));
     });
   }
 
@@ -160,10 +211,15 @@ class _LoginPageState extends State<LoginPage> {
                               fontFamily: "Gilroy",
                               decoration: TextDecoration.underline))))
             ]),
-            SizedBox(height: 20),
-            Text(
-              'Continue as free user.',
-              style: TextStyle(color: Colors.blue, fontFamily: "Gilroy"),
+            SizedBox(height: config.yMargin(context, 2)),
+            GestureDetector(
+              onTap: () {
+                Navigation().pushToAndReplace(context, HomeWrapper());
+              },
+              child: Text(
+                'Continue as free user.',
+                style: TextStyle(fontFamily: "Gilroy", color: Colors.blue),
+              ),
             ),
           ],
         ),
@@ -172,52 +228,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _emailPasswordWidget() {
-    return Column(
-      children: <Widget>[
-        _entryField("Email Address", "example@user.com", _emailController,
-            EmailValidator.validate),
-        _entryField("Password", "password", _passwordController,
-            PasswordValidator.validate,
-            isPassword: true),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: Container(
-        height: height,
-        child: Stack(
+    return Form(
+      key: _formKey,
+          child: SingleChildScrollView(
+        child: Column(
           children: <Widget>[
-            Positioned(
-              top: -MediaQuery.of(context).size.height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer(),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 30),
-                    _logo(context),
-//                    SizedBox(height: height * .2),
-                    _signInText(context),
-                    SizedBox(height: 20),
-                    _emailPasswordWidget(),
-                    SizedBox(height: 20),
-                    _resetAccountLabel(),
-                    _submitButton(),
-                    SizedBox(height: 50),
-                    _freeUserAccountLabel()
-                  ],
-                ),
-              ),
-            ),
+            _entryField("Email Address", "example@user.com", _emailController,
+                EmailValidator.validate),
+            _entryField("Password", "password", _passwordController,
+                PasswordValidator.validate,
+                isPassword: true),
           ],
         ),
       ),

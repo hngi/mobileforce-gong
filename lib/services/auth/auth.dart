@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../snackbarService.dart';
 
 enum AuthStatus {
-  NotAutheticated,
+  NotAuthenticated,
   Authenticating,
   Authenticated,
   UserNotFound,
@@ -24,7 +24,7 @@ AuthStatus status;
 
 Map<String, String> exposeUser({@required kUsername, @required kUID}) {
   print(kUID);
-  return {kUsername: kUsername, kUID: kUID};
+  return {'Username': kUsername, 'uid': kUID};
 }
 
 
@@ -55,11 +55,7 @@ void onAuthenticationChange(Function isLogin) {
   });
 }
 
-Future<Map<String, String>> signUp(
-  String email,
-  String password,
-  String name,
-) async {
+Future<Map<String, String>> signUp(String email, String password, String name,) async {
   status = AuthStatus.Authenticating;
   try {
     AuthResult result = await _auth.createUserWithEmailAndPassword(
@@ -157,4 +153,14 @@ Future<String> getUserId() async {
     return user.uid;
   }
   return null;
+}
+
+Future<void> sendEmailVerification() async {
+  FirebaseUser user = await _auth.currentUser();
+  user.sendEmailVerification();
+}
+
+Future<bool> isEmailVerified() async {
+  FirebaseUser user = await _auth.currentUser();
+  return user.isEmailVerified;
 }

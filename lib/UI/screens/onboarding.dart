@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:team_mobileforce_gong/UI/profile.dart';
+
+import 'package:team_mobileforce_gong/UI/screens/home_page.dart';
+import 'package:team_mobileforce_gong/UI/screens/sign_in.dart';
+import 'package:team_mobileforce_gong/services/navigation/app_navigation/navigation.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/util/const/constFile.dart';
-
-
 
 class Onboarding extends StatefulWidget {
   @override
@@ -11,17 +12,20 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
-  
   int currentIndex = 0;
   SizeConfig size = SizeConfig();
   PageController _pageController = PageController();
 
   void _bottomTapped(int page) {
+    if (page > 2) {
+      Navigation().pushToAndReplace(context, LoginPage());
+    }
     _pageController.jumpToPage(page);
   }
 
   @override
   Widget build(BuildContext context) {
+    Orientation orientation = MediaQuery.of(context).orientation;
     return Container(
         color: Colors.white,
         child: Stack(children: [
@@ -36,49 +40,54 @@ class _OnboardingState extends State<Onboarding> {
               onboard(
                   'assets/images/notes 1.png',
                   'Normal Notes But \nDigital & Better',
-                  'Quickly off load ideas, thoughts\nwithout losing any information at all\nall on the app'),
+                  'Quickly off load ideas, thoughts\nwithout losing any information at all\nall on the app', orientation),
               onboard(
                   'assets/images/shopping-list 1.png',
                   'save all Task\nDaily',
-                  'Outline all your daily task and check\nthem on accomplishment'),
+                  'Outline all your daily task and check\nthem on accomplishment', orientation),
               onboard(
                   'assets/images/quotes 1.png',
                   'Read Inspirational \nQuotes daily',
-                  'Outline all your daily task and check \nthem on accomplishment'),
+                  'Outline all your daily task and check \nthem on accomplishment', orientation),
             ],
           ),
-          Positioned(
-              bottom: size.yMargin(context, 24),
-              left: size.xMargin(context, 100 / 2.5),
-              child: Row(
-                children: [
-                  Indicator(
-                    positionIndex: 1,
-                    currentIndex: currentIndex,
-                  ),
-                  SizedBox(
-                    width: 24,
-                  ),
-                  Indicator(
-                    positionIndex: 2,
-                    currentIndex: currentIndex,
-                  ),
-                  SizedBox(
-                    width: 24,
-                  ),
-                  Indicator(
-                    positionIndex: 3,
-                    currentIndex: currentIndex,
-                  ),
-                ],
-              )),
+          orientation == Orientation.portrait ? Padding(
+            padding:
+                EdgeInsets.only(bottom: size.yMargin(context, 12)),
+                
+            child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Indicator(
+                      positionIndex: 1,
+                      currentIndex: currentIndex,
+                    ),
+                    SizedBox(
+                      width: 24,
+                    ),
+                    Indicator(
+                      positionIndex: 2,
+                      currentIndex: currentIndex,
+                    ),
+                    SizedBox(
+                      width: 24,
+                    ),
+                    Indicator(
+                      positionIndex: 3,
+                      currentIndex: currentIndex,
+                    ),
+                  ],
+                )),
+          ) : Container(),
           Positioned(
               bottom: 30,
               child: FlatButton(
                 onPressed: () {
-                  Navigator.of(context)
 
-                      .push(MaterialPageRoute(builder: (context) => Profile()));
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => LoginPage()));
 
                 },
                 child: Text(
@@ -94,7 +103,7 @@ class _OnboardingState extends State<Onboarding> {
             bottom: 30,
             right: 0,
             child: FlatButton(
-              onPressed: ()=> _bottomTapped(currentIndex++),
+              onPressed: () => _bottomTapped(currentIndex + 1),
               child: Text(
                 'Next',
                 style: TextStyle(
@@ -108,8 +117,8 @@ class _OnboardingState extends State<Onboarding> {
         ]));
   }
 
-  Widget onboard(String imgPath, String title, String desctext) {
-    return Column(
+  Widget onboard(String imgPath, String title, String desctext, Orientation orientation) {
+    return orientation == Orientation.portrait ? Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -118,7 +127,7 @@ class _OnboardingState extends State<Onboarding> {
           width: 120,
         ),
         SizedBox(
-          height: 36,
+          height: size.yMargin(context, 4),
         ),
         Text(
           title,
@@ -126,11 +135,11 @@ class _OnboardingState extends State<Onboarding> {
           style: TextStyle(
               decoration: TextDecoration.none,
               fontFamily: 'Gilroy',
-              fontSize: size.textSize(context, 4.5),
+              fontSize: size.textSize(context, 4),
               color: kPrimaryColor),
         ),
         SizedBox(
-          height: 36,
+          height: size.yMargin(context, 7),
         ),
         Text(
           desctext,
@@ -143,6 +152,44 @@ class _OnboardingState extends State<Onboarding> {
               color: kBlack),
         )
       ],
+    ): SingleChildScrollView(
+      child: Center(
+        child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            imgPath,
+            width: 120,
+          ),
+          SizedBox(
+            height: size.yMargin(context, 4),
+          ),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                decoration: TextDecoration.none,
+                fontFamily: 'Gilroy',
+                fontSize: size.textSize(context, 4.5),
+                color: kPrimaryColor),
+          ),
+          SizedBox(
+            height: size.yMargin(context, 7),
+          ),
+          Text(
+            desctext,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                decoration: TextDecoration.none,
+                fontSize: size.textSize(context, 2),
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Gilroy',
+                color: kBlack),
+          )
+        ],
+    ),
+      ),
     );
   }
 
