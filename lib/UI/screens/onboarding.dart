@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:team_mobileforce_gong/UI/screens/home_page.dart';
 import 'package:team_mobileforce_gong/UI/screens/sign_in.dart';
 import 'package:team_mobileforce_gong/services/navigation/app_navigation/navigation.dart';
@@ -84,8 +85,10 @@ class _OnboardingState extends State<Onboarding> {
               bottom: 30,
               child: FlatButton(
                 onPressed: () {
+
                   Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) => LoginPage()));
+
                 },
                 child: Text(
                   'Skip',
@@ -190,8 +193,8 @@ class _OnboardingState extends State<Onboarding> {
     );
   }
 
-  static const duration = Duration(seconds: 1);
-  static const curve = Curves.easeIn;
+//  static const duration = Duration(seconds: 1);
+//  static const curve = Curves.easeIn;
 }
 
 class Indicator extends StatelessWidget {
