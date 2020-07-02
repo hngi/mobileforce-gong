@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
         leading: GestureDetector(
           onTap: () => scaffoldKey.currentState.openDrawer(),
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
             child: SvgPicture.asset(
               'assets/svgs/ham.svg',
               color: Provider.of<ThemeNotifier>(context, listen: false)
