@@ -44,6 +44,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "241979089026-6r3fng63r0oruicmbc7n7dgnmhgabv7c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hng.gong",
+            "certificate_hash": "423723d61eef9c7da063c4e717cabd77368194ea"
+          }
+        },
+        {
           "client_id": "241979089026-oc0mqg1693lfs1qq6mvg7256igo2cjns.apps.googleusercontent.com",
           "client_type": 3
         }
