@@ -1,4 +1,5 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +9,7 @@ import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/state/todoProvider.dart';
 
 import 'UI/screens/splashscreen.dart';
+import 'services/quotes/quoteState.dart';
 import 'state/authProvider.dart';
 
 Future<void> main() async {
@@ -38,8 +40,9 @@ class MyApp extends StatelessWidget {
         return MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (_) => AuthenticationState()),
+            ChangeNotifierProvider(create: (_) => QuoteState()),
             ChangeNotifierProvider(create: (_) => NotesProvider()),
-            ChangeNotifierProvider(create: (_) => TodoProvider()),
+            ChangeNotifierProvider(create: (_) => TodoProvider())
           ],
           child: MaterialApp(
             locale: DevicePreview.of(context).locale,
@@ -54,5 +57,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
