@@ -32,6 +32,8 @@ dependencies:
   device_preview:
   google_sign_in:
   flutter_signin_button:
+  rate_my_app:
+  launch_review: ^2.0.0
   
   flutter:
     sdk: flutter

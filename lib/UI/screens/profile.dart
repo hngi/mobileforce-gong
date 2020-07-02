@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
+import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/util/const/constFile.dart';
 
 class Profile extends StatefulWidget {
@@ -31,20 +34,41 @@ class _ProfileState extends State<Profile> {
   String img;
 
   SizeConfig size = SizeConfig();
+
+  @override
+  void initState() {
+    getUser();
+    super.initState();
+  }
+
+  Future<void> getUser() async {
+    await FirebaseAuth.instance.currentUser().then((user) {
+      setState(() {
+        email = user.email;
+        name = user.displayName;
+        print(name);
+        // img = user.photoUrl;
+      });
+    });
+  }
+
+  var darktheme;
+
   @override
   Widget build(BuildContext context) {
+    darktheme = Provider.of<ThemeNotifier>(context).isDarkModeOn ?? false;
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(
-          Icons.edit,
-          color: Colors.white,
-        ),
-        foregroundColor: kPrimaryColor,
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {},
+      //   child: Icon(
+      //     Icons.edit,
+      //     color: Colors.white,
+      //   ),
+      //   foregroundColor: kPrimaryColor,
+      // ),
       body: SafeArea(
         child: Container(
-          color: Color(0xffFAFAFA),
+          color: darktheme ? Color(0xff0D141A) : Color(0xffFAFAFA),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -58,8 +82,10 @@ class _ProfileState extends State<Profile> {
                   Center(
                     child: Text(
                       'Profile',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                          color: darktheme ? Colors.white70 : Colors.black),
                     ),
                   ),
                 ],
@@ -76,15 +102,17 @@ class _ProfileState extends State<Profile> {
                       width: 106,
                       height: 106,
                       decoration: BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage(
+                              'assets/images/Ellipse 14 (1).png',
+                            )),
                         shape: BoxShape.circle,
                         border: Border.all(
                             color: kGrey, width: 2, style: BorderStyle.solid),
                       ),
                       child: _image == null
-                          ? Icon(
-                              Icons.camera_enhance,
-                              color: kGrey,
-                            )
+                          ? SizedBox()
                           : Image.file(
                               _image,
                               fit: BoxFit.cover,
@@ -98,7 +126,7 @@ class _ProfileState extends State<Profile> {
               ),
               Center(
                 child: Text(
-                  'Your Name Here',
+                  name,
                   style: TextStyle(fontSize: 24, color: kBlack),
                 ),
               ),
@@ -120,7 +148,7 @@ class _ProfileState extends State<Profile> {
                   width: size.xMargin(context, 100),
                   height: size.yMargin(context, 100),
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: darktheme ? Colors.black : Colors.white,
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(50),
                           topRight: Radius.circular(50))),
@@ -131,7 +159,7 @@ class _ProfileState extends State<Profile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Mobile',
+                          'Display Name',
                           style: TextStyle(
                               fontSize: 18,
                               color: kBlack,
@@ -141,7 +169,7 @@ class _ProfileState extends State<Profile> {
                           height: 8,
                         ),
                         Text(
-                          phoneNumber,
+                          name,
                           style: TextStyle(fontSize: 18, color: kGrey),
                         ),
                         Divider(
@@ -172,24 +200,24 @@ class _ProfileState extends State<Profile> {
                         SizedBox(
                           height: 24,
                         ),
-                        Text(
-                          'Address',
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: kBlack,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          address,
-                          style: TextStyle(fontSize: 18, color: kGrey),
-                        ),
-                        Divider(
-                          color: kGrey,
-                          thickness: 1,
-                        ),
+                        // Text(
+                        //   'Address',
+                        //   style: TextStyle(
+                        //       fontSize: 18,
+                        //       color: kBlack,
+                        //       fontWeight: FontWeight.bold),
+                        // ),
+                        // SizedBox(
+                        //   height: 8,
+                        // ),
+                        // Text(
+                        //   address,
+                        //   style: TextStyle(fontSize: 18, color: kGrey),
+                        // ),
+                        // Divider(
+                        //   color: kGrey,
+                        //   thickness: 1,
+                        // ),
                       ],
                     ),
                   ),
