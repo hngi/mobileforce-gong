@@ -1,4 +1,4 @@
-package com.example.team_mobileforce_gong
+package hng.gong
 
 import io.flutter.embedding.android.FlutterActivity
 
