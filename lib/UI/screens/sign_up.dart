@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
 import 'package:team_mobileforce_gong/UI/screens/home_page.dart';
 import 'package:team_mobileforce_gong/UI/screens/sign_in.dart';
@@ -183,6 +185,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    final state = Provider.of<AuthenticationState>(context);
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -211,7 +214,15 @@ class _SignUpPageState extends State<SignUpPage> {
                     SizedBox(height: config.yMargin(context, 3)),
                     _submitButton(),
                     SizedBox(height: config.yMargin(context, 3)),
-                    _freeUserAccountLabel()
+                    _freeUserAccountLabel(),
+                    SignInButton(
+                      Buttons.Google,
+                      onPressed: () {
+                        state
+                            .googleSignin()
+                            .then((value) => gotoHomeScreen(context));
+                      },
+                    ),
                   ],
                 ),
               ),

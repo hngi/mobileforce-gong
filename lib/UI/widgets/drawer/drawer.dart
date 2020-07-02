@@ -3,8 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:team_mobileforce_gong/UI/screens/dispatch_page.dart';
 import 'package:team_mobileforce_gong/UI/screens/show_notes.dart';
+import 'package:team_mobileforce_gong/services/auth/util.dart';
 import 'package:team_mobileforce_gong/services/navigation/app_navigation/navigation.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
+import 'package:team_mobileforce_gong/state/authProvider.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/util/styles/color.dart';
 
@@ -25,6 +27,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   @override
   Widget build(BuildContext context) {
     darktheme = Provider.of<ThemeNotifier>(context).isDarkModeOn ?? false;
+    final state = Provider.of<AuthenticationState>(context);
     return Drawer(
         child: Column(
       // padding: EdgeInsets.zero,
@@ -107,7 +110,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 thickness: 1,
                 color: Color.fromRGBO(9, 132, 227, 0.4),
               ),
-              createDrawerBodyItem(context: context, text: 'About'),
+              createDrawerBodyItem(context: context, text: 'Sign Out', onTap: (){
+                state.logout().then((value) => gotoLoginScreen(context));
+              }),
               Divider(
                 thickness: 1,
                 color: Color.fromRGBO(9, 132, 227, 0.4),
