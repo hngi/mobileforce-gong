@@ -18,7 +18,7 @@ class HomeWrapper extends StatelessWidget {
              alignment: Alignment.bottomCenter,
              child: Visibility(
                visible: true, child: LogoAnimation(
-                 milliseconds: 1500,
+                 milliseconds: 1900,
                  color: Colors.transparent,
                  child: QuoteTab()))),
                  
