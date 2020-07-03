@@ -94,7 +94,8 @@ exports.update = (req, res) => {
         content: req.body.content,
         category: req.body.category,
         date: req.body.date,
-        time: req.body.time
+        time: req.body.time,
+        completed: req.body.completed
     }, { new: true })
         .then(todo => {
             if (!todo) {
