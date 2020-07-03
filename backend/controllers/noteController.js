@@ -55,8 +55,9 @@ exports.findImportant = (req, res) => {
         });
 };
 
+
 exports.findByUser = (req, res) => {
-    var query = {userID: req.body.userId};
+    var query = {userID: req.params.userId};
     Note.find(query, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
         .then(notes => {
             res.send(notes);

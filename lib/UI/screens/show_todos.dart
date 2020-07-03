@@ -60,7 +60,7 @@ class ShowTodos extends StatelessWidget {
                                       ),
                                       SizedBox(height: 8,),
                                       Text(
-                                        todos[index].date,
+                                        todos[index].content ?? '',
                                         style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2)),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,

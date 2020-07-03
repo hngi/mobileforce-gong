@@ -39,14 +39,15 @@ class _HomePageState extends State<HomePage> {
             username = user.displayName;
             uid = user.uid;
           })
+        }).then((value) {
+          Provider.of<NotesProvider>(context, listen: false).fetch(uid);
+          Provider.of<TodoProvider>(context, listen: false).fetch(uid);
         });
   }
 
   @override
   void initState() {
     getUser();
-    Provider.of<NotesProvider>(context, listen: false).fetch(uid);
-    Provider.of<TodoProvider>(context, listen: false).fetch(uid);
     super.initState();
   }
 

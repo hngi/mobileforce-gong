@@ -22,18 +22,14 @@ class NotesProvider with ChangeNotifier{
   // }
 
   void fetch(String uid) async{
-    await http.post(
-      'http://gonghng.herokuapp.com/notes/user',
-      body: jsonEncode({
-        'userId': uid
-      }),
+    await http.get(
+      'http://gonghng.herokuapp.com/notes/user/$uid',
       headers: headers
     ).then((value){
       var jsonres = convert.jsonDecode(value.body) as List;
       notes = jsonres.map((e) => Notes.fromJson(e)).toList();
       notifyListeners();
-    });
-    
+    });  
   }
 
   void createNote(String uid, String title, String content, bool important) async{
@@ -44,11 +40,12 @@ class NotesProvider with ChangeNotifier{
         'title': title,
         'content': content,
         'userID': uid,
+        'date': dateFormat.format(DateTime.now()).toString(),
         'important': important,
-        'date': dateFormat.format(DateTime.now()).toString()
       }),
       headers: headers
     ).then((value){
+      print(value.body);
       Notes note = new Notes(sId: uid, title: title, content: content, important: important, date: dateFormat.format(DateTime.now()).toString());
       notes.insert(0, note);
       notifyListeners();
@@ -56,11 +53,15 @@ class NotesProvider with ChangeNotifier{
   }
 
   void updateNote(String uid, String title, String content, bool important, Notes note) async {
+    
     int index = notes.indexOf(note);
-    await post(
-      'http://',
+    String id = notes[index].sId;
+    print(id);
+    //print(index);
+    await put(
+      'http://gonghng.herokuapp.com/notes/$id',
       body: jsonEncode({
-        'noteId': notes[index].sId,
+        //'noteId': notes[index].sId,
         'title': title,
         'content': content,
         'important': important,
@@ -68,6 +69,7 @@ class NotesProvider with ChangeNotifier{
       headers: headers
     ).catchError((error) => print(error))
     .then((value){
+      print(value.body);
       notes[index].title = title;
       notes[index].content = content;
       notes[index].important =important;

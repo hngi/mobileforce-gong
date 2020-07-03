@@ -31,8 +31,8 @@ class _AddNoteState extends State<AddNote> {
         if(widget.stitle != null || widget.scontent != null) { 
           Provider.of<NotesProvider>(context, listen: false).updateNote(
             Provider.of<AuthenticationState>(context, listen: false).uid,
-            _title,
-            _content,
+            _title ?? widget.stitle,
+            _content ?? widget.scontent,
             widget.simportant,
             widget.snote
           );
@@ -69,11 +69,12 @@ class _AddNoteState extends State<AddNote> {
                   children: <Widget>[
                     GestureDetector(
                       onTap: () {
+                        //print(widget.stitle+' '+_title);
                         if(widget.stitle != null || widget.scontent != null) { 
                           Provider.of<NotesProvider>(context, listen: false).updateNote(
                             Provider.of<AuthenticationState>(context, listen: false).uid,
-                            _title,
-                            _content,
+                            _title ?? widget.stitle,
+                            _content ?? widget.scontent,
                             widget.simportant,
                             widget.snote
                           );
@@ -108,15 +109,17 @@ class _AddNoteState extends State<AddNote> {
                         ),
                         InkWell(
                           onTap: () {
-                            print(_title);
+                            //print(_title);
                             if(widget.stitle != null || widget.scontent != null) { 
-                            Provider.of<NotesProvider>(context, listen: false).updateNote(
-                              Provider.of<AuthenticationState>(context, listen: false).uid,
-                              _title,
-                              _content,
-                              widget.simportant,
-                              widget.snote
-                            );} else if(_title ==null && _content == null) {
+                              Provider.of<NotesProvider>(context, listen: false).updateNote(
+                                Provider.of<AuthenticationState>(context, listen: false).uid,
+                                _title ?? widget.stitle,
+                                _content ?? widget.scontent,
+                                widget.simportant,
+                                widget.snote
+                              );
+                              Navigator.pop(context);
+                            } else if(_title ==null && _content == null) {
                               Navigator.pop(context);
                             } else {
                               Provider.of<NotesProvider>(context, listen: false).createNote(

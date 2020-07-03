@@ -57,6 +57,11 @@ class AuthenticationState with ChangeNotifier {
     return await signUp(email, password, username,);
   }
 
+
+  Future googleSignin() async {
+    return signInWithGoogle();
+  }
+
  Future login(
     email,
     password,
@@ -76,8 +81,9 @@ class AuthenticationState with ChangeNotifier {
   //   signInWithEmail(email, password);
   // }
 
-  logout() async {
+  Future<void> logout() async {
     clearState();
+    // await signOutGoogle();
     await signOut();
     notifyListeners();
   }

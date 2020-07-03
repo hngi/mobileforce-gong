@@ -33,7 +33,7 @@ class ShowNotes extends StatelessWidget {
                     child: InkWell(
                       onTap: (){
                         Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) => AddNote(stitle: notes[index].title, scontent: notes[index].content)));
+                        .push(MaterialPageRoute(builder: (context) => AddNote(stitle: notes[index].title, scontent: notes[index].content, snote: notes[index], simportant: notes[index].important,)));
                       },
                       child: Card(
                         elevation: 0,
@@ -59,7 +59,7 @@ class ShowNotes extends StatelessWidget {
                               children: <Widget>[
                                 Container(
                                   child: Text(
-                                    notes[index].title,
+                                    notes[index].title ?? '',
                                     style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.5), color: blue, fontWeight: FontWeight.w500),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -72,7 +72,7 @@ class ShowNotes extends StatelessWidget {
                                   children: <Widget>[
                                     Flexible(
                                       child: Text(
-                                        notes[index].content,
+                                        notes[index].content ?? '',
                                         style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.2),),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
@@ -80,7 +80,7 @@ class ShowNotes extends StatelessWidget {
                                     ),
                                     Container(
                                       child: Text(
-                                        notes[index].date,
+                                        notes[index].important.toString() ?? '',
                                         style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 1.6))
                                       ),
                                     ),

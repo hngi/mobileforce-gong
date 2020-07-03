@@ -84,8 +84,22 @@ class _AddTodoState extends State<AddTodo> {
                       GestureDetector(
                         onTap: () {
                           if(widget.stitle != null || widget.scontent != null) {
-                            Provider.of<TodoProvider>(context, listen: false).updateTodo(_stitle, _selectedcategory.name, Provider.of<AuthenticationState>(context, listen: false).uid, _scontent, _sdate, _stime, widget.stodo);
-                          } //else if(_stitle)
+                            Provider.of<TodoProvider>(context, listen: false).updateTodo(
+                              _stitle ?? widget.stitle, 
+                              _selectedcategory.name ?? widget.scategory, 
+                              Provider.of<AuthenticationState>(context, listen: false).uid, 
+                              _scontent ?? widget.scontent, 
+                              _sdate ?? DateFormat("dd/MM/yy").parse(widget.sdate), 
+                              _stime ?? TimeOfDay(hour:int.parse(widget.sdate.split(":")[0]),minute: int.parse(widget.sdate.split(":")[1])), 
+                              widget.stodo
+                            );
+                            Navigator.pop(context);
+                          } else if(_stitle ==null && _scontent == null) {
+                            Navigator.pop(context);
+                          } else {
+                            Provider.of<TodoProvider>(context, listen: false).createTodo(_stitle, _selectedcategory.name, Provider.of<AuthenticationState>(context, listen: false).uid, _scontent, _sdate, _stime);
+                            Navigator.pop(context);
+                          }
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -131,7 +145,7 @@ class _AddTodoState extends State<AddTodo> {
                             'Choose Category',
                             style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.4), fontWeight: FontWeight.w200, color: Provider.of<ThemeNotifier>(context, listen: false).isDarkModeOn ? Colors.grey[400] : Colors.grey[500]),
                           ),
-                          value: widget.scategory != null ? Category(widget.scategory, widget.scategory) : _selectedcategory,
+                          value: _selectedcategory,
                           items: _dropdownMenuItems,
                           onChanged: onChangedDropdownItem,
                           style: Theme.of(context).textTheme.headline5.copyWith(fontSize: SizeConfig().textSize(context, 2.4),),
@@ -333,6 +347,9 @@ class _AddTodoState extends State<AddTodo> {
   void initState() {
     super.initState();
     _dropdownMenuItems = buildDropdownMenuItems(_category);
+    if(widget.scategory != null) {
+      _selectedcategory = Category(widget.scategory, widget.scategory);
+    }
   }
 
   List<DropdownMenuItem<Category>> buildDropdownMenuItems(List category) {
@@ -341,10 +358,11 @@ class _AddTodoState extends State<AddTodo> {
       print(category);
       items.add(
         DropdownMenuItem(
-            value: category,
-            child: Text(
-              category.name,
-            )),
+          value: category,
+          child: Text(
+            category.name,
+          )
+        ),
       );
     }
     return items;
