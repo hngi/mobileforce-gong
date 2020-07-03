@@ -1,5 +1,5 @@
 //This class allows users to add their biometrics data inorder to be authenticated
-//It wo
+//Use it to privatize a note
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
