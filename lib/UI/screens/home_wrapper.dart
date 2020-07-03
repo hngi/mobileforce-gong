@@ -5,7 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:team_mobileforce_gong/services/navigation/app_navigation/navigation.dart';
 
 import 'home_page.dart';
-import '../widgets/quotesTab/quoteTab.dart';
+//import '../widgets/quotesTab/quoteTab.dart';
 import '../../services/navigation/page_transitions/animations.dart';
 
 class HomeWrapper extends StatelessWidget {
@@ -24,7 +24,7 @@ class HomeWrapper extends StatelessWidget {
                     child: LogoAnimation(
                         milliseconds: 1900,
                         color: Colors.transparent,
-                        child: QuoteTab()))),
+                        child: null))),
           ],
         ),
       ),

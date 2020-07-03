@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const notes = require('./controllers/noteController.js');
-const todo = require('./controllers/todoControllers.js');
-const quote = require('./controllers/quoteController.js');
+const todo = require('./controllers/todoControllers.js')
 
 
 //defining a simple route
@@ -49,10 +48,6 @@ router.put('/todo/:todoId', todo.update);
 
 // Delete a Note with noteId
 router.delete('/todo/:todoId', todo.delete);
-
-
-//get quotes from db
-router.get('/quotes', quote.findAll);
 
 
 module.exports = router;

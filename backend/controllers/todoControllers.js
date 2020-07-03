@@ -5,16 +5,14 @@ exports.create = (req, res) => {
     // Validate request
     if (!req.body.title) {
         return res.status(400).send({
-            message: "Todo title can not be empty"
+            message: "Todo content can not be empty"
         });
     }
 
     // Create a Todo
     const todo = new Todo({
-        title: req.body.title,
-        content: req.body.content,
+        title: req.body.title || "Untitled Todo",
         userID: req.body.userID,
-        category: req.body.category,
         time: req.body.time,
         completed: req.body.completed,
         date: req.body.date
@@ -32,12 +30,34 @@ exports.create = (req, res) => {
 };
 
 
+<<<<<<< HEAD
 
 exports.findImportant = (req, res) => {
     var query = {userID: req.params.userId, important: true};
     Todo.find(query, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
         .then(todos => {
             res.send(todos);
+=======
+// Retrieve and return all reminders from the database.
+exports.findAll = (req, res) => {
+    var query = {userID : req.body.userId}
+    Todo.find(query)
+        .then(reminders => {
+            res.send(reminders);
+        }).catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving reminders."
+            });
+        });
+};
+
+
+exports.findImportant = (req, res) => {
+    var query = {userID: req.body.userId, important: true};
+    Todo.find(query)
+        .then(reminders => {
+            res.send(reminders);
+>>>>>>> 421189ff4a859a6f1f6df17e168e9578fcfb3961
         }).catch(err => {
             res.status(500).send({
                 message: err.message || "Some error occurred while retrieving reminders."
@@ -47,7 +67,11 @@ exports.findImportant = (req, res) => {
 
 // Find a single todo with a todoId
 exports.findOne = (req, res) => {
+<<<<<<< HEAD
     Todo.findById(req.params.todoId, {createdAt: 0, updatedAt: 0, __v: 0})
+=======
+    Todo.findById(req.params.reminderId)
+>>>>>>> 421189ff4a859a6f1f6df17e168e9578fcfb3961
         .then(todo => {
             if (!todo) {
                 return res.status(404).send({
@@ -68,10 +92,21 @@ exports.findOne = (req, res) => {
 };
 
 exports.findOneByUser = (req, res) => {
+<<<<<<< HEAD
     var query = {userID: req.params.userId};
     Todo.find(query, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
         .then(todos => {
             res.send(todos);
+=======
+    Todo.findById(req.params.userId)
+        .then(todo => {
+            if (!todo) {
+                return res.status(404).send({
+                    message: "todo not found with id " + req.params.userId
+                });
+            }
+            res.send(todo);
+>>>>>>> 421189ff4a859a6f1f6df17e168e9578fcfb3961
         }).catch(err => {
             res.status(500).send({
                 message: err.message || "Some error occurred while retrieving notes."
@@ -82,19 +117,25 @@ exports.findOneByUser = (req, res) => {
 // Update a todo identified by the todoId in the request
 exports.update = (req, res) => {
     // Validate Request
-    if (!req.body.title && !req.body.content) {
+    if (!req.body.content) {
         return res.status(400).send({
-            message: "todo title can not be empty"
+            message: "todo content can not be empty"
         });
     }
     //The {new: true} option in the findByIdAndUpdate() method is used to return the modified document to the then() function instead of the original
     // Find todo and update it with the request body
+<<<<<<< HEAD
     Todo.findByIdAndUpdate(req.params.todoId, {
         title: req.body.title,
         content: req.body.content,
         category: req.body.category,
         date: req.body.date,
         time: req.body.time
+=======
+    Todo.findByIdAndUpdate(req.params.reminderId, {
+        title: req.body.title || "Untitled todo",
+        content: req.body.content
+>>>>>>> 421189ff4a859a6f1f6df17e168e9578fcfb3961
     }, { new: true })
         .then(todo => {
             if (!todo) {

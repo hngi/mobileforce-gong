@@ -3,7 +3,7 @@ const Note = require('../models/note.js');
 // Create and Save a new Note
 exports.create = (req, res) => {
     // Validate request
-    if (!req.body.content && !req.body.title) {
+    if (!req.body.content) {
         return res.status(400).send({
             message: "Note content can not be empty"
         });
@@ -15,7 +15,7 @@ exports.create = (req, res) => {
         content: req.body.content,
         userID: req.body.userID,
         important: req.body.important,
-        //date: req.body.date
+        date: req.body.date
     });
 
     // Save Note in the database
@@ -32,7 +32,7 @@ exports.create = (req, res) => {
 
 // Retrieve and return all notes from the database.
 exports.findAll = (req, res) => {
-    Note.find(null, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
+    Note.find()
         .then(notes => {
             res.send(notes);
         }).catch(err => {
@@ -45,7 +45,7 @@ exports.findAll = (req, res) => {
 
 exports.findImportant = (req, res) => {
     var query = {userID: req.body.userId, important: true};
-    Note.find(query, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
+    Note.find(query)
         .then(notes => {
             res.send(notes);
         }).catch(err => {
@@ -57,8 +57,13 @@ exports.findImportant = (req, res) => {
 
 
 exports.findByUser = (req, res) => {
+<<<<<<< HEAD
     var query = {userID: req.params.userId};
     Note.find(query, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
+=======
+    var query = {userID: req.body.userId};
+    Note.find(query)
+>>>>>>> 421189ff4a859a6f1f6df17e168e9578fcfb3961
         .then(notes => {
             res.send(notes);
         }).catch(err => {
@@ -70,7 +75,7 @@ exports.findByUser = (req, res) => {
 
 // Find a single note with a noteId
 exports.findOne = (req, res) => {
-    Note.findById(req.params.noteId, {createdAt: 0, updatedAt: 0, __v: 0})
+    Note.findById(req.params.noteId)
         .then(note => {
             if (!note) {
                 return res.status(404).send({
@@ -91,7 +96,7 @@ exports.findOne = (req, res) => {
 };
 
 exports.findOneByUser = (req, res) => {
-    Note.findById(req.params.userId, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
+    Note.findById(req.params.userId)
         .then(note => {
             if (!note) {
                 return res.status(404).send({
@@ -114,7 +119,7 @@ exports.findOneByUser = (req, res) => {
 // Update a note identified by the noteId in the request
 exports.update = (req, res) => {
     // Validate Request
-    if (!req.body.content && !req.body.title) {
+    if (!req.body.content) {
         return res.status(400).send({
             message: "Note content can not be empty"
         });
@@ -123,8 +128,7 @@ exports.update = (req, res) => {
     // Find note and update it with the request body
     Note.findByIdAndUpdate(req.params.noteId, {
         title: req.body.title || "Untitled Note",
-        content: req.body.content,
-        important: req.body.important,
+        content: req.body.content
     }, { new: true })
         .then(note => {
             if (!note) {

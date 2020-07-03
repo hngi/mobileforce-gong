@@ -36,7 +36,6 @@ class AuthenticationState with ChangeNotifier {
         _authStatus = kAuthSuccess;
         _username = user[kUsername];
         _uid = user[kUID];
-        //print(user);
         _email = user[email];
       } else {
         clearState();
@@ -55,11 +54,6 @@ class AuthenticationState with ChangeNotifier {
 
   Future signup(email, password, username) async {
     return await signUp(email, password, username,);
-  }
-
-
-  Future googleSignin() async {
-    return signInWithGoogle();
   }
 
  Future login(
@@ -81,9 +75,8 @@ class AuthenticationState with ChangeNotifier {
   //   signInWithEmail(email, password);
   // }
 
-  Future<void> logout() async {
+  logout() async {
     clearState();
-    // await signOutGoogle();
     await signOut();
     notifyListeners();
   }

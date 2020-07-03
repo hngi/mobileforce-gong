@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-
 import 'package:team_mobileforce_gong/UI/screens/home_page.dart';
 import 'package:team_mobileforce_gong/UI/screens/sign_in.dart';
 import 'package:team_mobileforce_gong/services/navigation/app_navigation/navigation.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/util/const/constFile.dart';
+
+
+
 
 class Onboarding extends StatefulWidget {
   @override
@@ -12,12 +14,13 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
+  
   int currentIndex = 0;
   SizeConfig size = SizeConfig();
   PageController _pageController = PageController();
 
   void _bottomTapped(int page) {
-    if (page > 2) {
+    if(page > 2){
       Navigation().pushToAndReplace(context, LoginPage());
     }
     _pageController.jumpToPage(page);
@@ -25,14 +28,13 @@ class _OnboardingState extends State<Onboarding> {
 
   @override
   Widget build(BuildContext context) {
-    Orientation orientation = MediaQuery.of(context).orientation;
     return Container(
         color: Colors.white,
         child: Stack(children: [
           PageView(
-            onPageChanged: (index) {
+            onPageChanged: (index){
               setState(() {
-                currentIndex = index;
+                currentIndex=index;
               });
             },
             controller: _pageController,
@@ -40,55 +42,48 @@ class _OnboardingState extends State<Onboarding> {
               onboard(
                   'assets/images/notes 1.png',
                   'Normal Notes But \nDigital & Better',
-                  'Quickly off load ideas, thoughts\nwithout losing any information at all\nall on the app', orientation),
+                  'Quickly off load ideas, thoughts\nwithout losing any information at all\nall on the app'),
               onboard(
                   'assets/images/shopping-list 1.png',
                   'save all Task\nDaily',
-                  'Outline all your daily task and check\nthem on accomplishment', orientation),
+                  'Outline all your daily task and check\nthem on accomplishment'),
               onboard(
                   'assets/images/quotes 1.png',
                   'Read Inspirational \nQuotes daily',
-                  'Outline all your daily task and check \nthem on accomplishment', orientation),
+                  'Outline all your daily task and check \nthem on accomplishment'),
             ],
           ),
-          orientation == Orientation.portrait ? Padding(
-            padding:
-                EdgeInsets.only(bottom: size.yMargin(context, 12)),
-                
-            child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Indicator(
-                      positionIndex: 1,
-                      currentIndex: currentIndex,
-                    ),
-                    SizedBox(
-                      width: 24,
-                    ),
-                    Indicator(
-                      positionIndex: 2,
-                      currentIndex: currentIndex,
-                    ),
-                    SizedBox(
-                      width: 24,
-                    ),
-                    Indicator(
-                      positionIndex: 3,
-                      currentIndex: currentIndex,
-                    ),
-                  ],
-                )),
-          ) : Container(),
+          Positioned(
+              bottom: size.yMargin(context, 12),
+              left: size.xMargin(context, 100 / 2.5),
+              child: Row(
+                children: [
+                  Indicator(
+                    positionIndex: 1,
+                    currentIndex: currentIndex,
+                  ),
+                  SizedBox(
+                    width: 24,
+                  ),
+                  Indicator(
+                    positionIndex: 2,
+                    currentIndex: currentIndex,
+                  ),
+                  SizedBox(
+                    width: 24,
+                  ),
+                  Indicator(
+                    positionIndex: 3,
+                    currentIndex: currentIndex,
+                  ),
+                ],
+              )),
           Positioned(
               bottom: 30,
               child: FlatButton(
                 onPressed: () {
-
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => LoginPage()));
-
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => LoginPage()));
                 },
                 child: Text(
                   'Skip',
@@ -103,7 +98,7 @@ class _OnboardingState extends State<Onboarding> {
             bottom: 30,
             right: 0,
             child: FlatButton(
-              onPressed: () => _bottomTapped(currentIndex + 1),
+              onPressed: ()=> _bottomTapped(currentIndex+1),
               child: Text(
                 'Next',
                 style: TextStyle(
@@ -117,8 +112,8 @@ class _OnboardingState extends State<Onboarding> {
         ]));
   }
 
-  Widget onboard(String imgPath, String title, String desctext, Orientation orientation) {
-    return orientation == Orientation.portrait ? Column(
+  Widget onboard(String imgPath, String title, String desctext) {
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -127,7 +122,7 @@ class _OnboardingState extends State<Onboarding> {
           width: 120,
         ),
         SizedBox(
-          height: size.yMargin(context, 4),
+          height: 36,
         ),
         Text(
           title,
@@ -135,11 +130,11 @@ class _OnboardingState extends State<Onboarding> {
           style: TextStyle(
               decoration: TextDecoration.none,
               fontFamily: 'Gilroy',
-              fontSize: size.textSize(context, 4),
+              fontSize: size.textSize(context, 4.5),
               color: kPrimaryColor),
         ),
         SizedBox(
-          height: size.yMargin(context, 7),
+          height: 36,
         ),
         Text(
           desctext,
@@ -152,49 +147,11 @@ class _OnboardingState extends State<Onboarding> {
               color: kBlack),
         )
       ],
-    ): SingleChildScrollView(
-      child: Center(
-        child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Image.asset(
-            imgPath,
-            width: 120,
-          ),
-          SizedBox(
-            height: size.yMargin(context, 4),
-          ),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                decoration: TextDecoration.none,
-                fontFamily: 'Gilroy',
-                fontSize: size.textSize(context, 4.5),
-                color: kPrimaryColor),
-          ),
-          SizedBox(
-            height: size.yMargin(context, 7),
-          ),
-          Text(
-            desctext,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                decoration: TextDecoration.none,
-                fontSize: size.textSize(context, 2),
-                fontWeight: FontWeight.w500,
-                fontFamily: 'Gilroy',
-                color: kBlack),
-          )
-        ],
-    ),
-      ),
     );
   }
 
-//  static const duration = Duration(seconds: 1);
-//  static const curve = Curves.easeIn;
+  static const duration = Duration(seconds: 1);
+  static const curve = Curves.easeIn;
 }
 
 class Indicator extends StatelessWidget {
@@ -209,7 +166,7 @@ class Indicator extends StatelessWidget {
       width: 12,
       height: 12,
       decoration: BoxDecoration(
-          color: positionIndex == currentIndex + 1
+          color: positionIndex == currentIndex+1
               ? kPrimaryColor
               : kGrey.withOpacity(0.5),
           shape: BoxShape.circle),
