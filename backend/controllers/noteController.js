@@ -15,7 +15,7 @@ exports.create = (req, res) => {
         content: req.body.content,
         userID: req.body.userID,
         important: req.body.important,
-        //date: req.body.date
+        date: req.body.date
     });
 
     // Save Note in the database
@@ -125,6 +125,7 @@ exports.update = (req, res) => {
         title: req.body.title || "Untitled Note",
         content: req.body.content,
         important: req.body.important,
+        date: req.body.date
     }, { new: true })
         .then(note => {
             if (!note) {
