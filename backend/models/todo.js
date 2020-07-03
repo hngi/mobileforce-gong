@@ -12,4 +12,4 @@ const TodoSchema = mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('Reminder', TodoSchema);
+module.exports = mongoose.model('todo', TodoSchema);

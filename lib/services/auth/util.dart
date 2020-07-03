@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:team_mobileforce_gong/UI/screens/home_page.dart';
 import 'package:team_mobileforce_gong/UI/screens/home_wrapper.dart';
 import 'package:team_mobileforce_gong/UI/screens/sign_in.dart';
+import 'package:team_mobileforce_gong/services/navigation/app_navigation/navigation.dart';
 import 'package:team_mobileforce_gong/state/authProvider.dart';
 
 
@@ -15,8 +16,9 @@ void gotoHomeScreen(BuildContext context) {
     if (Provider.of<AuthenticationState>(context, listen: false).authStatus ==
       kAuthSuccess){
         // var user = Provider.of<AuthenticationState>(context, listen: false).exposeUser();
-        Navigator.push(context, 
-              MaterialPageRoute(builder: (context) => HomeWrapper()));
+        // Navigator.push(context, 
+        //       MaterialPageRoute(builder: (context) => HomeWrapper()));
+        Navigation().pushToAndReplace(context, HomeWrapper());
       }
   });
 }
@@ -26,8 +28,9 @@ void gotoLoginScreen(BuildContext context) {
   Future.microtask((){
     if (Provider.of<AuthenticationState>(context, listen: false).authStatus ==
       null){
-        Navigator.push(context, 
-              MaterialPageRoute(builder: (context) => LoginPage()));
+        Navigation().pushToAndReplace(context, LoginPage());
+        // Navigator.push(context, 
+        //       MaterialPageRoute(builder: (context) => LoginPage()));
       }
   });
 }

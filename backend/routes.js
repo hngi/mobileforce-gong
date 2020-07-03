@@ -24,7 +24,7 @@ router.post('/important', notes.findImportant);
 router.get('/notes/:noteId', notes.findOne);
 
 // Retrieve a single Note with userID
-router.post('/notes/user', notes.findByUser);
+router.get('/notes/user/:userId', notes.findByUser);
 
 // Update a Note with noteId
 router.put('/notes/:noteId', notes.update);
@@ -32,19 +32,17 @@ router.put('/notes/:noteId', notes.update);
 // Delete a Note with noteId
 router.delete('/notes/:noteId', notes.delete);
 
-
+//create a todo
 router.post('/todo', todo.create);
 
-// Retrieve all Notes
-router.post('/todo/user', todo.findAll);
-
-router.get('/completed', todo.findImportant);
+//get completed todo
+router.get('/completed/:todoId', todo.findImportant);
 
 // Retrieve a single Note with noteId
 router.get('/todo/:todoId', todo.findOne);
 
-// Retrieve a single Note with userID
-router.get('/todo/:userId', todo.findOneByUser);
+// Retrieve notes of a user with userID
+router.get('/todo/user/:userId', todo.findOneByUser);
 
 // Update a Note with noteId
 router.put('/todo/:todoId', todo.update);
