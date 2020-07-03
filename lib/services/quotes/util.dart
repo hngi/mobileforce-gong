@@ -1,0 +1,1 @@
+final String quoteUrl = 'https://gonghng.herokuapp.com/quotes';

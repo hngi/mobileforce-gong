@@ -11,6 +11,7 @@ import 'package:team_mobileforce_gong/services/snackbarService.dart';
 import 'package:team_mobileforce_gong/state/authProvider.dart';
 
 import 'home_page.dart';
+import 'home_wrapper.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key, this.title}) : super(key: key);
@@ -213,7 +214,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: config.yMargin(context, 2)),
             GestureDetector(
               onTap: () {
-                Navigation().pushToAndReplace(context, HomePage());
+                Navigation().pushToAndReplace(context, HomeWrapper());
               },
               child: Text(
                 'Continue as free user.',
@@ -227,15 +228,18 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _emailPasswordWidget() {
-    return SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          _entryField("Email Address", "example@user.com", _emailController,
-              EmailValidator.validate),
-          _entryField("Password", "password", _passwordController,
-              PasswordValidator.validate,
-              isPassword: true),
-        ],
+    return Form(
+      key: _formKey,
+          child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            _entryField("Email Address", "example@user.com", _emailController,
+                EmailValidator.validate),
+            _entryField("Password", "password", _passwordController,
+                PasswordValidator.validate,
+                isPassword: true),
+          ],
+        ),
       ),
     );
   }

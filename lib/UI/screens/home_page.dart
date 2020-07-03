@@ -45,132 +45,155 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     getUser();
+    Provider.of<NotesProvider>(context, listen: false).fetch(uid);
+    Provider.of<TodoProvider>(context, listen: false).fetch(uid);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<NotesProvider>(context).fetch(uid);
-    Provider.of<TodoProvider>(context).fetch(uid);
+    
     return Scaffold(
-      key: scaffoldKey,
-      drawer: HomeDrawer(
-        username: username,
-      ),
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(
-          'Hey ${username ?? 'There'}',
-          style: Theme.of(context).textTheme.headline6.copyWith(
-                fontSize: SizeConfig().textSize(context, 3),
-              ),
+        key: scaffoldKey,
+        drawer: HomeDrawer(
+          username: username,
         ),
-        leading: GestureDetector(
-          onTap: () => scaffoldKey.currentState.openDrawer(),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-            child: SvgPicture.asset(
-              'assets/svgs/ham.svg',
-              color: Provider.of<ThemeNotifier>(context, listen: false)
-                      .isDarkModeOn
-                  ? Colors.white
-                  : Colors.black,
+        appBar: AppBar(
+            elevation: 0,
+            title: Text(
+              'Hey ${username ?? 'There'}',
+              style: Theme.of(context).textTheme.headline6.copyWith(
+                    fontSize: SizeConfig().textSize(context, 3),
+                  ),
             ),
-          ),
-        ),
-        actions: <Widget>[
-          GestureDetector(
-            onTap: () {
-              Provider.of<ThemeNotifier>(context, listen: false).switchTheme(
-                  !Provider.of<ThemeNotifier>(context, listen: false)
-                      .isDarkModeOn);
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
-              margin: EdgeInsets.only(right: 10),
-              child: SvgPicture.asset(
-                'assets/svgs/night.svg',
-                width: 24,
-              ),
-            ),
-          )
-        ]
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Provider.of<NotesProvider>(context).notes.length == 0 ? Container(
-                padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.2, bottom:50),
-                child: Text(
-                  'Click the + button Below to get started',
-                  style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.1)),
+            leading: GestureDetector(
+              onTap: () => scaffoldKey.currentState.openDrawer(),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
+                child: SvgPicture.asset(
+                  'assets/svgs/ham.svg',
+                  color: Provider.of<ThemeNotifier>(context, listen: false)
+                          .isDarkModeOn
+                      ? Colors.white
+                      : Colors.black,
                 ),
-              ) : SizedBox(),
-              Center(child: newActions(context))
-            ],
+              ),
+            ),
+            actions: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  Provider.of<ThemeNotifier>(context, listen: false)
+                      .switchTheme(
+                          !Provider.of<ThemeNotifier>(context, listen: false)
+                              .isDarkModeOn);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0),
+                  margin: EdgeInsets.only(right: 10),
+                  child: SvgPicture.asset(
+                    'assets/svgs/night.svg',
+                    width: 24,
+                  ),
+                ),
+              )
+            ]
+          ),
+        body: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Provider.of<NotesProvider>(context).notes.length == 0
+                    ? Container(
+                        padding: EdgeInsets.only(
+                            right: MediaQuery.of(context).size.width * 0.2,
+                            bottom: 50),
+                        child: Text(
+                          'Click the + button Below to get started',
+                          style: Theme.of(context).textTheme.headline6.copyWith(
+                              fontSize: SizeConfig().textSize(context, 2.1)),
+                        ),
+                      )
+                    : SizedBox(),
+                Center(child: newActions(context))
+              ],
+            ),
           ),
         ),
-      ),
-      floatingActionButton: Visibility(
-        visible: open,
-        child: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: (){
-            setState(() {
-              open = false;
-            });
-            Navigator.of(context).push(
-              new PageRouteBuilder(
-              opaque: false,
-              barrierColor: Colors.black.withOpacity(0.5),
-              barrierDismissible: true,
-              pageBuilder: (BuildContext context, __, _) {
-                  return WillPopScope(
-                    onWillPop: () async{
-                      setState(() {
-                        open = true;
-                      });
-                      Navigator.pop(context);
-                      return false;
-                    },
-                    child: Center(
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(
-                            height: SizeConfig().yMargin(context, MediaQuery.of(context).orientation == Orientation.portrait ? 70 : 18),
-                          ),
-                          Container(
-                            width: SizeConfig().xMargin(context, 40.3),
-                            height: SizeConfig().yMargin(context, 28),
-                            child: Stack(
-                              children: <Widget>[
-                                Container(
-                                  width: SizeConfig().xMargin(context, 40.3),
-                                  height: SizeConfig().yMargin(context, 22.2),
-                                  padding: EdgeInsets.only(left: SizeConfig().xMargin(context, 4), right: SizeConfig().xMargin(context, 4), top: SizeConfig().yMargin(context, 1.2), bottom: SizeConfig().yMargin(context, 3.7)),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: Provider.of<ThemeNotifier>(context, listen: false)
-                                          .isDarkModeOn
-                                      ? Colors.grey.shade900
-                                      : Colors.white,
-                                  ),
-                                  child: Column(
-                                    children: <Widget>[
+        floatingActionButton: Visibility(
+          visible: open,
+          child: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () {
+              setState(() {
+                open = false;
+              });
+              Navigator.of(context).push(new PageRouteBuilder(
+                  opaque: false,
+                  barrierColor: Colors.black.withOpacity(0.5),
+                  barrierDismissible: true,
+                  pageBuilder: (BuildContext context, __, _) {
+                    return WillPopScope(
+                      onWillPop: () async {
+                        setState(() {
+                          open = true;
+                        });
+                        Navigator.pop(context);
+                        return false;
+                      },
+                      child: Center(
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(
+                              height: SizeConfig().yMargin(
+                                  context,
+                                  MediaQuery.of(context).orientation ==
+                                          Orientation.portrait
+                                      ? 70
+                                      : 18),
+                            ),
+                            Container(
+                              width: SizeConfig().xMargin(context, 40.3),
+                              height: SizeConfig().yMargin(context, 28),
+                              child: Stack(
+                                children: <Widget>[
+                                  Container(
+                                    width: SizeConfig().xMargin(context, 40.3),
+                                    height: SizeConfig().yMargin(context, 22.2),
+                                    padding: EdgeInsets.only(
+                                        left: SizeConfig().xMargin(context, 4),
+                                        right: SizeConfig().xMargin(context, 4),
+                                        top: SizeConfig().yMargin(context, 1.2),
+                                        bottom:
+                                            SizeConfig().yMargin(context, 3.7)),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: Provider.of<ThemeNotifier>(context,
+                                                  listen: false)
+                                              .isDarkModeOn
+                                          ? Colors.grey.shade900
+                                          : Colors.white,
+                                    ),
+                                    child: Column(children: <Widget>[
                                       GestureDetector(
-                                        onTap: (){
+                                        onTap: () {
                                           setState(() {
                                             open = true;
                                           });
                                           Navigator.pop(context);
-                                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddNote()));
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AddNote()));
                                         },
                                         child: Container(
-                                          padding: EdgeInsets.symmetric(vertical: SizeConfig().yMargin(context, 1.8), horizontal: SizeConfig().xMargin(context, 1.9)),
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: SizeConfig()
+                                                  .yMargin(context, 1.8),
+                                              horizontal: SizeConfig()
+                                                  .xMargin(context, 1.9)),
                                           child: Row(
                                             children: <Widget>[
                                               Container(
@@ -180,92 +203,119 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                               ),
                                               Container(
-                                                margin: EdgeInsets.only(left: SizeConfig().xMargin(context, 2.3)),
-                                                child: Text(
-                                                  'Create Note',
-                                                  style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 1.8), color: blue)
-                                                ),
+                                                margin: EdgeInsets.only(
+                                                    left: SizeConfig()
+                                                        .xMargin(context, 2.3)),
+                                                child: Text('Create Note',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline6
+                                                        .copyWith(
+                                                            fontSize:
+                                                                SizeConfig()
+                                                                    .textSize(
+                                                                        context,
+                                                                        1.8),
+                                                            color: blue)),
                                               )
                                             ],
                                           ),
                                         ),
                                       ),
                                       GestureDetector(
-                                        onTap: (){
+                                          onTap: () {
+                                            setState(() {
+                                              open = true;
+                                            });
+                                            Navigator.pop(context);
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AddTodo()));
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: SizeConfig()
+                                                    .yMargin(context, 1.8),
+                                                horizontal: SizeConfig()
+                                                    .xMargin(context, 1.9)),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: <Widget>[
+                                                Container(
+                                                  child: SvgPicture.asset(
+                                                    'assets/svgs/addtodo.svg',
+                                                    width: 15,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin: EdgeInsets.only(
+                                                      left: SizeConfig()
+                                                          .xMargin(
+                                                              context, 2.3)),
+                                                  child: Text('Add To Do',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline6
+                                                          .copyWith(
+                                                              fontSize:
+                                                                  SizeConfig()
+                                                                      .textSize(
+                                                                          context,
+                                                                          1.8),
+                                                              color: blue)),
+                                                )
+                                              ],
+                                            ),
+                                          )),
+                                    ]),
+                                  ),
+                                  Positioned(
+                                      top: SizeConfig().yMargin(context, 18),
+                                      left: SizeConfig().xMargin(context, 13),
+                                      child: GestureDetector(
+                                        onTap: () {
                                           setState(() {
                                             open = true;
                                           });
                                           Navigator.pop(context);
-                                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddTodo()));
                                         },
                                         child: Container(
-                                          padding: EdgeInsets.symmetric(vertical: SizeConfig().yMargin(context, 1.8), horizontal: SizeConfig().xMargin(context, 1.9)),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: <Widget>[
-                                              Container(
-                                                child: SvgPicture.asset(
-                                                  'assets/svgs/addtodo.svg',
-                                                  width: 15,
-                                                ),
-                                              ),
-                                              Container(
-                                                margin: EdgeInsets.only(left: SizeConfig().xMargin(context, 2.3)),
-                                                child: Text(
-                                                  'Add To Do',
-                                                  style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 1.8), color: blue)
-                                                ),
-                                              )
-                                            ],
+                                          width: SizeConfig().xMargin(
+                                              context,
+                                              SizeConfig()
+                                                  .getXSize(context, 50)),
+                                          height: SizeConfig().yMargin(
+                                              context,
+                                              SizeConfig()
+                                                  .getYSize(context, 50)),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            color: blue,
                                           ),
+                                          child: Center(
+                                              child: SvgPicture.asset(
+                                            'assets/svgs/cancel.svg',
+                                            width: SizeConfig()
+                                                .xMargin(context, 4),
+                                          )),
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Positioned(
-                                  top: SizeConfig().yMargin(context, 18),
-                                  left: SizeConfig().xMargin(context, 13),
-                                  child: GestureDetector(
-                                    onTap: (){
-                                      setState(() {
-                                        open = true;
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                    child: Container(
-                                      width: SizeConfig().xMargin(context, SizeConfig().getXSize(context, 50)),
-                                      height: SizeConfig().yMargin(context, SizeConfig().getYSize(context, 50)),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        color: blue,
-                                      ),
-                                      child: Center(
-                                        child: SvgPicture.asset(
-                                          'assets/svgs/cancel.svg',
-                                          width: SizeConfig().xMargin(context, 4),
-                                        )
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
+                                      ))
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                }
-              )
-            );
-          },
-        ),
-      )
-    );
+                    );
+                  }));
+            },
+          ),
+        ));
   }
 }
-
 
 Widget newActions(context) => Wrap(
     alignment: WrapAlignment.start,

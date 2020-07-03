@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:team_mobileforce_gong/models/todos.dart';
 import 'package:team_mobileforce_gong/state/authProvider.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/models/category.dart';
@@ -11,11 +12,13 @@ import 'package:team_mobileforce_gong/util/styles/color.dart';
 
 class AddTodo extends StatefulWidget {
   final String stitle;
-  //final String scontent;
+  final String scontent;
+  final String scategory;
   final String sdate;
   final String stime;
+  final Todos stodo;
 
-  const AddTodo({Key key, this.stitle, this.sdate, this.stime}) : super(key: key);
+  const AddTodo({Key key, this.stitle, this.scontent, this.scategory, this.sdate, this.stime, this.stodo}) : super(key: key);
 
   @override
   _AddTodoState createState() => _AddTodoState();
@@ -80,8 +83,9 @@ class _AddTodoState extends State<AddTodo> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Provider.of<TodoProvider>(context, listen: false).createTodo(_stitle, Provider.of<AuthenticationState>(context, listen: false).uid, _scontent, _sdate, _stime);
-                          Navigator.pop(context);
+                          if(widget.stitle != null || widget.scontent != null) {
+                            Provider.of<TodoProvider>(context, listen: false).updateTodo(_stitle, _selectedcategory.name, Provider.of<AuthenticationState>(context, listen: false).uid, _scontent, _sdate, _stime, widget.stodo);
+                          } //else if(_stitle)
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -127,7 +131,7 @@ class _AddTodoState extends State<AddTodo> {
                             'Choose Category',
                             style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.4), fontWeight: FontWeight.w200, color: Provider.of<ThemeNotifier>(context, listen: false).isDarkModeOn ? Colors.grey[400] : Colors.grey[500]),
                           ),
-                          value: _selectedcategory,
+                          value: widget.scategory != null ? Category(widget.scategory, widget.scategory) : _selectedcategory,
                           items: _dropdownMenuItems,
                           onChanged: onChangedDropdownItem,
                           style: Theme.of(context).textTheme.headline5.copyWith(fontSize: SizeConfig().textSize(context, 2.4),),
@@ -168,7 +172,7 @@ class _AddTodoState extends State<AddTodo> {
                           keyboardType: TextInputType.multiline,
                           style: TextStyle(
                               fontSize: SizeConfig().textSize(context, 2.4)),
-                          //initialValue: widget.scontent == null ? null : widget.scontent,
+                          initialValue: widget.scontent == null ? null : widget.scontent,
                           decoration: InputDecoration(
                             hintText: 'Enter note (optional)',
                             hintStyle: TextStyle(

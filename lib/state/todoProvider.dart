@@ -15,6 +15,7 @@ class TodoProvider with ChangeNotifier{
   final dformat = new DateFormat('dd/MM/yy');
   List<Todos> todos = [];
   Map<String,String> headers = {'Content-type': 'application/json','Accept': 'application/json'};
+  String error;
 
   void completed(bool val, int index) {
     todos[index].completed = !val;
@@ -50,7 +51,7 @@ class TodoProvider with ChangeNotifier{
     });
   }
 
-  void createTodo(String title, String uid, String content, DateTime date, TimeOfDay time) async {
+  void createTodo(String title, String category, String uid, String content, DateTime date, TimeOfDay time) async {
     print(time);
     await post(
       'http://gonghng.herokuapp.com/todo',
@@ -66,7 +67,32 @@ class TodoProvider with ChangeNotifier{
       print(value.body);
       hValue = null;
       value = null;
-      fetch(uid);
+      Todos todo = new Todos(title: title, content: content, userID: uid, category: category, time: time != null ? time.hour.toString()+':'+time.minute.toString() : null, date: dformat.format(date).toString(), completed: false);
+      todos.insert(0, todo);
+      notifyListeners();
+    });
+  }
+
+  void updateTodo(String title, String category, String uid, String content, DateTime date, TimeOfDay time, Todos todo) async {
+    int index = todos.indexOf(todo);
+    await post(
+      'http://gonghng.herokuapp.com/todo/todoID',
+      body: jsonEncode({
+        'reminderId': todos[index].sId,
+        'title': title,
+        'content': content,
+        'category': category,
+        'date': dformat.format(date).toString(),
+        'time': time != null ? time.hour.toString()+':'+time.minute.toString() : null,
+      }),
+      headers: headers
+    ).then((value){
+      todos[index].title = title;
+      todos[index].content = content;
+      todos[index].category = category;
+      todos[index].date = dformat.format(date).toString();
+      todos[index].time = time != null ? time.hour.toString()+':'+time.minute.toString() : null;
+      notifyListeners();
     });
   }
 }

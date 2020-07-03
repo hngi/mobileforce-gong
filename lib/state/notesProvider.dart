@@ -15,6 +15,7 @@ class NotesProvider with ChangeNotifier{
   List<Notes> notes = [];
   var dateFormat = DateFormat("dd/MM/yy");
   Map<String,String> headers = {'Content-type': 'application/json','Accept': 'application/json'};
+  String error;
 
   // NotesProvider() {
   //   fetch();
@@ -48,7 +49,29 @@ class NotesProvider with ChangeNotifier{
       }),
       headers: headers
     ).then((value){
-      fetch(uid);
+      Notes note = new Notes(sId: uid, title: title, content: content, important: important, date: dateFormat.format(DateTime.now()).toString());
+      notes.insert(0, note);
+      notifyListeners();
+    });
+  }
+
+  void updateNote(String uid, String title, String content, bool important, Notes note) async {
+    int index = notes.indexOf(note);
+    await post(
+      'http://',
+      body: jsonEncode({
+        'noteId': notes[index].sId,
+        'title': title,
+        'content': content,
+        'important': important,
+      }),
+      headers: headers
+    ).catchError((error) => print(error))
+    .then((value){
+      notes[index].title = title;
+      notes[index].content = content;
+      notes[index].important =important;
+      notifyListeners();
     });
   }
 }

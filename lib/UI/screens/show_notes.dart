@@ -28,63 +28,66 @@ class ShowNotes extends StatelessWidget {
               child: ListView.builder(
                 itemCount: notes.length,
                 itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: (){
-                      Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => AddNote(stitle: notes[index].title, scontent: notes[index].content)));
-                    },
-                    child: Card(
-                      elevation: 0,
-                      margin: EdgeInsets.only(bottom: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(8),
-                          bottomLeft: Radius.circular(8),
+                  return Container(
+                    padding: index == notes.length -1 ? EdgeInsets.only(bottom: 30) : EdgeInsets.zero,
+                    child: InkWell(
+                      onTap: (){
+                        Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) => AddNote(stitle: notes[index].title, scontent: notes[index].content)));
+                      },
+                      child: Card(
+                        elevation: 0,
+                        margin: EdgeInsets.only(bottom: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
-                        child: Container(
-                          padding: EdgeInsets.only(top: 20, left: 20, bottom: 8, right: 20),
-                          decoration: BoxDecoration(
-                            border: Border(
-                              left: BorderSide(width: 5.0, color: blue)
-                            )
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            bottomLeft: Radius.circular(8),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                child: Text(
-                                  notes[index].title,
-                                  style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.5), color: blue, fontWeight: FontWeight.w500),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              SizedBox(height: 8,),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Flexible(
-                                    child: Text(
-                                      notes[index].content,
-                                      style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.2),),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Text(
-                                      notes[index].date,
-                                      style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 1.6))
-                                    ),
-                                  ),
-                                ],
+                          child: Container(
+                            padding: EdgeInsets.only(top: 20, left: 20, bottom: 8, right: 20),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                left: BorderSide(width: 5.0, color: blue)
                               )
-                            ],
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(
+                                  child: Text(
+                                    notes[index].title,
+                                    style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.5), color: blue, fontWeight: FontWeight.w500),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                SizedBox(height: 8,),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    Flexible(
+                                      child: Text(
+                                        notes[index].content,
+                                        style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.2),),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        notes[index].date,
+                                        style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 1.6))
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
