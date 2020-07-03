@@ -57,13 +57,8 @@ exports.findImportant = (req, res) => {
 
 
 exports.findByUser = (req, res) => {
-<<<<<<< HEAD
-    var query = {userID: req.params.userId};
-    Note.find(query, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
-=======
     var query = {userID: req.body.userId};
     Note.find(query)
->>>>>>> 421189ff4a859a6f1f6df17e168e9578fcfb3961
         .then(notes => {
             res.send(notes);
         }).catch(err => {
@@ -128,7 +123,10 @@ exports.update = (req, res) => {
     // Find note and update it with the request body
     Note.findByIdAndUpdate(req.params.noteId, {
         title: req.body.title || "Untitled Note",
-        content: req.body.content
+        content: req.body.content,
+        important: req.body.important,
+        date: req.body.date,
+        userID: req.body.userID
     }, { new: true })
         .then(note => {
             if (!note) {

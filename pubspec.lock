@@ -199,6 +199,23 @@ packages:
     source: hosted
     version: "3.1.4"
   image:
+<<<<<<< HEAD
+=======
+    dependency: transitive
+    description:
+      name: image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.13"
+  image_picker:
+    dependency: "direct main"
+    description:
+      name: image_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.7+2"
+  image_picker_platform_interface:
+>>>>>>> 7425f1b5fb4a689b577f7d833b4cc8a68d639d2d
     dependency: transitive
     description:
       name: image
