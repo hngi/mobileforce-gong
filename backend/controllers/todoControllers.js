@@ -32,25 +32,12 @@ exports.create = (req, res) => {
 };
 
 
-// Retrieve and return all reminders from the database.
-exports.findAll = (req, res) => {
-    var query = {userID : req.body.userId}
-    Todo.find(query, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
-        .then(reminders => {
-            res.send(reminders);
-        }).catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving reminders."
-            });
-        });
-};
-
 
 exports.findImportant = (req, res) => {
-    var query = {userID: req.body.userId, important: true};
+    var query = {userID: req.params.userId, important: true};
     Todo.find(query, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
-        .then(reminders => {
-            res.send(reminders);
+        .then(todos => {
+            res.send(todos);
         }).catch(err => {
             res.status(500).send({
                 message: err.message || "Some error occurred while retrieving reminders."
@@ -58,50 +45,41 @@ exports.findImportant = (req, res) => {
         });
 };
 
-// Find a single todo with a reminderId
+// Find a single todo with a todoId
 exports.findOne = (req, res) => {
-    Todo.findById(req.params.reminderId, {createdAt: 0, updatedAt: 0, __v: 0})
+    Todo.findById(req.params.todoId, {createdAt: 0, updatedAt: 0, __v: 0})
         .then(todo => {
             if (!todo) {
                 return res.status(404).send({
-                    message: "todo not found with id " + req.params.reminderId
+                    message: "todo not found with id " + req.params.todoId
                 });
             }
             res.send(todo);
         }).catch(err => {
             if (err.kind === 'ObjectId') {
                 return res.status(404).send({
-                    message: "todo not found with id " + req.params.reminderId
+                    message: "todo not found with id " + req.params.todoId
                 });
             }
             return res.status(500).send({
-                message: "Error retrieving todo with id " + req.params.reminderId
+                message: "Error retrieving todo with id " + req.params.todoId
             });
         });
 };
 
 exports.findOneByUser = (req, res) => {
-    Todo.findById(req.params.userId, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
-        .then(todo => {
-            if (!todo) {
-                return res.status(404).send({
-                    message: "todo not found with id " + req.params.userId
-                });
-            }
-            res.send(todo);
+    var query = {userID: req.params.userId};
+    Todo.find(query, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
+        .then(todos => {
+            res.send(todos);
         }).catch(err => {
-            if (err.kind === 'ObjectId') {
-                return res.status(404).send({
-                    message: "todo not found with id " + req.params.userId
-                });
-            }
-            return res.status(500).send({
-                message: "Error retrieving todo with id " + req.params.userId
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving notes."
             });
         });
 };
 
-// Update a todo identified by the reminderId in the request
+// Update a todo identified by the todoId in the request
 exports.update = (req, res) => {
     // Validate Request
     if (!req.body.title && !req.body.content) {
@@ -111,7 +89,7 @@ exports.update = (req, res) => {
     }
     //The {new: true} option in the findByIdAndUpdate() method is used to return the modified document to the then() function instead of the original
     // Find todo and update it with the request body
-    Todo.findByIdAndUpdate(req.params.reminderId, {
+    Todo.findByIdAndUpdate(req.params.todoId, {
         title: req.body.title,
         content: req.body.content,
         category: req.body.category,
@@ -121,40 +99,40 @@ exports.update = (req, res) => {
         .then(todo => {
             if (!todo) {
                 return res.status(404).send({
-                    message: "todo not found with id " + req.params.reminderId
+                    message: "todo not found with id " + req.params.todoId
                 });
             }
             res.send(todo);
         }).catch(err => {
             if (err.kind === 'ObjectId') {
                 return res.status(404).send({
-                    message: "todo not found with id " + req.params.reminderId
+                    message: "todo not found with id " + req.params.todoId
                 });
             }
             return res.status(500).send({
-                message: "Error updating todo with id " + req.params.reminderId
+                message: "Error updating todo with id " + req.params.todoId
             });
         });
 };
 
-// Delete a todo with the specified reminderId in the request
+// Delete a todo with the specified todoId in the request
 exports.delete = (req, res) => {
-    Todo.findByIdAndRemove(req.params.reminderId)
+    Todo.findByIdAndRemove(req.params.todoId)
         .then(todo => {
             if (!todo) {
                 return res.status(404).send({
-                    message: "todo not found with id " + req.params.reminderId
+                    message: "todo not found with id " + req.params.todoId
                 });
             }
             res.send({ message: "todo deleted successfully!" });
         }).catch(err => {
             if (err.kind === 'ObjectId' || err.name === 'NotFound') {
                 return res.status(404).send({
-                    message: "todo not found with id " + req.params.reminderId
+                    message: "todo not found with id " + req.params.todoId
                 });
             }
             return res.status(500).send({
-                message: "Could not delete Todo with id " + req.params.reminderId
+                message: "Could not delete Todo with id " + req.params.todoId
             });
         });
 };
