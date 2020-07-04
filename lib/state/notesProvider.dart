@@ -16,10 +16,28 @@ class NotesProvider with ChangeNotifier{
   var dateFormat = DateFormat("dd/MM/yy");
   Map<String,String> headers = {'Content-type': 'application/json','Accept': 'application/json'};
   String error;
+  bool select = false;
+  List<Notes> deletes = [];
 
   // NotesProvider() {
   //   fetch();
   // }
+
+  void setSelect() {
+    select = !select;
+    deletes = [];
+    notifyListeners();
+  }
+
+  void addDelete(Notes note) {
+    deletes.add(note);
+    notifyListeners();
+  }
+
+  void removeDeletes(int index) {
+    deletes.removeAt(index);
+    notifyListeners();
+  }
 
   void fetch(String uid) async{
     await http.get(
@@ -75,5 +93,21 @@ class NotesProvider with ChangeNotifier{
       notes[index].important =important;
       notifyListeners();
     });
+  }
+  void deleteNote() async {
+    for(var note in deletes) {
+      //print(note.sId);
+      String id = note.sId;
+      int index = notes.indexOf(note);
+      await delete(
+        'http://gonghng.herokuapp.com/notes/$id',
+        headers: headers
+      ).then((value){
+        print(value.body);
+        notes.removeAt(index);
+        setSelect();
+        notifyListeners();
+      });
+    }
   }
 }

@@ -16,6 +16,24 @@ class TodoProvider with ChangeNotifier{
   List<Todos> todos = [];
   Map<String,String> headers = {'Content-type': 'application/json','Accept': 'application/json'};
   String error;
+  bool select = false;
+  List<Todos> deletes = [];
+
+  void setSelect() {
+    select = !select;
+    deletes = [];
+    notifyListeners();
+  }
+
+  void addDelete(Todos todo) {
+    deletes.add(todo);
+    notifyListeners();
+  }
+
+  void removeDeletes(int index) {
+    deletes.removeAt(index);
+    notifyListeners();
+  }
 
   void completed(bool val, int index) {
     todos[index].completed = !val;
@@ -57,14 +75,16 @@ class TodoProvider with ChangeNotifier{
         'userID': uid,
         'time': time != null ? time.hour.toString()+':'+time.minute.toString() : null,
         'completed': false,
-        'date': dformat.format(date).toString()
+        'content': content,
+        'category': category,
+        'date': date == null ? null : dformat.format(date).toString()
       }),
       headers: headers
     ).then((value){
       print(value.body);
       hValue = null;
       value = null;
-      Todos todo = new Todos(title: title, content: content, userID: uid, category: category, time: time != null ? time.hour.toString()+':'+time.minute.toString() : null, date: dformat.format(date).toString(), completed: false);
+      Todos todo = new Todos(title: title, content: content, userID: uid, category: category, time: time != null ? time.hour.toString()+':'+time.minute.toString() : null, date: date == null ? null : dformat.format(date).toString(), completed: false);
       todos.insert(0, todo);
       notifyListeners();
     });
@@ -81,6 +101,7 @@ class TodoProvider with ChangeNotifier{
         'content': content,
         'category': category,
         'date': dformat.format(date).toString(),
+        'completed': false,
         'time': time != null ? time.hour.toString()+':'+time.minute.toString() : null,
       }),
       headers: headers
@@ -88,13 +109,14 @@ class TodoProvider with ChangeNotifier{
       todos[index].title = title;
       todos[index].content = content;
       todos[index].category = category;
+      todos[index].completed = false;
       todos[index].date = dformat.format(date).toString();
       todos[index].time = time != null ? time.hour.toString()+':'+time.minute.toString() : null;
       notifyListeners();
     });
   }
 
-  void updateCompleted(String title, String category, String uid, String content, DateTime date, TimeOfDay time, Todos todo) async {
+  void updateCompleted(String title, String category, String uid, String content, String date, String time, bool completed, Todos todo) async {
     int index = todos.indexOf(todo);
     String id = todos[index].sId;
     await http.put(
@@ -104,17 +126,34 @@ class TodoProvider with ChangeNotifier{
         'title': title,
         'content': content,
         'category': category,
-        'date': dformat.format(date).toString(),
-        'time': time != null ? time.hour.toString()+':'+time.minute.toString() : null,
+        'completed' : completed,
+        'date': date,
+        'time': time,
       }),
       headers: headers
     ).then((value){
       todos[index].title = title;
       todos[index].content = content;
       todos[index].category = category;
-      todos[index].date = dformat.format(date).toString();
-      todos[index].time = time != null ? time.hour.toString()+':'+time.minute.toString() : null;
+      todos[index].completed = completed;
+      todos[index].date = date;
+      todos[index].time = time;
       notifyListeners();
     });
+  }
+  void deleteTodo() async {
+    for(var todo in deletes) {
+      String id = todo.sId;
+      int index = todos.indexOf(todo);
+      await delete(
+        'http://gonghng.herokuapp.com/todo/$id',
+        headers: headers
+      ).then((value){
+        print(value.body);
+        todos.removeAt(index);
+        setSelect();
+        notifyListeners();
+      });
+    }
   }
 }

@@ -125,6 +125,8 @@ exports.update = (req, res) => {
         title: req.body.title || "Untitled Note",
         content: req.body.content,
         important: req.body.important,
+        date: req.body.date,
+        userID: req.body.userID
     }, { new: true })
         .then(note => {
             if (!note) {

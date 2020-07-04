@@ -50,6 +50,29 @@ class DispatchPage extends StatelessWidget {
             ),
           ),
         ),
+        actions: <Widget>[
+          Provider.of<TodoProvider>(context, listen: false).select || Provider.of<NotesProvider>(context, listen: false).select ? GestureDetector(
+            onTap: () {
+              Provider.of<TodoProvider>(context, listen: false).select ? Provider.of<TodoProvider>(context, listen: false).deleteTodo() : Provider.of<NotesProvider>(context, listen: false).deleteNote();
+            },
+            child: Container(
+              margin: EdgeInsets.only(right: 10, bottom: 10, top: 10),
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.red.withOpacity(0.8),
+              ),
+              child: SvgPicture.asset(
+                'assets/svgs/delete.svg',
+                width: 18,
+                color: Provider.of<ThemeNotifier>(context, listen: false)
+                        .isDarkModeOn
+                    ? Colors.white
+                    : Colors.black,
+              ),
+            ),
+          ) : SizedBox()
+        ],
       ),
       body: name == 'note' && notes.length != 0 ? ShowNotes() : name == 'todo' && todos.length != 0 ? ShowTodos() : Container(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
