@@ -5,9 +5,8 @@ class Todos {
   String time;
   bool completed;
   String date;
-  String createdAt;
-  String updatedAt;
-  int iV;
+  String content;
+  String category;
 
   Todos(
       {this.sId,
@@ -16,9 +15,8 @@ class Todos {
       this.time,
       this.completed,
       this.date,
-      this.createdAt,
-      this.updatedAt,
-      this.iV});
+      this.category,
+      this.content});
 
   Todos.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -27,9 +25,8 @@ class Todos {
     time = json['time'];
     completed = json['completed'];
     date = json['date'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    iV = json['__v'];
+    category = json['category'];
+    content = json['content'];
   }
 
   Map<String, dynamic> toJson() {
@@ -40,9 +37,8 @@ class Todos {
     data['time'] = this.time;
     data['completed'] = this.completed;
     data['date'] = this.date;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
+    data['category'] = this.category;
+    data['content'] = this.content;
     return data;
   }
 }

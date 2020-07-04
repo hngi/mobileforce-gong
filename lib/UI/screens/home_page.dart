@@ -39,14 +39,15 @@ class _HomePageState extends State<HomePage> {
             username = user.displayName;
             uid = user.uid;
           })
+        }).then((value) {
+          Provider.of<NotesProvider>(context, listen: false).fetch(uid);
+          Provider.of<TodoProvider>(context, listen: false).fetch(uid);
         });
   }
 
   @override
   void initState() {
     getUser();
-    Provider.of<NotesProvider>(context, listen: false).fetch(uid);
-    Provider.of<TodoProvider>(context, listen: false).fetch(uid);
     super.initState();
   }
 
@@ -96,7 +97,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               )
-            ]),
+            ]
+          ),
         body: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -317,56 +319,36 @@ class _HomePageState extends State<HomePage> {
 }
 
 Widget newActions(context) => Wrap(
-      alignment: WrapAlignment.start,
-      spacing: SizeConfig().xMargin(context, 6),
-      runSpacing: SizeConfig().yMargin(context, 2.1),
-      children: <Widget>[
-        ActionCard(
-          svg: 'assets/svgs/note.svg',
-          title: 'Notes',
-          text: Provider.of<NotesProvider>(context).notes.length != 0
-              ? Provider.of<NotesProvider>(context, listen: true)
-                      .notes
-                      .length
-                      .toString() +
-                  ' saved'
-              : '',
-          onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => DispatchPage(
-                        name: 'note',
-                      ))),
-        ),
-        ActionCard(
-          svg: 'assets/svgs/todo.svg',
-          title: 'Todo',
-          text: Provider.of<TodoProvider>(context).todos.length != 0
-              ? Provider.of<TodoProvider>(context, listen: true)
-                      .todos
-                      .length
-                      .toString() +
-                  ' Pending'
-              : '',
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => DispatchPage(
-                    name: 'todo',
-                  ))),
-        ),
-        ActionCard(
-          svg: 'assets/svgs/facts.svg',
-          title: 'View Facts',
-          text: '12 Saved',
-        ),
-        ActionCard(
-          svg: 'assets/svgs/motivation.svg',
-          title: 'Motivation',
-          text: '12 Saved',
-        ),
-        ActionCard(
-          svg: 'assets/svgs/calendar.svg',
-          title: 'View Reminder',
-          text: '12 Saved',
-        ),
-      ],
-    );
+    alignment: WrapAlignment.start,
+    spacing: SizeConfig().xMargin(context, 6),
+    runSpacing: SizeConfig().yMargin(context, 2.1),
+    children: <Widget>[
+      ActionCard(
+        svg: 'assets/svgs/note.svg',
+        title: 'Notes',
+        text: Provider.of<NotesProvider>(context).notes.length != 0 ? Provider.of<NotesProvider>(context, listen: true).notes.length.toString() + ' saved' : '0 saved',
+        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DispatchPage(name: 'note',))),
+      ),
+      ActionCard(
+        svg: 'assets/svgs/todo.svg',
+        title: 'Todo',
+        text:  Provider.of<TodoProvider>(context).todos.length != 0 ? Provider.of<TodoProvider>(context, listen: true).todos.length.toString() + ' Pending' : '0 Pending',
+        onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => DispatchPage(name: 'todo',))),
+      ),
+      ActionCard(
+        svg: 'assets/svgs/facts.svg',
+        title: 'View Facts',
+        text: '12 Saved',
+      ),
+      ActionCard(
+        svg: 'assets/svgs/motivation.svg',
+        title: 'Motivation',
+        text: '12 Saved',
+      ),
+      ActionCard(
+        svg: 'assets/svgs/calendar.svg',
+        title: 'View Reminder',
+        text: '12 Saved',
+      ),
+    ],
+  );

@@ -15,24 +15,39 @@ class NotesProvider with ChangeNotifier{
   List<Notes> notes = [];
   var dateFormat = DateFormat("dd/MM/yy");
   Map<String,String> headers = {'Content-type': 'application/json','Accept': 'application/json'};
+  String error;
+  bool select = false;
+  List<Notes> deletes = [];
 
   // NotesProvider() {
   //   fetch();
   // }
 
+  void setSelect() {
+    select = !select;
+    deletes = [];
+    notifyListeners();
+  }
+
+  void addDelete(Notes note) {
+    deletes.add(note);
+    notifyListeners();
+  }
+
+  void removeDeletes(int index) {
+    deletes.removeAt(index);
+    notifyListeners();
+  }
+
   void fetch(String uid) async{
-    await http.post(
-      'http://gonghng.herokuapp.com/notes/user',
-      body: jsonEncode({
-        'userId': uid
-      }),
+    await http.get(
+      'http://gonghng.herokuapp.com/notes/user/$uid',
       headers: headers
     ).then((value){
       var jsonres = convert.jsonDecode(value.body) as List;
       notes = jsonres.map((e) => Notes.fromJson(e)).toList();
       notifyListeners();
-    });
-    
+    });  
   }
 
   void createNote(String uid, String title, String content, bool important) async{
@@ -43,12 +58,56 @@ class NotesProvider with ChangeNotifier{
         'title': title,
         'content': content,
         'userID': uid,
-        'important': 'false',
-        'date': dateFormat.format(DateTime.now()).toString()
+        'date': dateFormat.format(DateTime.now()).toString(),
+        'important': important,
       }),
       headers: headers
     ).then((value){
-      fetch(uid);
+      print(value.body);
+      Notes note = new Notes(sId: uid, title: title, content: content, important: important, date: dateFormat.format(DateTime.now()).toString());
+      notes.insert(0, note);
+      notifyListeners();
     });
+  }
+
+  void updateNote(String uid, String title, String content, bool important, Notes note) async {
+    
+    int index = notes.indexOf(note);
+    String id = notes[index].sId;
+    print(id);
+    //print(index);
+    await put(
+      'http://gonghng.herokuapp.com/notes/$id',
+      body: jsonEncode({
+        //'noteId': notes[index].sId,
+        'title': title,
+        'content': content,
+        'important': important,
+      }),
+      headers: headers
+    ).catchError((error) => print(error))
+    .then((value){
+      print(value.body);
+      notes[index].title = title;
+      notes[index].content = content;
+      notes[index].important =important;
+      notifyListeners();
+    });
+  }
+  void deleteNote() async {
+    for(var note in deletes) {
+      //print(note.sId);
+      String id = note.sId;
+      int index = notes.indexOf(note);
+      await delete(
+        'http://gonghng.herokuapp.com/notes/$id',
+        headers: headers
+      ).then((value){
+        print(value.body);
+        notes.removeAt(index);
+        setSelect();
+        notifyListeners();
+      });
+    }
   }
 }

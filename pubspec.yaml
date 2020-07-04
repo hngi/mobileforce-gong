@@ -23,11 +23,9 @@ environment:
 dependencies:
   sqflite: any
   path_provider: any
-
-  intl: ^0.16.1
+  intl:
   google_fonts:
   http:
-
   flutter_svg:
   device_preview:
   google_sign_in:
