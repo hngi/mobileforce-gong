@@ -151,9 +151,9 @@ class TodoProvider with ChangeNotifier{
       ).then((value){
         print(value.body);
         todos.removeAt(index);
-        setSelect();
         notifyListeners();
       });
     }
+    setSelect();
   }
 }

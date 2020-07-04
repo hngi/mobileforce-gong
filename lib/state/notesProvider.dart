@@ -105,9 +105,9 @@ class NotesProvider with ChangeNotifier{
       ).then((value){
         print(value.body);
         notes.removeAt(index);
-        setSelect();
         notifyListeners();
       });
     }
+    setSelect();
   }
 }

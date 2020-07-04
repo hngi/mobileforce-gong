@@ -71,7 +71,7 @@ class ShowTodos extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                           child: Container(
-                            padding: EdgeInsets.only(top: 8, left: 25, right: 20, bottom: 5),
+                            padding: EdgeInsets.only(top: 20, left: 25, right: 20, bottom: 5),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
@@ -110,7 +110,7 @@ class ShowTodos extends StatelessWidget {
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
-                                            SizedBox(height: 8,),
+                                            todos[index].content == null ? SizedBox() : SizedBox(height: 8,),
                                             todos[index].content == null ? SizedBox() : Text(
                                               todos[index].content,
                                               style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2)),
