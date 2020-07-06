@@ -1,16 +1,16 @@
 class Category {
-  int id;
+  String id;
   String name;
 
   Category(this.id, this.name);
 
   static List<Category> getData() {
     return <Category>[
-      Category(1, 'Category1'),
-      Category(1, 'Category2'),
-      Category(1, 'Category3'),
-      Category(1, 'Category4'),
-      Category(1, 'Category5'),
+      Category('Category1', 'Category1'),
+      Category('Category2', 'Category2'),
+      Category('Category3', 'Category3'),
+      Category('Category4', 'Category4'),
+      Category('Category5', 'Category5'),
     ];
   }
 }

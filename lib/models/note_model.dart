@@ -5,9 +5,6 @@ class Notes {
   String userID;
   bool important;
   String date;
-  String createdAt;
-  String updatedAt;
-  int iV;
 
   Notes(
       {this.sId,
@@ -15,10 +12,7 @@ class Notes {
       this.content,
       this.userID,
       this.important,
-      this.date,
-      this.createdAt,
-      this.updatedAt,
-      this.iV});
+      this.date});
 
   Notes.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -27,9 +21,6 @@ class Notes {
     userID = json['userID'];
     important = json['important'];
     date = json['date'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    iV = json['__v'];
   }
 
   Map<String, dynamic> toJson() {
@@ -40,9 +31,6 @@ class Notes {
     data['userID'] = this.userID;
     data['important'] = this.important;
     data['date'] = this.date;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
     return data;
   }
 }

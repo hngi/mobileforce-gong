@@ -23,11 +23,13 @@ environment:
 dependencies:
   sqflite: any
   path_provider: any
+<<<<<<< HEAD
 
+=======
+>>>>>>> 68a91e097a627e64bdc7c9d5fdde8afe111dac21
   intl:
   google_fonts:
   http:
-
   flutter_svg:
   device_preview:
   google_sign_in:
