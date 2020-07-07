@@ -7,7 +7,6 @@ import 'package:team_mobileforce_gong/UI/screens/home_page.dart';
 import 'package:team_mobileforce_gong/UI/screens/show_notes.dart';
 import 'package:team_mobileforce_gong/UI/screens/show_todos.dart';
 import 'package:team_mobileforce_gong/models/note_model.dart';
-import 'package:team_mobileforce_gong/models/todo.dart';
 import 'package:team_mobileforce_gong/models/todos.dart';
 import 'package:team_mobileforce_gong/services/navigation/app_navigation/navigation.dart';
 import 'package:team_mobileforce_gong/state/notesProvider.dart';
@@ -25,7 +24,6 @@ class DispatchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Notes> notes = Provider.of<NotesProvider>(context).notes;
     List<Todos> todos = Provider.of<TodoProvider>(context).todos;
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -110,9 +108,9 @@ class DispatchPage extends StatelessWidget {
         child: Icon(Icons.add),
         onPressed: () => name == 'note'
             ? Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => AddNote()))
+                .push(MaterialPageRoute(builder: (context) => AddNote(new Notes.noID( "", "", "", 1))))
             : Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => AddTodo())),
+                .push(MaterialPageRoute(builder: (context) => AddTodo(new Todos.noID("", "","", false, 0,1)))),
       ),
     );
   }

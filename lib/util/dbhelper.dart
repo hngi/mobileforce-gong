@@ -3,15 +3,17 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:team_mobileforce_gong/models/todo.dart';
+import 'package:team_mobileforce_gong/models/todos.dart';
 
 class DbHelper {
   static final DbHelper _dbHelper = DbHelper._internal();
   String tblTodo = "todo";
   String colId = "id";
   String colTitle = "title";
-  String colDescription = "description";
-  String colPriority = "priority";
+  String colTime = "time";
+  String colCompleted = "completed";
+  //date of Creation.
+  String colUpdatedDate = "updateddate";
   String colDate = "date";
   String colBackgroundColor = "backgroundcolor";
 
@@ -42,10 +44,10 @@ class DbHelper {
   {
     await db.execute(
         "CREATE TABLE $tblTodo($colId INTEGER PRIMARY KEY, $colTitle TEXT, " +
-            "$colDescription TEXT, $colPriority INTEGER, $colBackgroundColor INTEGER, $colDate TEXT)");
+            "$colTime TEXT, $colUpdatedDate TEXT, $colCompleted INTEGER, $colBackgroundColor INTEGER, $colDate TEXT)");
   }
 
-  Future<int> insertTodo(Todo todo) async {
+  Future<int> insertTodo(Todos todo) async {
     Database db = await this.db;
     var result = await db.insert(tblTodo, todo.toMap());
     return result;
@@ -53,14 +55,14 @@ class DbHelper {
 
   Future<List> getTodos() async {
     Database db = await this.db;
-    var result = await db.rawQuery("SELECT * FROM $tblTodo order by $colPriority ASC");
+    var result = await db.rawQuery("SELECT * FROM $tblTodo order by $colId ASC");
     return result;
   }
 
   Future<List> searchTodo(String query) async {
     Database db = await this.db;
     var result = await db.rawQuery
-      ("SELECT * FROM $tblTodo WHERE $colDescription LIKE '%$query%' UNION  SELECT * FROM $tblTodo WHERE $colTitle LIKE '%$query%' ");
+      ("SELECT * FROM $tblTodo WHERE $colTime LIKE '%$query%' UNION  SELECT * FROM $tblTodo WHERE $colTitle LIKE '%$query%' ");
     return result;
   }
 
@@ -72,11 +74,11 @@ class DbHelper {
     return result;
   }
 
-  Future<int> updateTodo(Todo todo) async {
+  Future<int> updateTodo(Todos todo) async {
     var db = await this.db;
     print("Color/Updated: "+ todo.backgroundColor.toString()+ "");
     var result = await db.update(tblTodo, todo.toMap(),
-        where: "$colId = ?", whereArgs: [todo.id]);
+        where: "$colId = ?", whereArgs: [todo.sId]);
     return result;
   }
 

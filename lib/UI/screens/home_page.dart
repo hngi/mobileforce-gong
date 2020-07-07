@@ -11,7 +11,8 @@ import 'package:team_mobileforce_gong/UI/screens/onboarding.dart';
 import 'package:team_mobileforce_gong/UI/screens/password_reset_success.dart';
 import 'package:team_mobileforce_gong/UI/widgets/drawer/drawer.dart';
 import 'package:team_mobileforce_gong/services/navigation/app_navigation/navigation.dart';
-
+import 'package:team_mobileforce_gong/models/note_model.dart';
+import 'package:team_mobileforce_gong/models/todos.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/UI/widgets/action_card.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
@@ -47,6 +48,7 @@ class _HomePageState extends State<HomePage> {
     getUser();
     Provider.of<NotesProvider>(context, listen: false).fetch(uid);
     Provider.of<TodoProvider>(context, listen: false).fetch(uid);
+    Provider.of<TodoProvider>(context, listen: false).getData();
     super.initState();
   }
 
@@ -185,7 +187,7 @@ class _HomePageState extends State<HomePage> {
                                           Navigator.of(context).push(
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      AddNote()));
+                                                      AddNote(new Notes.noID( "", "", "", 1))));
                                         },
                                         child: Container(
                                           padding: EdgeInsets.symmetric(
@@ -230,7 +232,7 @@ class _HomePageState extends State<HomePage> {
                                             Navigator.of(context).push(
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        AddTodo()));
+                                                        AddTodo(new Todos.noID("", "","", false, 0,1))));
                                           },
                                           child: Container(
                                             padding: EdgeInsets.symmetric(

@@ -6,23 +6,24 @@ import 'package:team_mobileforce_gong/state/notesProvider.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/util/styles/color.dart';
+import 'package:team_mobileforce_gong/models/note_model.dart';
 
 class AddNote extends StatefulWidget {
-  final String stitle;
-  final String scontent;
+  final Notes note;
 
-  AddNote({Key key, this.stitle, this.scontent}) : super(key: key);
+  AddNote(this.note);
 
   @override
-  _AddNoteState createState() => _AddNoteState();
+  _AddNoteState createState() => _AddNoteState(note);
 }
 
 class _AddNoteState extends State<AddNote> {
-  String _title;
-  String _content;
+  Notes note;
+  _AddNoteState(this.note);
 
   @override
   Widget build(BuildContext context) {
+    var model = Provider.of<NotesProvider>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: false,
@@ -58,14 +59,16 @@ class _AddNoteState extends State<AddNote> {
                     children: <Widget>[
                       Container(
                         child: Text(
-                          widget.stitle == null ? 'New Note' : 'Edit Note',
+                          note.title == null ? 'New Note' : 'Edit Note',
                           style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.7), color: Colors.white, fontWeight: FontWeight.w600)
                         ),
                       ),
                       InkWell(
                         onTap: () {
-                          print(_title);
-                          Provider.of<NotesProvider>(context, listen: false).createNote(Provider.of<AuthenticationState>(context, listen: false).uid, _title, _content, false);
+                          print(note.title);
+                          model.save(note);
+               /*           Provider.of<NotesProvider>(context, listen: false).createNote(Provider.of<AuthenticationState>(context, listen: false).
+                          uid, note.title, note.description, false);*/
                           Navigator.pop(context);
                         },
                         child: Container(
@@ -102,7 +105,7 @@ class _AddNoteState extends State<AddNote> {
                                     maxLengthEnforced: false,
                                     keyboardType: TextInputType.multiline,
                                     style: TextStyle(fontSize: SizeConfig().textSize(context, 3.5)),
-                                    initialValue: widget.stitle == null ? null : widget.stitle,
+                                    initialValue: note.title == null ? null : note.title,
                                     decoration: InputDecoration(
                                       hintText: 'Enter Title',
                                       hintStyle: TextStyle(
@@ -125,7 +128,7 @@ class _AddNoteState extends State<AddNote> {
                                     ),
                                     onChanged: (value) {
                                       setState(() {
-                                        _title = value;
+                                        note.title = value;
                                       });
                                     }
                                   ),
@@ -137,7 +140,7 @@ class _AddNoteState extends State<AddNote> {
                                     maxLengthEnforced: false,
                                     keyboardType: TextInputType.multiline,
                                     style: TextStyle(fontSize: SizeConfig().textSize(context, 2.4)),
-                                    initialValue: widget.scontent == null ? null : widget.scontent,
+                                    initialValue: note.description == null ? null : note.description,
                                     decoration: InputDecoration(
                                       hintText: 'Enter your note here...',
                                       hintStyle: TextStyle(
@@ -159,7 +162,7 @@ class _AddNoteState extends State<AddNote> {
                                     ),
                                     onChanged: (value) {
                                       setState(() {
-                                        _content = value;
+                                        note.description = value;
                                       });
                                     },
                                   ),

@@ -17,7 +17,6 @@ class ShowNotes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
       List<Notes> notes = Provider.of<NotesProvider>(context).notes;
-
     return Scaffold(
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -31,7 +30,7 @@ class ShowNotes extends StatelessWidget {
                   return InkWell(
                     onTap: (){
                       Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => AddNote(stitle: notes[index].title, scontent: notes[index].content)));
+                      .push(MaterialPageRoute(builder: (context) => AddNote(notes[index])));
                     },
                     child: Card(
                       elevation: 0,
@@ -70,7 +69,7 @@ class ShowNotes extends StatelessWidget {
                                 children: <Widget>[
                                   Flexible(
                                     child: Text(
-                                      notes[index].content,
+                                      notes[index].description,
                                       style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.2),),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,

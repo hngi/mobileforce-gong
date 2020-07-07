@@ -1,20 +1,32 @@
 class Todos {
   String sId;
+
+  //sqlite uses int for ID;
+  int id;
   String title;
   String userID;
   String time;
-  bool completed;
+  bool isCompleted;
+
+  //sqlite has no boolean and uses int, so I created an Int to represent completed
+  int completed;
+  String description;
   String date;
   String createdAt;
   String updatedAt;
   int iV;
+  int backgroundColor;
 
+  String category;
+
+  Todos.noID(this.date,this.title,this.description,this.isCompleted,this.completed,this.backgroundColor);
+  Todos.withID(this.id,this.date,this.title,this.description,this.completed,this.isCompleted,this.backgroundColor);
   Todos(
       {this.sId,
       this.title,
       this.userID,
       this.time,
-      this.completed,
+      this.isCompleted,
       this.date,
       this.createdAt,
       this.updatedAt,
@@ -25,7 +37,7 @@ class Todos {
     title = json['title'];
     userID = json['userID'];
     time = json['time'];
-    completed = json['completed'];
+    isCompleted = json['completed'];
     date = json['date'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
@@ -38,11 +50,33 @@ class Todos {
     data['title'] = this.title;
     data['userID'] = this.userID;
     data['time'] = this.time;
-    data['completed'] = this.completed;
+    data['completed'] = this.isCompleted;
     data['date'] = this.date;
     data['createdAt'] = this.createdAt;
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
     return data;
+  }
+
+  Todos.fromObject(dynamic o) {
+    this.id = o["id"];
+    this.time = o["time"];
+    this.title = o["title"];
+    this.date = o["date"];
+    this.backgroundColor = o["backgroundcolor"];
+    this.completed = o["completed"];
+  }
+
+  Map <String, dynamic> toMap(){
+    var map = Map<String, dynamic>();
+    map["title"] = title;
+    map["completed"] = completed;
+    map["date"] = date;
+    map["backgroundcolor"] = backgroundColor;
+    map["time"] = time;
+    if (id != null) {
+      map["id"] = id;
+    }
+    return map;
   }
 }

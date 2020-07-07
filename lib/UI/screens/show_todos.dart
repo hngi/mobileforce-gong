@@ -25,9 +25,11 @@ class ShowTodos extends StatelessWidget {
                   return InkWell(
                     onTap: (){
                       Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => AddTodo(stitle: todos[index].title, sdate: todos[index].date, stime: todos[index].time,)));
+                      .push(MaterialPageRoute(builder: (context) =>
+                          AddTodo(todos[index])));
                     },
                     child: Card(
+                      color: model.getBackgroundColor(todos[index].backgroundColor),
                       elevation: 1,
                       margin: EdgeInsets.only(bottom: 10),
                       shape: RoundedRectangleBorder(
@@ -73,15 +75,15 @@ class ShowTodos extends StatelessWidget {
                                     child: Checkbox(
                                       checkColor: blue,
                                       activeColor: Colors.transparent,
-                                      value: todos[index].completed,
+                                      value: model.isTodoCompleted(todos[index].completed),
                                       onChanged: (val) {
-                                        model.completed(todos[index].completed, index);
+                                        model.completed(model.isTodoCompleted(todos[index].completed), index);
                                       },
                                     ),
                                   ),
                                   Container(
                                     child: Text(
-                                      todos[index].date,
+                                        todos[index].description == null? "": todos[index].date,
                                       style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 1.6))
                                     ),
                                   ),
