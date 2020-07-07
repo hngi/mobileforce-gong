@@ -1,5 +1,8 @@
 class Notes {
   String sId;
+
+  //sqLite uses integer to represent ID;
+  int id;
   String title;
   String content;
   String userID;
@@ -8,7 +11,10 @@ class Notes {
   String createdAt;
   String updatedAt;
   int iV;
+  int backgroundColor;
 
+  Notes.withID(this.id,this.date,this.title,this.content,this.backgroundColor);
+  Notes.noID(this.title,this.content,this.date,this.backgroundColor);
   Notes(
       {this.sId,
       this.title,
@@ -44,5 +50,25 @@ class Notes {
     data['updatedAt'] = this.updatedAt;
     data['__v'] = this.iV;
     return data;
+  }
+
+  Map <String, dynamic> toMap(){
+    var map = Map<String, dynamic>();
+    map["title"] = title;
+    map["description"] = content;
+    map["backgroundcolor"] = backgroundColor;
+    map["date"] = date;
+    if (id != null) {
+      map["id"] = id;
+    }
+    return map;
+  }
+
+  Notes.fromObject(dynamic o) {
+    this.id = o["id"];
+    this.title = o["title"];
+    this.content = o["description"];
+    this.date = o["date"];
+    this.backgroundColor = o["backgroundcolor"];
   }
 }

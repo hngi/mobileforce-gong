@@ -7,7 +7,6 @@ import 'package:team_mobileforce_gong/UI/screens/home_page.dart';
 import 'package:team_mobileforce_gong/UI/screens/show_notes.dart';
 import 'package:team_mobileforce_gong/UI/screens/show_todos.dart';
 import 'package:team_mobileforce_gong/models/note_model.dart';
-import 'package:team_mobileforce_gong/models/todo.dart';
 import 'package:team_mobileforce_gong/models/todos.dart';
 import 'package:team_mobileforce_gong/services/navigation/app_navigation/navigation.dart';
 import 'package:team_mobileforce_gong/state/notesProvider.dart';
@@ -32,24 +31,47 @@ class DispatchPage extends StatelessWidget {
         title: Text(
           name == 'note' ? 'Notes' : 'To-do',
           style: Theme.of(context).textTheme.headline6.copyWith(
-                fontSize: SizeConfig().textSize(context, 3),
-              ),
+            fontSize: SizeConfig().textSize(context, 3),
+          ),
         ),
         leading: GestureDetector(
           onTap: () {
             Navigation().pushFrom(context, HomePage());
           },
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 18.0),
+            padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
             child: SvgPicture.asset(
               'assets/svgs/backarrow.svg',
               color: Provider.of<ThemeNotifier>(context, listen: false)
-                      .isDarkModeOn
+                  .isDarkModeOn
                   ? Colors.white
                   : Colors.black,
             ),
           ),
         ),
+        actions: <Widget>[
+          Provider.of<TodoProvider>(context, listen: false).select || Provider.of<NotesProvider>(context, listen: false).select ? GestureDetector(
+            onTap: () {
+              Provider.of<TodoProvider>(context, listen: false).select ? Provider.of<TodoProvider>(context, listen: false).deleteTodo() : Provider.of<NotesProvider>(context, listen: false).deleteNote();
+            },
+            child: Container(
+              margin: EdgeInsets.only(right: 10, bottom: 10, top: 10),
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: Colors.red.withOpacity(0.8),
+              ),
+              child: SvgPicture.asset(
+                'assets/svgs/delete.svg',
+                width: 18,
+                color: Provider.of<ThemeNotifier>(context, listen: false)
+                    .isDarkModeOn
+                    ? Colors.white
+                    : Colors.black,
+              ),
+            ),
+          ) : SizedBox()
+        ],
       ),
       body: name == 'note' && notes.length != 0 ? ShowNotes() : name == 'todo' && todos.length != 0 ? ShowTodos() : Container(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -63,8 +85,8 @@ class DispatchPage extends StatelessWidget {
               child: Text(
                 'Click the + button Below to get started',
                 style: Theme.of(context).textTheme.headline6.copyWith(
-                      fontSize: SizeConfig().textSize(context, 2.1),
-                    ),
+                  fontSize: SizeConfig().textSize(context, 2.1),
+                ),
               ),
             ),
             Container(
@@ -84,10 +106,10 @@ class DispatchPage extends StatelessWidget {
                       child: Text(
                         'No Activities Yet',
                         style: Theme.of(context).textTheme.headline6.copyWith(
-                              fontSize: SizeConfig().textSize(context, 3),
-                              fontWeight: FontWeight.bold,
-                              color: blue,
-                            ),
+                          fontSize: SizeConfig().textSize(context, 3),
+                          fontWeight: FontWeight.bold,
+                          color: blue,
+                        ),
                       ),
                     ),
                     Container(
@@ -110,9 +132,9 @@ class DispatchPage extends StatelessWidget {
         child: Icon(Icons.add),
         onPressed: () => name == 'note'
             ? Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => AddNote()))
+            .push(MaterialPageRoute(builder: (context) => AddNote(new Notes.noID("", "", "", 1))))
             : Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => AddTodo())),
+            .push(MaterialPageRoute(builder: (context) => AddTodo(new Todos.noID("", "", "", false,   1, 1)))),
       ),
     );
   }
