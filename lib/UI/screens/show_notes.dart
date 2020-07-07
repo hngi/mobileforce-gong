@@ -93,11 +93,7 @@ class _ShowNotesState extends State<ShowNotes> {
                             String status = state.successful;
                             if (status == 'Successful') {
                               Get.to(AddNote(
-                                    stitle: notes[index].title,
-                                    scontent: notes[index].content,
-                                    snote: notes[index],
-                                    simportant: notes[index].important,
-                                    noteID: notes[index].sId,
+                                    notes[index]
                                   ));
                             } else {
                               scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -106,11 +102,7 @@ class _ShowNotesState extends State<ShowNotes> {
                             }
                           } else {
                             Get.to(AddNote(
-                                    stitle: notes[index].title,
-                                    scontent: notes[index].content,
-                                    snote: notes[index],
-                                    simportant: notes[index].important,
-                                    noteID: notes[index].sId,
+                                    notes[index]
                                   ));
                           }
                           

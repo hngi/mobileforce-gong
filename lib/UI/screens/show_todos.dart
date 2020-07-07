@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:team_mobileforce_gong/UI/screens/add_todo.dart';
-import 'package:team_mobileforce_gong/models/todo.dart';
 import 'package:team_mobileforce_gong/models/todos.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/state/authProvider.dart';
@@ -61,7 +60,8 @@ class ShowTodos extends StatelessWidget {
                               }
                             }
                           } else{
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddTodo(stitle: todos[index].title, sdate: todos[index].date, stime: todos[index].time, scontent: todos[index].content, scategory: todos[index].category, stodo: todos[index],)));
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => AddTodo(todos[index])));
                           }
                         },
                         child: Card(
@@ -81,16 +81,16 @@ class ShowTodos extends StatelessWidget {
                                       model.select ? Container(
                                         margin: EdgeInsets.only(right: 10),
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(50),
-                                          border: Border.all(color: blue, width: 1)
+                                            borderRadius: BorderRadius.circular(50),
+                                            border: Border.all(color: blue, width: 1)
                                         ),
                                         width: 15,
                                         height: 15,
                                         child: Center(
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(50),
-                                              color: model.deletes.indexOf(todos[index]) == -1 ? Colors.white : blue
+                                                borderRadius: BorderRadius.circular(50),
+                                                color: model.deletes.indexOf(todos[index]) == -1 ? Colors.white : blue
                                             ),
                                             width: 10,
                                             height: 10,
@@ -130,17 +130,17 @@ class ShowTodos extends StatelessWidget {
                                       child: Checkbox(
                                         checkColor: blue,
                                         activeColor: Colors.transparent,
-                                        value: todos[index].completed,
+                                        value: todos[index].isCompleted,
                                         onChanged: (val) {
                                           Provider.of<TodoProvider>(context, listen: false).updateCompleted(
-                                            todos[index].title, 
-                                            todos[index].category, 
-                                            Provider.of<AuthenticationState>(context, listen: false).uid, 
-                                            todos[index].content, 
-                                            todos[index].date,
-                                            todos[index].time, 
-                                            !todos[index].completed,
-                                            todos[index]
+                                              todos[index].title,
+                                              todos[index].category,
+                                              Provider.of<AuthenticationState>(context, listen: false).uid,
+                                              todos[index].content,
+                                              todos[index].date,
+                                              todos[index].time,
+                                              !todos[index].isCompleted,
+                                              todos[index]
                                           );
                                         },
                                       ),

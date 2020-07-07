@@ -12,28 +12,21 @@ import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dar
 import 'package:team_mobileforce_gong/util/styles/color.dart';
 
 class AddNote extends StatefulWidget {
-  final String stitle;
-  final String scontent;
-  final bool simportant;
   final Notes snote;
-  final String noteID;
+  // final String noteID;
 
-  AddNote(
-      {Key key,
-      this.stitle,
-      this.scontent,
-      this.simportant,
-      this.snote,
-      this.noteID})
-      : super(key: key);
+  AddNote(this.snote);
 
   @override
-  _AddNoteState createState() => _AddNoteState();
+  _AddNoteState createState() => _AddNoteState(snote);
 }
 
 class _AddNoteState extends State<AddNote> {
+  Notes snote;
   String _title;
   String _content;
+
+  _AddNoteState(this.snote);
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -42,16 +35,17 @@ class _AddNoteState extends State<AddNote> {
     final state = Provider.of<LocalAuth>(context);
     return WillPopScope(
       onWillPop: () async {
-        if (widget.stitle != null || widget.scontent != null) {
+        if (snote.title != null || snote.content != null) {
           String userID =
               await Provider.of<AuthenticationState>(context, listen: false)
                   .currentUserId();
+          print(userID);
           Provider.of<NotesProvider>(context, listen: false).updateNote(
               userID,
-              _title ?? widget.stitle,
-              _content ?? widget.scontent,
-              widget.simportant,
-              widget.snote);
+              _title ?? snote.title,
+              _content ?? snote.content,
+              snote.important,
+              snote);
         } else if (_title == null && _content == null) {
           Navigator.pop(context);
         } else {
@@ -91,49 +85,52 @@ class _AddNoteState extends State<AddNote> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
-                          onTap: () async {
-                            //print(widget.stitle+' '+_title);
-                            if (widget.stitle != null ||
-                                widget.scontent != null) {
-                              String userID =
-                                  await Provider.of<AuthenticationState>(
-                                          context,
-                                          listen: false)
-                                      .currentUserId();
-                              print(userID);
-                              Provider.of<NotesProvider>(context, listen: false)
-                                  .updateNote(
-                                      userID,
-                                      _title ?? widget.stitle,
-                                      _content ?? widget.scontent,
-                                      widget.simportant,
-                                      widget.snote);
-                              Navigator.pop(context);
-                            } else if (_title == null && _content == null) {
-                              Navigator.pop(context);
-                            } else {
-                              String userID =
-                                  await Provider.of<AuthenticationState>(
-                                          context,
-                                          listen: false)
-                                      .currentUserId();
-                              print(userID);
-                              Provider.of<NotesProvider>(context, listen: false)
-                                  .createNote(userID, _title, _content, false);
-                              Navigator.pop(context);
-                            }
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: SizeConfig().yMargin(context, 2.1),
-                                horizontal: SizeConfig().xMargin(context, 1.9)),
-                            child: SvgPicture.asset(
-                              'assets/svgs/backarrow.svg',
-                              width: 25,
-                            ),
-                          ),
-                        ),
-                        widget.stitle == null
+                            onTap: () async {
+                              //print(widget.stitle+' '+_title);
+                              if (snote.title != null ||
+                                  snote.content != null) {
+                                String userID =
+                                    await Provider.of<AuthenticationState>(
+                                            context,
+                                            listen: false)
+                                        .currentUserId();
+                                print(userID);
+                                Provider.of<NotesProvider>(context,
+                                        listen: false)
+                                    .updateNote(
+                                        userID,
+                                        _title ?? snote.title,
+                                        _content ?? snote.content,
+                                        snote.important,
+                                        snote);
+                                Navigator.pop(context);
+                              } else if (_title == null && _content == null) {
+                                Navigator.pop(context);
+                              } else {
+                                String userID =
+                                    await Provider.of<AuthenticationState>(
+                                            context,
+                                            listen: false)
+                                        .currentUserId();
+                                print(userID);
+                                Provider.of<NotesProvider>(context,
+                                        listen: false)
+                                    .createNote(
+                                        userID, _title, _content, false);
+                                Navigator.pop(context);
+                              }
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: SizeConfig().yMargin(context, 2.1),
+                                  horizontal:
+                                      SizeConfig().xMargin(context, 1.9)),
+                              child: SvgPicture.asset(
+                                'assets/svgs/backarrow.svg',
+                                width: 25,
+                              ),
+                            )),
+                        snote.title == null
                             ? SizedBox()
                             : IconButton(
                                 icon: Icon(Icons.share),
@@ -145,7 +142,7 @@ class _AddNoteState extends State<AddNote> {
                       children: <Widget>[
                         Container(
                           child: Text(
-                              widget.stitle == null ? 'New Note' : 'Edit Note',
+                              snote.title.isEmpty ? 'New Note' : 'Edit Note',
                               style: Theme.of(context)
                                   .textTheme
                                   .headline6
@@ -155,11 +152,17 @@ class _AddNoteState extends State<AddNote> {
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600)),
                         ),
+                        IconButton(
+                            icon: Icon(Icons.color_lens), onPressed: () {}),
                         InkWell(
                             onTap: () async {
                               //print(_title);
-                              if (widget.stitle != null ||
-                                  widget.scontent != null) {
+                              snote.title = _title;
+                              snote.content = _content;
+                              Provider.of<NotesProvider>(context, listen: false)
+                                  .save(snote);
+                              if (snote.title != null ||
+                                  snote.content != null) {
                                 if (_title == null && _content == null) {
                                   Navigator.pop(context);
                                 } else {
@@ -172,10 +175,10 @@ class _AddNoteState extends State<AddNote> {
                                           listen: false)
                                       .updateNote(
                                           userID,
-                                          _title ?? widget.stitle,
-                                          _content ?? widget.scontent,
-                                          widget.simportant,
-                                          widget.snote);
+                                          _title ?? snote.title,
+                                          _content ?? snote.content,
+                                          snote.important,
+                                          snote);
                                   Navigator.pop(context);
                                 }
                               } else if (_title == null && _content == null) {
@@ -233,9 +236,9 @@ class _AddNoteState extends State<AddNote> {
                                         style: TextStyle(
                                             fontSize: SizeConfig()
                                                 .textSize(context, 3.5)),
-                                        initialValue: widget.stitle == null
-                                            ? null
-                                            : widget.stitle,
+                                        initialValue: snote.title.isEmpty
+                                            ? ""
+                                            : snote.title,
                                         decoration: InputDecoration(
                                           hintText: 'Enter Title',
                                           hintStyle: TextStyle(
@@ -273,9 +276,9 @@ class _AddNoteState extends State<AddNote> {
                                       style: TextStyle(
                                           fontSize: SizeConfig()
                                               .textSize(context, 2.4)),
-                                      initialValue: widget.scontent == null
-                                          ? null
-                                          : widget.scontent,
+                                      initialValue: snote.content.isEmpty
+                                          ? ""
+                                          : snote.content,
                                       decoration: InputDecoration(
                                         hintText: 'Enter your note here...',
                                         hintStyle: TextStyle(
@@ -349,7 +352,7 @@ class _AddNoteState extends State<AddNote> {
                                         SizeConfig().textSize(context, 1.9))),
                       ),
                       Spacer(),
-                      widget.stitle == null
+                      snote.title == null
                           ? SizedBox()
                           : IconButton(
                               icon: Icon(Icons.enhanced_encryption),
@@ -365,8 +368,8 @@ class _AddNoteState extends State<AddNote> {
                                   if (status == 'Successful') {
                                     final prefs =
                                         await SharedPreferences.getInstance();
-                                    prefs.setBool(widget.noteID, true);
-                                    bool test = prefs.getBool(widget.noteID);
+                                    prefs.setBool(snote.sId, true);
+                                    bool test = prefs.getBool(snote.sId);
                                     print(test);
                                     scaffoldKey.currentState.showSnackBar(
                                         SnackBar(
@@ -398,8 +401,8 @@ class _AddNoteState extends State<AddNote> {
   share(BuildContext context) {
     final RenderBox box = context.findRenderObject();
 
-    Share.share(widget.stitle ?? 'Untitled',
-        subject: widget.scontent ?? '',
+    Share.share(snote.title ?? 'Untitled',
+        subject: snote.content ?? '',
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
@@ -422,17 +425,3 @@ class _AddNoteState extends State<AddNote> {
     }
   }
 }
-
-//This method deals with changing backgroundColor of the Note.
-/*  void changeColor(int value) {
-    setState(() {
-      todo.backgroundColor = value;
-    });
-    if (todo.id != null) {
-      helper.updateTodo(todo);
-    }
-    else {
-      helper.insertTodo(todo);
-    }
-
-  }*/
