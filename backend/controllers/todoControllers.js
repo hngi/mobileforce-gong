@@ -17,7 +17,8 @@ exports.create = (req, res) => {
         category: req.body.category,
         time: req.body.time,
         completed: req.body.completed,
-        date: req.body.date
+        date: req.body.date,
+        todoID: req.body.todoID
     });
 
     // Save todo in the database
@@ -79,6 +80,48 @@ exports.findOneByUser = (req, res) => {
         });
 };
 
+
+exports.updateNew = (req, res) => {
+    if (!req.body.content && !req.body.title) {
+        return res.status(400).send({
+            message: "Todo content can not be empty"
+        });
+    }
+
+    var query = {todoID: req.body.todoID};
+
+    Todo.updateOne(query, {
+        title: req.body.title,
+        content: req.body.content,
+        category: req.body.category,
+        date: req.body.date,
+        time: req.body.time,
+        completed: req.body.completed
+    },).then(todo => {
+        res.send(todo);
+    }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred"
+        });
+    });
+}
+
+exports.deleteNew = (req, res) => {
+    var query = {todoID: req.body.todoID};
+
+    Todo.deleteOne(query).then(todo => {
+        if (!todo) {
+            return res.status(404).send({
+                message: "Todo not found with id " + req.body.noteID
+            });
+        }
+        res.send({ message: "Todo deleted successfully!" });
+    }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred"
+        });
+    });
+}
 // Update a todo identified by the todoId in the request
 exports.update = (req, res) => {
     // Validate Request

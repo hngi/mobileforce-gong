@@ -18,6 +18,7 @@ import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dar
 import 'package:team_mobileforce_gong/state/todoProvider.dart';
 import 'package:team_mobileforce_gong/util/styles/color.dart';
 
+import 'facts.dart';
 import 'show_notes.dart';
 import 'sign_in.dart';
 
@@ -339,6 +340,7 @@ Widget newActions(context) => Wrap(
         svg: 'assets/svgs/facts.svg',
         title: 'View Facts',
         text: '12 Saved',
+        onPressed: () => Navigation().pushTo(context, Facts()),
       ),
       ActionCard(
         svg: 'assets/svgs/motivation.svg',

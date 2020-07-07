@@ -318,14 +318,15 @@ class _AddTodoState extends State<AddTodo> {
                                   firstDate: DateTime(int.parse(DateFormat('yyyy').format(DateTime.now())), int.parse(DateFormat('MM').format(DateTime.now())), int.parse(DateFormat('dd').format(DateTime.now()))),
                                   lastDate: DateTime(2025)
                                 ).then((value) async{
+                                  
                                   await showTimePicker(
                                     context: context,
                                     initialTime: TimeOfDay.now(),
                                   ).then((val) {
                                     setState(() {
                                       print(value);
-                                      _sdate = value;
-                                      _stime = val;
+                                      _sdate = value ?? DateTime.now();
+                                      _stime = val ?? TimeOfDay.now();
                                     });
                                     model.setValue(value, val, context);
                                   });

@@ -7,7 +7,8 @@ const TodoSchema = mongoose.Schema({
     time: String,
     completed: Boolean,
     date: String,
-    category: String
+    category: String,
+    todoID: String
 }, {
     timestamps: true
 });

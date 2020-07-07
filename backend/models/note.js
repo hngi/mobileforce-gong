@@ -5,7 +5,8 @@ const NoteSchema = mongoose.Schema({
     content: String,
     userID: String,
     important: Boolean,
-    date: String
+    date: String,
+    noteID: String
 }, {
     timestamps: true
 });
