@@ -4,7 +4,7 @@ class Notes {
   //sqLite uses integer to represent ID;
   int id;
   String title;
-  String description;
+  String content;
   String userID;
   bool important;
   String date;
@@ -13,12 +13,12 @@ class Notes {
   int iV;
   int backgroundColor;
 
-  Notes.withID(this.id,this.date,this.title,this.description,this.backgroundColor);
-  Notes.noID(this.title,this.description,this.date,this.backgroundColor);
+  Notes.withID(this.id,this.date,this.title,this.content,this.backgroundColor);
+  Notes.noID(this.title,this.content,this.date,this.backgroundColor);
   Notes(
       {this.sId,
       this.title,
-      this.description,
+      this.content,
       this.userID,
       this.important,
       this.date,
@@ -29,7 +29,7 @@ class Notes {
   Notes.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     title = json['title'];
-    description = json['content'];
+    content = json['content'];
     userID = json['userID'];
     important = json['important'];
     date = json['date'];
@@ -42,7 +42,7 @@ class Notes {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_id'] = this.sId;
     data['title'] = this.title;
-    data['content'] = this.description;
+    data['content'] = this.content;
     data['userID'] = this.userID;
     data['important'] = this.important;
     data['date'] = this.date;
@@ -55,7 +55,7 @@ class Notes {
   Map <String, dynamic> toMap(){
     var map = Map<String, dynamic>();
     map["title"] = title;
-    map["description"] = description;
+    map["description"] = content;
     map["backgroundcolor"] = backgroundColor;
     map["date"] = date;
     if (id != null) {
@@ -67,7 +67,7 @@ class Notes {
   Notes.fromObject(dynamic o) {
     this.id = o["id"];
     this.title = o["title"];
-    this.description = o["description"];
+    this.content = o["description"];
     this.date = o["date"];
     this.backgroundColor = o["backgroundcolor"];
   }

@@ -69,7 +69,7 @@ class ShowNotes extends StatelessWidget {
                                 children: <Widget>[
                                   Flexible(
                                     child: Text(
-                                      notes[index].description,
+                                      notes[index].content,
                                       style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.2),),
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,

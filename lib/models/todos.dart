@@ -10,38 +10,38 @@ class Todos {
 
   //sqlite has no boolean and uses int, so I created an Int to represent completed
   int completed;
-  String description;
+  String content;
   String date;
   String createdAt;
   String updatedAt;
   int iV;
   int backgroundColor;
-
   String category;
 
-  Todos.noID(this.date,this.title,this.description,this.isCompleted,this.completed,this.backgroundColor);
-  Todos.withID(this.id,this.date,this.title,this.description,this.completed,this.isCompleted,this.backgroundColor);
+
+
+  Todos.noID(this.date,this.title,this.content,this.isCompleted,this.completed,this.backgroundColor);
+  Todos.withID(this.id,this.date,this.title,this.content,this.completed,this.isCompleted,this.backgroundColor);
+
   Todos(
       {this.sId,
-      this.title,
-      this.userID,
-      this.time,
-      this.isCompleted,
-      this.date,
-      this.createdAt,
-      this.updatedAt,
-      this.iV});
+        this.title,
+        this.userID,
+        this.time,
+        this.isCompleted,
+        this.date,
+        this.category,
+        this.content});
 
   Todos.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     title = json['title'];
     userID = json['userID'];
     time = json['time'];
-    isCompleted = json['completed'];
+    completed = json['completed'];
     date = json['date'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    iV = json['__v'];
+    category = json['category'];
+    content = json['content'];
   }
 
   Map<String, dynamic> toJson() {
@@ -50,13 +50,15 @@ class Todos {
     data['title'] = this.title;
     data['userID'] = this.userID;
     data['time'] = this.time;
-    data['completed'] = this.isCompleted;
+    data['completed'] = this.completed;
     data['date'] = this.date;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
+    data['category'] = this.category;
+    data['content'] = this.content;
     return data;
   }
+
+
+
 
   Todos.fromObject(dynamic o) {
     this.id = o["id"];

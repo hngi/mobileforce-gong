@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-import 'package:team_mobileforce_gong/models/todo.dart';
+import 'package:team_mobileforce_gong/models/todos.dart';
 import 'dart:convert' as convert;
 import 'package:team_mobileforce_gong/models/todos.dart';
 import 'package:team_mobileforce_gong/state/authProvider.dart';
@@ -20,7 +20,17 @@ class TodoProvider with ChangeNotifier{
   final dformat = new DateFormat('dd/MM/yy');
   List<Todos> todos = [];
   Map<String,String> headers = {'Content-type': 'application/json','Accept': 'application/json'};
+  String error;
+  bool select = false;
+  List<Todos> deletes = [];
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  void setSelect() {
+    select = !select;
+    deletes = [];
+    notifyListeners();
+  }
+
 
   TodoProvider() {
 //     fetch();
@@ -34,6 +44,48 @@ class TodoProvider with ChangeNotifier{
   void setVal(String val) {
     value = val;
     notifyListeners();
+  }
+
+  void deleteTodo() async {
+    for(var todo in deletes) {
+      String id = todo.sId;
+      int index = todos.indexOf(todo);
+      await delete(
+          'http://gonghng.herokuapp.com/todo/$id',
+          headers: headers
+      ).then((value){
+        print(value.body);
+        todos.removeAt(index);
+        notifyListeners();
+      });
+    }
+    setSelect();
+  }
+
+  void updateCompleted(String title, String category, String uid, String content, String date, String time, bool completed, Todos todo) async {
+    int index = todos.indexOf(todo);
+    String id = todos[index].sId;
+    await http.put(
+        'http://gonghng.herokuapp.com/todo/$id',
+        body: jsonEncode({
+          //'reminderId': todos[index].sId,
+          'title': title,
+          'content': content,
+          'category': category,
+          'completed' : completed,
+          'date': date,
+          'time': time,
+        }),
+        headers: headers
+    ).then((value){
+      todos[index].title = title;
+      todos[index].content = content;
+      todos[index].category = category;
+      todos[index].isCompleted = completed;
+      todos[index].date = date;
+      todos[index].time = time;
+      notifyListeners();
+    });
   }
 
   Future getUser() async {
@@ -90,24 +142,65 @@ class TodoProvider with ChangeNotifier{
   }
 
 
-  void createTodo(Todos todo) async {
-    FirebaseUser user = await getUser();
-    todo.userID = user.uid;
-    print(todo.title);
+
+  void createTodo(String title, String category, String uid, String content, DateTime date, TimeOfDay time) async {
+    print(time);
     await post(
-      'http://gonghng.herokuapp.com/todo',
-      body: jsonEncode({
-        'title': todo.title,
-        'userID': todo.userID,
-        'time': todo.time,
-        'completed': 'false',
-        'date': todo.date,
-      }),
-      headers: headers
+        'http://gonghng.herokuapp.com/todo',
+        body: jsonEncode({
+          'title': title,
+          'userID': uid,
+          'time': time != null ? time.hour.toString()+':'+time.minute.toString() : null,
+          'completed': false,
+          'content': content,
+          'category': category,
+          'date': date == null ? null : dformat.format(date).toString()
+        }),
+        headers: headers
     ).then((value){
       print(value.body);
       hValue = null;
-      fetch(todo.userID);
+      value = null;
+      Todos todo = new Todos(title: title, content: content, userID: uid, category: category, time: time != null ? time.hour.toString()+':'+time.minute.toString() : null, date: date == null ? null : dformat.format(date).toString(), isCompleted : false);
+      todos.insert(0, todo);
+      notifyListeners();
+    });
+  }
+
+  void addDelete(Todos todo) {
+    deletes.add(todo);
+    notifyListeners();
+  }
+
+  void removeDeletes(int index) {
+    deletes.removeAt(index);
+    notifyListeners();
+  }
+
+
+  void updateTodo(String title, String category, String uid, String content, DateTime date, TimeOfDay time, Todos todo) async {
+    int index = todos.indexOf(todo);
+    String id = todos[index].sId;
+    await http.put(
+        'http://gonghng.herokuapp.com/todo/$id',
+        body: jsonEncode({
+          //'reminderId': todos[index].sId,
+          'title': title,
+          'content': content,
+          'category': category,
+          'date': dformat.format(date).toString(),
+          'completed': false,
+          'time': time != null ? time.hour.toString()+':'+time.minute.toString() : null,
+        }),
+        headers: headers
+    ).then((value){
+      todos[index].title = title;
+      todos[index].content = content;
+      todos[index].category = category;
+      todos[index].isCompleted = false;
+      todos[index].date = dformat.format(date).toString();
+      todos[index].time = time != null ? time.hour.toString()+':'+time.minute.toString() : null;
+      notifyListeners();
     });
   }
 
@@ -130,7 +223,7 @@ class TodoProvider with ChangeNotifier{
     }
   }
 
-        Color getBackgroundColor(int backgroundColor) {
+  Color getBackgroundColor(int backgroundColor) {
           switch(backgroundColor){
             case 1:
               return Colors.white;
@@ -149,3 +242,8 @@ class TodoProvider with ChangeNotifier{
           }
         }
 }
+
+
+
+
+

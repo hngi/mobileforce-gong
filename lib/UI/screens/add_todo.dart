@@ -2,33 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:team_mobileforce_gong/models/todos.dart';
 import 'package:team_mobileforce_gong/state/authProvider.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/models/category.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/state/todoProvider.dart';
 import 'package:team_mobileforce_gong/util/styles/color.dart';
-import 'package:team_mobileforce_gong/models/todos.dart';
 
 class AddTodo extends StatefulWidget {
-final Todos todo;
 
-  const AddTodo(this.todo);
+  final Todos stodo;
+
+AddTodo(this.stodo);
 
   @override
-  _AddTodoState createState() => _AddTodoState(todo);
+  _AddTodoState createState() => _AddTodoState(stodo);
 }
 
 class _AddTodoState extends State<AddTodo> {
-  Todos todo;
-  _AddTodoState(this.todo);
-
+  Todos stodo;
+  _AddTodoState(this.stodo);
   List<Category> _category = Category.getData();
   List<DropdownMenuItem<Category>> _dropdownMenuItems;
   Category _selectedcategory;
   bool checkedValue = false;
-  String _stitle ;
-  String _scontent ;
+  String _stitle;
+  String _scontent;
   DateTime _sdate;
   TimeOfDay _stime;
 
@@ -37,39 +37,32 @@ class _AddTodoState extends State<AddTodo> {
     var model = Provider.of<TodoProvider>(context);
     return WillPopScope(
       onWillPop: () async {
-        if(todo.title != null || todo.description != null) {
+        if(stodo.title != null || stodo.content != null) {
           if(_stitle ==null && _scontent == null) {
             Navigator.pop(context);
           } else {
-           /* Provider.of<TodoProvider>(context, listen: false).updateTodo(
-                _stitle ?? widget.stitle,
-                _selectedcategory == null ? widget.scategory : _selectedcategory.name,
+            Provider.of<TodoProvider>(context, listen: false).updateTodo(
+                _stitle ?? stodo.title,
+                _selectedcategory == null ? stodo.category : _selectedcategory.name,
                 Provider.of<AuthenticationState>(context, listen: false).uid,
-                _scontent ?? widget.scontent,
-                _sdate ?? DateFormat("dd/MM/yy").parse(widget.sdate),
-                _stime ?? TimeOfDay(hour:int.parse(widget.sdate.split(":")[0]),minute: int.parse(widget.sdate.split(":")[1])),
-                widget.stodo
-            );*/
-           todo.title = _stitle;
-           todo.description = _scontent;
-           print(todo.title + "this is the title and desc :" + todo.description) ;
-
-           Provider.of<TodoProvider>(context,listen: false).save(todo);
+                _scontent ?? stodo.content,
+                _sdate ?? stodo.date,
+                _stime ?? stodo.time,
+                stodo
+            );
             Navigator.pop(context);
           }
         } else if(_stitle ==null && _scontent == null) {
           Navigator.pop(context);
         } else {
-         /* Provider.of<TodoProvider>(context, listen: false).createTodo(
+          Provider.of<TodoProvider>(context, listen: false).createTodo(
               _stitle,
               _selectedcategory == null ? null : _selectedcategory.name,
               Provider.of<AuthenticationState>(context, listen: false).uid,
               _scontent,
               _sdate,
               _stime
-          );*/
-
-         Provider.of<TodoProvider>(context,listen: false).save(todo);
+          );
           Navigator.pop(context);
         }
         return true;
@@ -108,7 +101,7 @@ class _AddTodoState extends State<AddTodo> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
-                          child: Text(todo.title.isNotEmpty ? 'Edit Todo' : 'New Todo',
+                          child: Text(stodo.title != null ? 'Edit Todo' : 'New Todo',
                               style: Theme.of(context)
                                   .textTheme
                                   .headline6
@@ -120,40 +113,37 @@ class _AddTodoState extends State<AddTodo> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            if(todo.title != null || todo.description != null) {
+                            stodo.title = _stitle;
+                            stodo.content = _scontent;
+                            stodo.time =  _stime.hour.toString()+':'+_stime.minute.toString();
+                            stodo.date = model.dformat.format(_sdate).toString();
+                            model.save(stodo);
+                            if(stodo.title != null || stodo.content != null) {
                               if(_stitle ==null && _scontent == null) {
                                 Navigator.pop(context);
                               } else {
-                                /*Provider.of<TodoProvider>(context, listen: false).updateTodo(
-                                    _stitle ?? widget.stitle,
-                                    _selectedcategory == null ? widget.scategory : _selectedcategory.name,
+                                Provider.of<TodoProvider>(context, listen: false).updateTodo(
+                                    _stitle ?? stodo.title,
+                                    _selectedcategory == null ? stodo.category : _selectedcategory.name,
                                     Provider.of<AuthenticationState>(context, listen: false).uid,
-                                    _scontent ?? widget.scontent,
-                                    _sdate ?? DateFormat("dd/MM/yy").parse(widget.sdate),
-                                    _stime ?? TimeOfDay(hour:int.parse(widget.sdate.split(":")[0]),minute: int.parse(widget.sdate.split(":")[1])),
-                                    widget.stodo
-                                );*/
-                                todo.title = _stitle;
-                                todo.description = _scontent;
-                                print(todo.title + "this is the title and desc :" + todo.description) ;
-                                Provider.of<TodoProvider>(context,listen: false).save(todo);
+                                    _scontent ?? stodo.content,
+                                    _sdate ?? stodo.date,
+                                    _stime ?? stodo.time,
+                                    stodo
+                                );
                                 Navigator.pop(context);
                               }
                             } else if(_stitle ==null && _scontent == null) {
                               Navigator.pop(context);
                             } else {
-                              /*Provider.of<TodoProvider>(context, listen: false).createTodo(
+                              Provider.of<TodoProvider>(context, listen: false).createTodo(
                                   _stitle,
                                   _selectedcategory == null ? null : _selectedcategory.name,
                                   Provider.of<AuthenticationState>(context, listen: false).uid,
                                   _scontent,
                                   _sdate,
                                   _stime
-                              );*/
-                              todo.title = _stitle;
-                              todo.description = _scontent;
-                              print(todo.title + "this is the title and desc :" + todo.description) ;
-                              Provider.of<TodoProvider>(context,listen: false).save(todo);
+                              );
                               Navigator.pop(context);
                             }
                           },
@@ -184,7 +174,7 @@ class _AddTodoState extends State<AddTodo> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        todo.title != null ? SizedBox() : Container(
+                        stodo.title != null ? SizedBox() : Container(
                           margin: EdgeInsets.only(bottom: 30),
                           child: Text(
                             'Create A Todo',
@@ -197,8 +187,8 @@ class _AddTodoState extends State<AddTodo> {
                             child: DropdownButton(
                               underline: Container(height: 0.9, color: Colors.black.withOpacity(0.4)),
                               isExpanded: true,
-                              hint: todo.category != null ? Text(
-                                todo.category,
+                              hint: stodo.category != null ? Text(
+                                stodo.category,
                                 style: Theme.of(context).textTheme.headline5.copyWith(fontSize: SizeConfig().textSize(context, 2.4),),
                               ) :  Text(
                                 'Choose Category',
@@ -218,7 +208,7 @@ class _AddTodoState extends State<AddTodo> {
                             keyboardType: TextInputType.multiline,
                             style: TextStyle(
                                 fontSize: SizeConfig().textSize(context, 2.4)),
-                            initialValue: todo.title == null ? null : todo.title,
+                            initialValue: stodo.title.isEmpty ? "" : stodo.title,
                             decoration: InputDecoration(
                               hintText: 'Enter Title',
                               hintStyle: TextStyle(
@@ -245,7 +235,7 @@ class _AddTodoState extends State<AddTodo> {
                             keyboardType: TextInputType.multiline,
                             style: TextStyle(
                                 fontSize: SizeConfig().textSize(context, 2.4)),
-                            initialValue: todo.description == null ? null : todo.description,
+                            initialValue: stodo.content == null ? null : stodo.content,
                             decoration: InputDecoration(
                               hintText: 'Enter note (optional)',
                               hintStyle: TextStyle(
@@ -271,10 +261,10 @@ class _AddTodoState extends State<AddTodo> {
                                   height: 0.9,
                                   color: Colors.black.withOpacity(0.4)),
                               isExpanded: true,
-                              hint: todo.date != null && todo.time != null ?
-                              model.dformat.format(DateTime.now()).toString() == todo.date ?
+                              hint: stodo.date != null && stodo.time != null ?
+                              model.dformat.format(DateTime.now()).toString() == stodo.date ?
                               Text(
-                                'Remind me at '+todo.time,
+                                'Remind me at '+stodo.time,
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline5
@@ -283,7 +273,7 @@ class _AddTodoState extends State<AddTodo> {
                               )
                                   :
                               Text(
-                                'Reminder for '+todo.date+' '+todo.time,
+                                'Reminder for '+stodo.date+' '+stodo.time,
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline5
@@ -434,6 +424,35 @@ class _AddTodoState extends State<AddTodo> {
     });
   }
 
+  Color getBackgroundColor(int backgroundColor) {
+    switch (backgroundColor) {
+      case 1:
+        return Colors.white;
+        break;
+      case 2:
+        return Colors.red;
+        break;
+      case 3:
+        return Colors.yellow;
+        break;
+      case 4:
+        return Colors.lightBlue;
+        break;
+      default:
+        return Colors.white;
+    }
+  }
 
+/*  void changeColor(int value) {
+    setState(() {
+      todo.backgroundColor = value;
+    });
+    if (todo.id != null) {
+      helper.updateTodo(todo);
+    }
+    else {
+      helper.insertTodo(todo);
+    }
 
+  }*/
 }

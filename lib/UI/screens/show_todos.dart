@@ -83,7 +83,7 @@ class ShowTodos extends StatelessWidget {
                                   ),
                                   Container(
                                     child: Text(
-                                        todos[index].description == null? "": todos[index].date,
+                                        todos[index].content == null? "": todos[index].date,
                                       style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 1.6))
                                     ),
                                   ),

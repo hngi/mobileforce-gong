@@ -19,6 +19,10 @@ class NotesProvider with ChangeNotifier{
   var dateFormat = DateFormat("dd/MM/yy");
   Map<String,String> headers = {'Content-type': 'application/json','Accept': 'application/json'};
 
+  String error;
+  bool select = false;
+  List<Notes> deletes = [];
+
    NotesProvider() {
 //     fetch();
    getData();
@@ -66,8 +70,6 @@ class NotesProvider with ChangeNotifier{
       helper.insertNote(note);
     }
     print("Saved Note ${note.title}");
-    int count  = await helper.getCount();
-    print(count.toString() + "Notes Provider,save method");
     getData();
   }
 
@@ -90,4 +92,65 @@ class NotesProvider with ChangeNotifier{
 
 
   }
+
+
+  void setSelect() {
+    select = !select;
+    deletes = [];
+    notifyListeners();
+  }
+
+  void addDelete(Notes note) {
+    deletes.add(note);
+    notifyListeners();
+  }
+
+  void removeDeletes(int index) {
+    deletes.removeAt(index);
+    notifyListeners();
+  }
+
+
+  void updateNote(String uid, String title, String content, bool important, Notes note) async {
+
+    int index = notes.indexOf(note);
+    String id = notes[index].sId;
+    print(id);
+    //print(index);
+    await put(
+        'http://gonghng.herokuapp.com/notes/$id',
+        body: jsonEncode({
+          //'noteId': notes[index].sId,
+          'title': title,
+          'content': content,
+          'important': important,
+        }),
+        headers: headers
+    ).catchError((error) => print(error))
+        .then((value){
+      print(value.body);
+      notes[index].title = title;
+      notes[index].content = content;
+      notes[index].important =important;
+      notifyListeners();
+    });
+  }
+  void deleteNote() async {
+    for(var note in deletes) {
+      //print(note.sId);
+      String id = note.sId;
+      int index = notes.indexOf(note);
+      await delete(
+          'http://gonghng.herokuapp.com/notes/$id',
+          headers: headers
+      ).then((value){
+        print(value.body);
+        notes.removeAt(index);
+        notifyListeners();
+      });
+    }
+    setSelect();
+  }
+
+
 }
