@@ -109,6 +109,9 @@ class _AddNoteState extends State<AddNote> {
                               style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.7), color: Colors.white, fontWeight: FontWeight.w600)
                           ),
                         ),
+                        IconButton(icon: Icon(Icons.color_lens), onPressed: (){
+
+                        }),
                         InkWell(
                             onTap: () {
                               //print(_title);
