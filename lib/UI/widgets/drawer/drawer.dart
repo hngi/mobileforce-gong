@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:rate_my_app/rate_my_app.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:team_mobileforce_gong/UI/screens/dispatch_page.dart';
 import 'package:team_mobileforce_gong/UI/screens/show_notes.dart';
+import 'package:team_mobileforce_gong/services/auth/util.dart';
 import 'package:team_mobileforce_gong/services/navigation/app_navigation/navigation.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
+import 'package:team_mobileforce_gong/state/authProvider.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/util/styles/color.dart';
+import 'package:launch_review/launch_review.dart';
+
+import '../../screens/profile.dart';
+import '../rate.dart';
 
 class HomeDrawer extends StatefulWidget {
   final String username;
@@ -21,10 +29,12 @@ class HomeDrawer extends StatefulWidget {
 class _HomeDrawerState extends State<HomeDrawer> {
   var darktheme;
   SizeConfig config = SizeConfig();
+  WidgetBuilder builder = buildProgressIndicator;
 
   @override
   Widget build(BuildContext context) {
     darktheme = Provider.of<ThemeNotifier>(context).isDarkModeOn ?? false;
+    final state = Provider.of<AuthenticationState>(context);
     return Drawer(
         child: Column(
       // padding: EdgeInsets.zero,
@@ -36,54 +46,62 @@ class _HomeDrawerState extends State<HomeDrawer> {
         // ),
         Expanded(
             child: Container(
-          color: darktheme ? Color(0xff0D141A) : Colors.white,
+          color: darktheme ? Colors.black : Colors.white,
           //padding: EdgeInsets.symmetric(vertical: 20),
           // color: Colors.red,
           child: ListView(
             padding: const EdgeInsets.only(top: 0),
             children: <Widget>[
-              createDrawerBodyItem(context: context, text: 'Edit Profile'),
-              Divider(
-                thickness: 1,
-                color: Color.fromRGBO(9, 132, 227, 0.4),
-              ),
               createDrawerBodyItem(
                   context: context,
-                  text: 'View All Notes',
-                  onTap: () => Navigation().pushTo(
-                      context,
-                      DispatchPage(
-                        username: widget.username,
-                        name: 'note',
-                      ))),
+                  text: 'Profile',
+                  onTap: () {
+                    Navigation().pushTo(context, Profile());
+                  }),
               Divider(
                 thickness: 1,
                 color: Color.fromRGBO(9, 132, 227, 0.4),
               ),
-              createDrawerBodyItem(
-                  context: context,
-                  text: 'View To-Dos',
-                  onTap: () => Navigation().pushTo(
-                      context,
-                      DispatchPage(
-                        username: widget.username,
-                        name: 'todo',
-                      ))),
-              Divider(
-                thickness: 1,
-                color: Color.fromRGBO(9, 132, 227, 0.4),
-              ),
-              createDrawerBodyItem(context: context, text: 'View Categories'),
-              Divider(
-                thickness: 1,
-                color: Color.fromRGBO(9, 132, 227, 0.4),
-              ),
+              // createDrawerBodyItem(
+              //     context: context,
+              //     text: 'View All Notes',
+              //     onTap: () => Navigation().pushTo(
+              //         context,
+              //         DispatchPage(
+              //           username: widget.username,
+              //           name: 'note',
+              //         ))),
+              // Divider(
+              //   thickness: 1,
+              //   color: Color.fromRGBO(9, 132, 227, 0.4),
+              // ),
+              // createDrawerBodyItem(
+              //     context: context,
+              //     text: 'View To-Dos',
+              //     onTap: () => Navigation().pushTo(
+              //         context,
+              //         DispatchPage(
+              //           username: widget.username,
+              //           name: 'todo',
+              //         ))),
+              // Divider(
+              //   thickness: 1,
+              //   color: Color.fromRGBO(9, 132, 227, 0.4),
+              // ),
+              // createDrawerBodyItem(context: context, text: 'View Categories'),
+              // Divider(
+              //   thickness: 1,
+              //   color: Color.fromRGBO(9, 132, 227, 0.4),
+              // ),
               createDrawerBodyItem(context: context, text: 'See Quotes'),
               Divider(
                 thickness: 1,
                 color: Color.fromRGBO(9, 132, 227, 0.4),
               ),
-              createDrawerBodyItem(context: context, text: 'Auto System'),
+              createDrawerBodyItem(
+                context: context,
+                text: 'Auto System', /* onTap: () => LaunchReview.launch()*/
+              ),
               Divider(
                 thickness: 1,
                 color: Color.fromRGBO(9, 132, 227, 0.4),
@@ -102,12 +120,50 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 thickness: 1,
                 color: Color.fromRGBO(9, 132, 227, 0.4),
               ),
-              createDrawerBodyItem(context: context, text: 'Setting'),
+              createDrawerBodyItem(
+                  context: context,
+                  text: 'Rate Us',
+                  onTap: () async {
+                    if (darktheme == true) {
+                      Provider.of<ThemeNotifier>(context, listen: false)
+                          .switchTheme(!Provider.of<ThemeNotifier>(context,
+                                  listen: false)
+                              .isDarkModeOn);
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setBool('changed', true);
+                    }
+
+                    Navigation().pushTo(
+                        context,
+                        RateMyAppBuilder(
+                          builder: builder,
+                          onInitialized: (context, rateMyApp) async {
+                            await rateMyApp.showRateDialog(context);
+                            final prefs = await SharedPreferences.getInstance();
+                            bool check =  prefs.getBool('changed');
+                            if (check == true) {
+                              Provider.of<ThemeNotifier>(context, listen: false)
+                                  .switchTheme(!Provider.of<ThemeNotifier>(
+                                          context,
+                                          listen: false)
+                                      .isDarkModeOn);
+                              await prefs.setBool('changed', false);
+                            }
+
+                            Navigator.pop(context);
+                          },
+                        ));
+                  }),
               Divider(
                 thickness: 1,
                 color: Color.fromRGBO(9, 132, 227, 0.4),
               ),
-              createDrawerBodyItem(context: context, text: 'About'),
+              createDrawerBodyItem(
+                  context: context,
+                  text: 'Sign Out',
+                  onTap: () {
+                    state.logout().then((value) => gotoLoginScreen(context));
+                  }),
               Divider(
                 thickness: 1,
                 color: Color.fromRGBO(9, 132, 227, 0.4),
@@ -120,6 +176,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
     ));
   }
 
+  static Widget buildProgressIndicator(BuildContext context) =>
+      const Center(child: CircularProgressIndicator());
+
   Widget createDrawerFooter(BuildContext context) {
     return Container(
       color: blue,
@@ -131,14 +190,18 @@ class _HomeDrawerState extends State<HomeDrawer> {
   Widget createDrawerBodyItem(
       {BuildContext context, String text, GestureTapCallback onTap}) {
     return ListTile(
-      title: Padding(
-        padding: EdgeInsets.only(left: config.xMargin(context, config.getXSize(context, 68)), top: config.yMargin(context, config.getYSize(context, 14))),
-        child: Text(text,
-        style: GoogleFonts.roboto(
+      leading: SizedBox(),
+      title: Container(
+        padding: EdgeInsets.only(top: config.yMargin(context, 2.5)),
+        child: Text(
+          text,
+          style: GoogleFonts.roboto(
             fontStyle: FontStyle.normal,
             color: darktheme ? Colors.white : Color(0xff312E2E),
             fontSize: config.textSize(context, 2.3),
-            fontWeight: FontWeight.w400)),
+            fontWeight: FontWeight.w600),
+          textAlign: TextAlign.left,
+        ),
       ),
       onTap: onTap,
     );
@@ -147,27 +210,24 @@ class _HomeDrawerState extends State<HomeDrawer> {
   Widget createDrawerHeader(BuildContext context) {
     return Container(
       //height: config.yMargin(context, 18),
-      color: Color(0xff0984E3),
-      padding: EdgeInsets.only(top: config.yMargin(context, config.getYSize(context, 25)), bottom: config.xMargin(context, config.getXSize(context, 15))),
+      color: Theme.of(context).scaffoldBackgroundColor,
+      padding: EdgeInsets.only(top: config.yMargin(context, 5), bottom: config.xMargin(context, 1.8)),
       child: Center(
         child: Column(
           children: <Widget>[
             Container(
+              margin: EdgeInsets.only(bottom: config.yMargin(context, 1)),
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.white, width: 3),
                   shape: BoxShape.circle),
               child: CircleAvatar(
-                backgroundImage:
-                    AssetImage('assets/images/Ellipse 14 (1).png'),
+                backgroundImage: AssetImage('assets/images/Ellipse 14 (1).png'),
                 radius: 30,
               ),
             ),
             Text(
               widget.username ?? 'User',
-              style: GoogleFonts.roboto(
-                  fontSize: config.textSize(context, config.getYSize(context, 18)),
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xffFBFBF8)),
+              style: Theme.of(context).textTheme.headline6.copyWith(fontSize: config.textSize(context, 3), fontWeight: FontWeight.w600),
             )
             // RichText(
             //   text: TextSpan(

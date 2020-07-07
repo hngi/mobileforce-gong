@@ -15,7 +15,7 @@ exports.create = (req, res) => {
         content: req.body.content,
         userID: req.body.userID,
         important: req.body.important,
-        //date: req.body.date
+        date: req.body.date
     });
 
     // Save Note in the database
@@ -55,8 +55,9 @@ exports.findImportant = (req, res) => {
         });
 };
 
+
 exports.findByUser = (req, res) => {
-    var query = {userID: req.body.userId};
+    var query = {userID: req.params.userId};
     Note.find(query, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
         .then(notes => {
             res.send(notes);
@@ -124,6 +125,8 @@ exports.update = (req, res) => {
         title: req.body.title || "Untitled Note",
         content: req.body.content,
         important: req.body.important,
+        date: req.body.date,
+        userID: req.body.userID
     }, { new: true })
         .then(note => {
             if (!note) {
