@@ -2,7 +2,7 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:team_mobileforce_gong/models/note.dart';
+import 'package:team_mobileforce_gong/models/note_model.dart';
 
 class NoteDbhelper {
   static final NoteDbhelper _dbHelper = NoteDbhelper._internal();
@@ -52,7 +52,7 @@ class NoteDbhelper {
             "$colDescription TEXT, $colBackgroundColor INTEGER, $colDate TEXT)");
   }
 
-  Future<int> insertNote(Note note) async {
+  Future<int> insertNote(Notes note) async {
     Database db = await this.db;
     var result = await db.insert(tblNotes, note.toMap());
     return result;
@@ -72,7 +72,7 @@ class NoteDbhelper {
     return result;
   }
 
-  Future<int> updateNote(Note note) async {
+  Future<int> updateNote(Notes note) async {
     var db = await this.db;
     var result = await db.update(tblNotes, note.toMap(),
         where: "$colId = ?", whereArgs: [note.id]);
