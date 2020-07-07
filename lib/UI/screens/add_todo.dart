@@ -11,18 +11,20 @@ import 'package:team_mobileforce_gong/state/todoProvider.dart';
 import 'package:team_mobileforce_gong/util/styles/color.dart';
 
 class AddTodo extends StatefulWidget {
-
+  final String stitle;
+  final String scontent;
+  final String scategory;
+  final String sdate;
+  final String stime;
   final Todos stodo;
 
-AddTodo(this.stodo);
+  const AddTodo({Key key, this.stitle, this.scontent, this.scategory, this.sdate, this.stime, this.stodo}) : super(key: key);
 
   @override
-  _AddTodoState createState() => _AddTodoState(stodo);
+  _AddTodoState createState() => _AddTodoState();
 }
 
 class _AddTodoState extends State<AddTodo> {
-  Todos stodo;
-  _AddTodoState(this.stodo);
   List<Category> _category = Category.getData();
   List<DropdownMenuItem<Category>> _dropdownMenuItems;
   Category _selectedcategory;
@@ -37,18 +39,18 @@ class _AddTodoState extends State<AddTodo> {
     var model = Provider.of<TodoProvider>(context);
     return WillPopScope(
       onWillPop: () async {
-        if(stodo.title != null || stodo.content != null) {
+        if(widget.stitle != null || widget.scontent != null) {
           if(_stitle ==null && _scontent == null) {
             Navigator.pop(context);
           } else {
             Provider.of<TodoProvider>(context, listen: false).updateTodo(
-                _stitle ?? stodo.title,
-                _selectedcategory == null ? stodo.category : _selectedcategory.name,
-                Provider.of<AuthenticationState>(context, listen: false).uid,
-                _scontent ?? stodo.content,
-                _sdate ?? stodo.date,
-                _stime ?? stodo.time,
-                stodo
+              _stitle ?? widget.stitle, 
+              _selectedcategory == null ? widget.scategory : _selectedcategory.name, 
+              Provider.of<AuthenticationState>(context, listen: false).uid, 
+              _scontent ?? widget.scontent, 
+              _sdate ?? DateFormat("dd/MM/yy").parse(widget.sdate), 
+              _stime ?? TimeOfDay(hour:int.parse(widget.sdate.split(":")[0]),minute: int.parse(widget.sdate.split(":")[1])), 
+              widget.stodo
             );
             Navigator.pop(context);
           }
@@ -56,12 +58,12 @@ class _AddTodoState extends State<AddTodo> {
           Navigator.pop(context);
         } else {
           Provider.of<TodoProvider>(context, listen: false).createTodo(
-              _stitle,
-              _selectedcategory == null ? null : _selectedcategory.name,
-              Provider.of<AuthenticationState>(context, listen: false).uid,
-              _scontent,
-              _sdate,
-              _stime
+            _stitle,
+            _selectedcategory == null ? null : _selectedcategory.name,
+            Provider.of<AuthenticationState>(context, listen: false).uid,
+            _scontent,
+            _sdate,
+            _stime
           );
           Navigator.pop(context);
         }
@@ -87,7 +89,34 @@ class _AddTodoState extends State<AddTodo> {
                   children: <Widget>[
                     GestureDetector(
                       onTap: () {
-                        Navigator.pop(context);
+                        if(widget.stitle != null || widget.scontent != null) {
+                          if(_stitle ==null && _scontent == null) {
+                            Navigator.pop(context);
+                          } else {
+                            Provider.of<TodoProvider>(context, listen: false).updateTodo(
+                              _stitle ?? widget.stitle, 
+                              _selectedcategory == null ? widget.scategory : _selectedcategory.name, 
+                              Provider.of<AuthenticationState>(context, listen: false).uid, 
+                              _scontent ?? widget.scontent, 
+                              _sdate ?? DateFormat("dd/MM/yy").parse(widget.sdate), 
+                              _stime ?? TimeOfDay(hour:int.parse(widget.sdate.split(":")[0]),minute: int.parse(widget.sdate.split(":")[1])), 
+                              widget.stodo
+                            );
+                            Navigator.pop(context);
+                          }
+                        } else if(_stitle ==null && _scontent == null) {
+                          Navigator.pop(context);
+                        } else {
+                          Provider.of<TodoProvider>(context, listen: false).createTodo(
+                            _stitle,
+                            _selectedcategory == null ? null : _selectedcategory.name,
+                            Provider.of<AuthenticationState>(context, listen: false).uid,
+                            _scontent,
+                            _sdate,
+                            _stime
+                          );
+                          Navigator.pop(context);
+                        }
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(vertical: SizeConfig().yMargin(context, 2.1), horizontal: SizeConfig().xMargin(context, 1.9)),
@@ -101,35 +130,30 @@ class _AddTodoState extends State<AddTodo> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Container(
-                          child: Text(stodo.title != null ? 'Edit Todo' : 'New Todo',
+                          child: Text(widget.stitle != null ? 'Edit Todo' : 'New Todo',
                               style: Theme.of(context)
                                   .textTheme
                                   .headline6
                                   .copyWith(
-                                  fontSize:
-                                  SizeConfig().textSize(context, 2.7),
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600)),
+                                      fontSize:
+                                          SizeConfig().textSize(context, 2.7),
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600)),
                         ),
                         GestureDetector(
                           onTap: () {
-                            stodo.title = _stitle;
-                            stodo.content = _scontent;
-                            stodo.time =  _stime.hour.toString()+':'+_stime.minute.toString();
-                            stodo.date = model.dformat.format(_sdate).toString();
-                            model.save(stodo);
-                            if(stodo.title != null || stodo.content != null) {
+                            if(widget.stitle != null || widget.scontent != null) {
                               if(_stitle ==null && _scontent == null) {
                                 Navigator.pop(context);
                               } else {
                                 Provider.of<TodoProvider>(context, listen: false).updateTodo(
-                                    _stitle ?? stodo.title,
-                                    _selectedcategory == null ? stodo.category : _selectedcategory.name,
-                                    Provider.of<AuthenticationState>(context, listen: false).uid,
-                                    _scontent ?? stodo.content,
-                                    _sdate ?? stodo.date,
-                                    _stime ?? stodo.time,
-                                    stodo
+                                  _stitle ?? widget.stitle, 
+                                  _selectedcategory == null ? widget.scategory : _selectedcategory.name, 
+                                  Provider.of<AuthenticationState>(context, listen: false).uid, 
+                                  _scontent ?? widget.scontent, 
+                                  _sdate ?? DateFormat("dd/MM/yy").parse(widget.sdate), 
+                                  _stime ?? TimeOfDay(hour:int.parse(widget.sdate.split(":")[0]),minute: int.parse(widget.sdate.split(":")[1])), 
+                                  widget.stodo
                                 );
                                 Navigator.pop(context);
                               }
@@ -137,12 +161,12 @@ class _AddTodoState extends State<AddTodo> {
                               Navigator.pop(context);
                             } else {
                               Provider.of<TodoProvider>(context, listen: false).createTodo(
-                                  _stitle,
-                                  _selectedcategory == null ? null : _selectedcategory.name,
-                                  Provider.of<AuthenticationState>(context, listen: false).uid,
-                                  _scontent,
-                                  _sdate,
-                                  _stime
+                                _stitle,
+                                _selectedcategory == null ? null : _selectedcategory.name,
+                                Provider.of<AuthenticationState>(context, listen: false).uid,
+                                _scontent,
+                                _sdate,
+                                _stime
                               );
                               Navigator.pop(context);
                             }
@@ -154,10 +178,10 @@ class _AddTodoState extends State<AddTodo> {
                                     .textTheme
                                     .headline6
                                     .copyWith(
-                                    fontSize:
-                                    SizeConfig().textSize(context, 2.3),
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600)),
+                                        fontSize:
+                                            SizeConfig().textSize(context, 2.3),
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600)),
                           ),
                         )
                       ],
@@ -174,7 +198,7 @@ class _AddTodoState extends State<AddTodo> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        stodo.title != null ? SizedBox() : Container(
+                        widget.stitle != null ? SizedBox() : Container(
                           margin: EdgeInsets.only(bottom: 30),
                           child: Text(
                             'Create A Todo',
@@ -182,23 +206,23 @@ class _AddTodoState extends State<AddTodo> {
                                 fontSize: SizeConfig().yMargin(context, 4.5)),
                           ),
                         ),
-                        Container(
-                            margin: EdgeInsets.only(bottom: 25),
-                            child: DropdownButton(
-                              underline: Container(height: 0.9, color: Colors.black.withOpacity(0.4)),
-                              isExpanded: true,
-                              hint: stodo.category != null ? Text(
-                                stodo.category,
-                                style: Theme.of(context).textTheme.headline5.copyWith(fontSize: SizeConfig().textSize(context, 2.4),),
-                              ) :  Text(
-                                'Choose Category',
-                                style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.4), fontWeight: FontWeight.w200, color: Provider.of<ThemeNotifier>(context, listen: false).isDarkModeOn ? Colors.grey[400] : Colors.grey[500]),
-                              ),
-                              value: _selectedcategory,
-                              items: _dropdownMenuItems,
-                              onChanged: onChangedDropdownItem,
+                         Container(
+                           margin: EdgeInsets.only(bottom: 25),
+                          child: DropdownButton(
+                            underline: Container(height: 0.9, color: Colors.black.withOpacity(0.4)),
+                            isExpanded: true,
+                            hint: widget.scategory != null ? Text(
+                              widget.scategory,
                               style: Theme.of(context).textTheme.headline5.copyWith(fontSize: SizeConfig().textSize(context, 2.4),),
-                            )
+                            ) :  Text(
+                              'Choose Category',
+                              style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 2.4), fontWeight: FontWeight.w200, color: Provider.of<ThemeNotifier>(context, listen: false).isDarkModeOn ? Colors.grey[400] : Colors.grey[500]),
+                            ),
+                            value: _selectedcategory,
+                            items: _dropdownMenuItems,
+                            onChanged: onChangedDropdownItem,
+                            style: Theme.of(context).textTheme.headline5.copyWith(fontSize: SizeConfig().textSize(context, 2.4),),
+                          )
                         ),
                         Container(
                           margin: EdgeInsets.only(bottom: 25),
@@ -208,15 +232,15 @@ class _AddTodoState extends State<AddTodo> {
                             keyboardType: TextInputType.multiline,
                             style: TextStyle(
                                 fontSize: SizeConfig().textSize(context, 2.4)),
-                            initialValue: stodo.title.isEmpty ? "" : stodo.title,
+                            initialValue: widget.stitle == null ? null : widget.stitle,
                             decoration: InputDecoration(
                               hintText: 'Enter Title',
                               hintStyle: TextStyle(
                                   fontSize: SizeConfig().textSize(context, 2.4),
                                   fontWeight: FontWeight.w200,
                                   color: Provider.of<ThemeNotifier>(context,
-                                      listen: false)
-                                      .isDarkModeOn
+                                              listen: false)
+                                          .isDarkModeOn
                                       ? Colors.grey[400]
                                       : Colors.grey[500]),
                               contentPadding: new EdgeInsets.symmetric(
@@ -235,15 +259,15 @@ class _AddTodoState extends State<AddTodo> {
                             keyboardType: TextInputType.multiline,
                             style: TextStyle(
                                 fontSize: SizeConfig().textSize(context, 2.4)),
-                            initialValue: stodo.content == null ? null : stodo.content,
+                            initialValue: widget.scontent == null ? null : widget.scontent,
                             decoration: InputDecoration(
                               hintText: 'Enter note (optional)',
                               hintStyle: TextStyle(
                                   fontSize: SizeConfig().textSize(context, 2.4) ,
                                   fontWeight: FontWeight.w200,
                                   color: Provider.of<ThemeNotifier>(context,
-                                      listen: false)
-                                      .isDarkModeOn
+                                              listen: false)
+                                          .isDarkModeOn
                                       ? Colors.grey[400]
                                       : Colors.grey[500]),
                               contentPadding: new EdgeInsets.symmetric(
@@ -255,56 +279,56 @@ class _AddTodoState extends State<AddTodo> {
                           ),
                         ),
                         Container(
-                            margin: EdgeInsets.only(bottom: 25),
-                            child: DropdownButton<String>(
-                              underline: Container(
-                                  height: 0.9,
-                                  color: Colors.black.withOpacity(0.4)),
-                              isExpanded: true,
-                              hint: stodo.date != null && stodo.time != null ?
-                              model.dformat.format(DateTime.now()).toString() == stodo.date ?
-                              Text(
-                                'Remind me at '+stodo.time,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    .copyWith(
+                          margin: EdgeInsets.only(bottom: 25),
+                          child: DropdownButton<String>(
+                            underline: Container(
+                                height: 0.9,
+                                color: Colors.black.withOpacity(0.4)),
+                            isExpanded: true,
+                            hint: widget.sdate != null && widget.stime != null ? 
+                            model.dformat.format(DateTime.now()).toString() == widget.sdate ? 
+                            Text(
+                              'Remind me at '+widget.stime,
+                              style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(
                                     fontSize: SizeConfig().textSize(context, 2.4), fontWeight: FontWeight.w400),
-                              )
-                                  :
-                              Text(
-                                'Reminder for '+stodo.date+' '+stodo.time,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    .copyWith(
+                            )
+                             : 
+                            Text(
+                              'Reminder for '+widget.sdate+' '+widget.stime,
+                              style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(
                                     fontSize: SizeConfig().textSize(context, 2.4), fontWeight: FontWeight.w400),
-                              )
-                                  :
-                              model.hValue == null ? Text(
-                                'Set Reminder',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline6
-                                    .copyWith(
-                                    fontSize:
-                                    SizeConfig().textSize(context, 2.4),
-                                    fontWeight: FontWeight.w200,
-                                    color: Provider.of<ThemeNotifier>(context,
-                                        listen: false)
-                                        .isDarkModeOn
-                                        ? Colors.grey[400]
-                                        : Colors.grey[500]),
-                              ) : Text(
-                                model.hValue,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    .copyWith(
+                            )
+                            : 
+                            model.hValue == null ? Text(
+                              'Set Reminder',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(
+                                      fontSize:
+                                          SizeConfig().textSize(context, 2.4),
+                                      fontWeight: FontWeight.w200,
+                                      color: Provider.of<ThemeNotifier>(context,
+                                                  listen: false)
+                                              .isDarkModeOn
+                                          ? Colors.grey[400]
+                                          : Colors.grey[500]),
+                            ) : Text(
+                              model.hValue,
+                              style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(
                                     fontSize: SizeConfig().textSize(context, 2.4), fontWeight: FontWeight.w400),
-                              ),
-                              value: model.value,
-                              items: model.drop.map<DropdownMenuItem<String>>((String value) {
+                            ),
+                            value: model.value,
+                            items: model.drop.map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: Text(
@@ -312,63 +336,63 @@ class _AddTodoState extends State<AddTodo> {
                                   ),
                                 );
                               })
-                                  .toList(),
-                              onChanged: (value) async{
-                                if(value == 'Custom Reminder') {
-                                  await showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime(int.parse(DateFormat('yyyy').format(DateTime.now())), int.parse(DateFormat('MM').format(DateTime.now())), int.parse(DateFormat('dd').format(DateTime.now()))),
-                                      lastDate: DateTime(2025)
-                                  ).then((value) async{
-                                    await showTimePicker(
-                                      context: context,
-                                      initialTime: TimeOfDay.now(),
-                                    ).then((val) {
-                                      setState(() {
-                                        print(value);
-                                        _sdate = value;
-                                        _stime = val;
-                                      });
-                                      model.setValue(value, val, context);
+                              .toList(),
+                            onChanged: (value) async{
+                              if(value == 'Custom Reminder') {
+                                await showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(int.parse(DateFormat('yyyy').format(DateTime.now())), int.parse(DateFormat('MM').format(DateTime.now())), int.parse(DateFormat('dd').format(DateTime.now()))),
+                                  lastDate: DateTime(2025)
+                                ).then((value) async{
+                                  await showTimePicker(
+                                    context: context,
+                                    initialTime: TimeOfDay.now(),
+                                  ).then((val) {
+                                    setState(() {
+                                      print(value);
+                                      _sdate = value;
+                                      _stime = val;
                                     });
+                                    model.setValue(value, val, context);
                                   });
-                                } else if(value == 'Next 10 mins'){
-                                  setState(() {
-                                    print(value);
-                                    _sdate = DateTime.now();
-                                    _stime = TimeOfDay.fromDateTime(DateTime.now().add(Duration(minutes: 10)));
-                                  });
-                                  model.setValue(DateTime.now(), TimeOfDay.fromDateTime(DateTime.now().add(Duration(minutes: 10))), context);
-                                }else if(value == 'Next 30 mins'){
-                                  setState(() {
-                                    print(value);
-                                    _sdate = DateTime.now();
-                                    _stime = TimeOfDay.fromDateTime(DateTime.now().add(Duration(minutes: 30)));
-                                  });
-                                  model.setValue(DateTime.now(), TimeOfDay.fromDateTime(DateTime.now().add(Duration(minutes: 30))), context);
-                                }else if(value == 'Next 1 hour'){
-                                  setState(() {
-                                    print(value);
-                                    _sdate = DateTime.now();
-                                    _stime = TimeOfDay.fromDateTime(DateTime.now().add(Duration(hours: 1)));
-                                  });
-                                  model.setValue(DateTime.now(), TimeOfDay.fromDateTime(DateTime.now().add(Duration(hours: 1))), context);
-                                } else {
-                                  setState(() {
-                                    print(value);
-                                    _sdate = DateTime.now();
-                                    _stime = null;
-                                  });
-                                  model.setVal(value);
-                                }
-                              },
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(
-                                  fontSize: SizeConfig().textSize(context, 2.4), fontWeight: FontWeight.w400),
-                            )
+                                });
+                              } else if(value == 'Next 10 mins'){
+                                setState(() {
+                                  print(value);
+                                  _sdate = DateTime.now();
+                                  _stime = TimeOfDay.fromDateTime(DateTime.now().add(Duration(minutes: 10)));
+                                });
+                                model.setValue(DateTime.now(), TimeOfDay.fromDateTime(DateTime.now().add(Duration(minutes: 10))), context);
+                              }else if(value == 'Next 30 mins'){
+                                setState(() {
+                                  print(value);
+                                  _sdate = DateTime.now();
+                                  _stime = TimeOfDay.fromDateTime(DateTime.now().add(Duration(minutes: 30)));
+                                });
+                                model.setValue(DateTime.now(), TimeOfDay.fromDateTime(DateTime.now().add(Duration(minutes: 30))), context);
+                              }else if(value == 'Next 1 hour'){
+                                setState(() {
+                                  print(value);
+                                  _sdate = DateTime.now();
+                                  _stime = TimeOfDay.fromDateTime(DateTime.now().add(Duration(hours: 1)));
+                                });
+                                model.setValue(DateTime.now(), TimeOfDay.fromDateTime(DateTime.now().add(Duration(hours: 1))), context);
+                              } else {
+                                setState(() {
+                                  print(value);
+                                  _sdate = DateTime.now();
+                                  _stime = null;
+                                });
+                                model.setVal(value);
+                              }
+                            },
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(
+                                    fontSize: SizeConfig().textSize(context, 2.4), fontWeight: FontWeight.w400),
+                          )
                         ),
                         // Container(
                         //   child: CheckboxListTile(
@@ -408,10 +432,10 @@ class _AddTodoState extends State<AddTodo> {
       print(category);
       items.add(
         DropdownMenuItem(
-            value: category,
-            child: Text(
-              category.name,
-            )
+          value: category,
+          child: Text(
+            category.name,
+          )
         ),
       );
     }
