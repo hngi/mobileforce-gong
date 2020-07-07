@@ -32,8 +32,8 @@ dependencies:
   flutter_signin_button:
   rate_my_app:
   launch_review: ^2.0.0
-  
-  
+
+
   flutter:
     sdk: flutter
   shared_preferences:
@@ -51,10 +51,10 @@ dev_dependencies:
     sdk: flutter
 
   flutter_launcher_icons:
-  
+
 
 flutter_icons:
-#  image_path: "assets/images/icon-128x128.png"
+  #  image_path: "assets/images/icon-128x128.png"
   image_path_android: "assets/images/goong.png"
   image_path_ios: "assets/images/goong.png"
   android: true # can specify file name here e.g. "ic_launcher"
