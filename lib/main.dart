@@ -25,15 +25,18 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   notificationAppLaunchDetails =
       await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
-  NotificationManager().initNotifications();
+  await NotificationManager().initNotifications();
 
   runApp(
-    ChangeNotifierProvider<ThemeNotifier>(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => ChangeNotifierProvider<ThemeNotifier>(
       child: MyApp(),
       create: (BuildContext context) {
         return ThemeNotifier();
       },
     ),
+    )
   );
 }
 
@@ -54,8 +57,8 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => LocalAuth())
           ],
           child: GetMaterialApp(
-                // locale: DevicePreview.of(context).locale,
-                // builder: DevicePreview.appBuilder,
+                locale: DevicePreview.of(context).locale,
+                builder: DevicePreview.appBuilder,
                 debugShowCheckedModeBanner: false,
                 // initialRoute: '/',
                 // routes: {
@@ -69,49 +72,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// Future<void> main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-//     statusBarColor: Color(0xff0984E3),
-//   ));
-
-//   runApp(
-//     DevicePreview(
-//       enabled: !kReleaseMode,
-//       builder: (context) => ChangeNotifierProvider<ThemeNotifier>(
-//       child: MyApp(),
-//       create: (BuildContext context) {
-//         return ThemeNotifier();
-//       },
-//     ),
-//     )
-//   );
-// }
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     Provider.of<ThemeNotifier>(context).loadThemeData(context);
-//     return Consumer<ThemeNotifier>(
-//       builder: (context, value, child) {
-//         return MultiProvider(
-//           providers: [
-//             ChangeNotifierProvider(create: (_) => AuthenticationState()),
-//             ChangeNotifierProvider(create: (_) => QuoteState()),
-//             ChangeNotifierProvider(create: (_) => NotesProvider()),
-//             ChangeNotifierProvider(create: (_) => TodoProvider())
-//           ],
-//           child: MaterialApp(
-//             locale: DevicePreview.of(context).locale,
-//             builder: DevicePreview.appBuilder,
-//             debugShowCheckedModeBanner: false,
-//             title: 'Gong',
-//             theme: Provider.of<ThemeNotifier>(context).currentThemeData,
-//             home: SplashScreen()
-//           ),
-//         );
-//       },
-//     );
-//   }
-// }

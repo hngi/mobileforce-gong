@@ -18,7 +18,7 @@ class NotificationManager {
     return flutterLocalNotificationsPlugin;
   }
 
-  void initNotifications() {
+  Future<void> initNotifications() async {
     // initialise the plugin.
     var initializationSettingsAndroid =
         new AndroidInitializationSettings('@mipmap/ic_launcher');
