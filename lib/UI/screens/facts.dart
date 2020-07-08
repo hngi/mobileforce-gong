@@ -12,6 +12,8 @@ import 'package:team_mobileforce_gong/services/quotes/quoteState.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 
+import 'showQuotes.dart';
+
 enum QuoteType { Facts, Motivation }
 
 class Facts extends StatefulWidget {
@@ -33,7 +35,6 @@ class _FactsState extends State<Facts> {
 
   Quote quote = Quote(author: '', quote: '', id: '');
   Quote fact = Quote(author: '', quote: '', id: '');
-
 
   @override
   void initState() {
@@ -64,7 +65,6 @@ class _FactsState extends State<Facts> {
                   }
                 else
                   {
-                    
                     facts.add(value[i]),
                     if (facts.length > 1)
                       {
@@ -100,6 +100,10 @@ class _FactsState extends State<Facts> {
     darktheme = Provider.of<ThemeNotifier>(context).isDarkModeOn ?? false;
     return Scaffold(
       key: scaffoldKey,
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text('View More'),
+        onPressed: () => Get.to(ShowQuotes()),
+      ),
       appBar: AppBar(
         actions: [
           widget.quoteType == QuoteType.Motivation

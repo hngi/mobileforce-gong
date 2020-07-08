@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:team_mobileforce_gong/services/localAuth/lockNotes.dart';
@@ -12,14 +13,19 @@ import 'package:team_mobileforce_gong/state/todoProvider.dart';
 
 import 'UI/screens/add_note.dart';
 import 'UI/screens/splashscreen.dart';
+import 'services/notifications/notifications.dart';
 import 'services/quotes/quoteState.dart';
 import 'state/authProvider.dart';
 
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+NotificationAppLaunchDetails notificationAppLaunchDetails;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    // statusBarColor: Color(0xff0984E3),
-  ));
+  notificationAppLaunchDetails =
+      await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+  NotificationManager().initNotifications();
 
   runApp(
     ChangeNotifierProvider<ThemeNotifier>(

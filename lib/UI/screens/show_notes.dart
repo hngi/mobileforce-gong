@@ -92,18 +92,14 @@ class _ShowNotesState extends State<ShowNotes> {
                             await state.authenticate();
                             String status = state.successful;
                             if (status == 'Successful') {
-                              Get.to(AddNote(
-                                    notes[index]
-                                  ));
+                              Get.to(AddNote(stitle: notes[index].title, scontent: notes[index].content, snote: notes[index], simportant: notes[index].important,));
                             } else {
                               scaffoldKey.currentState.showSnackBar(SnackBar(
                                   backgroundColor: Colors.red,
                                   content: Text('Authorization Failed')));
                             }
                           } else {
-                            Get.to(AddNote(
-                                    notes[index]
-                                  ));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddNote(stitle: notes[index].title, scontent: notes[index].content, snote: notes[index], simportant: notes[index].important,)));
                           }
                           
                         }
@@ -205,16 +201,22 @@ class _ShowNotesState extends State<ShowNotes> {
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
-                                            Container(
-                                              child: Text(
-                                                  notes[index].date ?? '',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline6
-                                                      .copyWith(
-                                                          fontSize: SizeConfig()
-                                                              .textSize(context,
-                                                                  1.6))),
+                                            Column(
+                                              children: <Widget>[
+                                                !notes[index].uploaded || notes[index].shouldUpdate ? Container(
+                                                  child: SvgPicture.asset(
+                                                    'assets/svgs/upload.svg',
+                                                    width: 15,
+                                                    color: Colors.black45,
+                                                  ),
+                                                ) : SizedBox(),
+                                                Container(
+                                                  child: Text(
+                                                    notes[index].date ?? '',
+                                                    style: Theme.of(context).textTheme.headline6.copyWith(fontSize: SizeConfig().textSize(context, 1.6))
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         )

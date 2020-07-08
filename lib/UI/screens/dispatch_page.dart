@@ -132,9 +132,9 @@ class DispatchPage extends StatelessWidget {
         child: Icon(Icons.add),
         onPressed: () => name == 'note'
             ? Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => AddNote(new Notes.noID("", "", "", 1))))
+            .push(MaterialPageRoute(builder: (context) => AddNote(snote :new Notes.noID("", "", "", 1))))
             : Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => AddTodo(new Todos.noID("", "", "", false,   1, 1)))),
+            .push(MaterialPageRoute(builder: (context) => AddTodo(stodo: new Todos.noID("", "", "", false, false, 1)))),
       ),
     );
   }

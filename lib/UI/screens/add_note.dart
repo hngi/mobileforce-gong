@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,10 +18,12 @@ import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dar
 import 'package:team_mobileforce_gong/util/styles/color.dart';
 
 class AddNote extends StatefulWidget {
+  final String stitle;
+  final String scontent;
+  final bool simportant;
   final Notes snote;
-  // final String noteID;
 
-  AddNote(this.snote);
+  AddNote({Key key, this.stitle, this.scontent, this.simportant, this.snote}) : super(key: key);
 
   @override
   _AddNoteState createState() => _AddNoteState(snote);
@@ -50,7 +56,6 @@ class _AddNoteState extends State<AddNote> {
 
   @override
   Widget build(BuildContext context) {
-    print(snote.sId);
     final state = Provider.of<LocalAuth>(context);
     return Scaffold(
       key: scaffoldKey,
@@ -147,17 +152,17 @@ class _AddNoteState extends State<AddNote> {
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600)),
                       ),
-                      IconButton(
-                          icon: Icon(Icons.color_lens), onPressed: () {}),
+                      // IconButton(
+                      //     icon: Icon(Icons.color_lens), onPressed: () {}),
                       InkWell(
                           onTap: () async {
                             //print(_title);
-                            snote.title = _title;
-                            snote.content = _content;
-                            Provider.of<NotesProvider>(context, listen: false)
-                                .save(snote);
-                            if (snote.title != null ||
-                                snote.content != null) {
+                            // snote.title = _title;
+                            // snote.content = _content;
+                            // Provider.of<NotesProvider>(context, listen: false)
+                            //     .save(snote);
+                            if (widget.stitle != null ||
+                                widget.scontent != null) {
                               if (_title == null && _content == null) {
                                 Navigator.pop(context);
                               } else {
@@ -228,12 +233,8 @@ class _AddNoteState extends State<AddNote> {
                                       maxLines: null,
                                       maxLengthEnforced: false,
                                       keyboardType: TextInputType.multiline,
-                                      style: TextStyle(
-                                          fontSize: SizeConfig()
-                                              .textSize(context, 3.5)),
-                                      initialValue: snote.title.isEmpty
-                                          ? ""
-                                          : snote.title,
+                                      style: TextStyle(fontSize: SizeConfig().textSize(context, 2.4)),
+                                      initialValue: widget.scontent == null ? null : widget.scontent,
                                       decoration: InputDecoration(
                                         hintText: 'Enter Title',
                                         hintStyle: TextStyle(
@@ -424,9 +425,108 @@ class _AddNoteState extends State<AddNote> {
               ),
             )
           ],
-        ),
-      ),
-    );
+              // Container(
+              //   padding: EdgeInsets.only(top: 10, left: 12, right: 12, bottom: MediaQuery.of(context).viewInsets.bottom,),
+              //   decoration: BoxDecoration(
+              //     border: Border(
+              //       top: BorderSide(
+              //         color: lightwhite,
+              //         width: 1.0,
+              //       ),
+              //     )
+              //   ),
+              //   child: GestureDetector(
+              //     onTap: () {
+              //       scaffoldKey.currentState.showBottomSheet(
+              //         (context) => Container(
+              //           height: 100,
+              //           child: Column(
+              //             children: <Widget>[
+              //               GestureDetector(
+              //                 onTap: () {
+              //                   Navigator.pop(context);
+              //                   ImagePicker().getImage(source: ImageSource.camera).then((value)async {
+              //                     Uint8List data = await value.readAsBytes();
+              //                     print(data);
+              //                     setState(() {
+              //                       model.img.add(base64Encode(data));
+              //                       print(Base64Decoder().convert(model.img[0]).toString());
+              //                       //print(img.toString());
+              //                     });
+              //                   });
+              //                 },
+              //                 child: Container(
+              //                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              //                   child: Row(
+              //                     children: <Widget>[
+              //                       SvgPicture.asset(
+              //                         'assets/svgs/camera.svg',
+              //                         width: 20,
+              //                       ),
+              //                       Container(
+              //                         child: Text(
+              //                           'Take Photo'
+              //                         ),
+              //                       )
+              //                     ],
+              //                   ),
+              //                 ),
+              //               ),
+              //               GestureDetector(
+              //                 onTap: () {
+              //                   Navigator.pop(context);
+              //                   ImagePicker().getImage(source: ImageSource.gallery).then((value)async {
+              //                     Uint8List data = await value.readAsBytes();
+              //                     setState(() {
+              //                       model.img.add(base64Encode(data));
+              //                     });
+              //                   });
+              //                 },
+              //                 child: Container(
+              //                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              //                   child: Row(
+              //                     children: <Widget>[
+              //                       SvgPicture.asset(
+              //                         'assets/svgs/gallery.svg',
+              //                         width: 20
+              //                       ),
+              //                       Container(
+              //                         child: Text(
+              //                           'Select from gallery'
+              //                         ),
+              //                       )
+              //                     ],
+              //                   ),
+              //                 ),
+              //               )
+              //             ],
+              //           ),
+              //         )
+              //       );
+              //     },
+              //     child: Row(
+              //       children: <Widget>[
+              //         Container(
+              //           child: SvgPicture.asset(
+              //             'assets/svgs/addimage.svg',
+              //             width: 40,
+              //           ),
+              //         ),
+              //         Container(
+              //           margin: EdgeInsets.only(left: 15),
+              //           child: Text('Add image',
+              //               style: Theme.of(context).textTheme.headline4.copyWith(
+              //                   fontSize: SizeConfig().textSize(context, 1.9))),
+              //         )
+              //       ],
+              //     ),
+              //   ),
+              // )
+            // ],
+            )
+          ),
+        );
+      
   }
 
   share(BuildContext context) {
@@ -456,3 +556,17 @@ class _AddNoteState extends State<AddNote> {
     }
   }
 }
+
+//This method deals with changing backgroundColor of the Note.
+/*  void changeColor(int value) {
+    setState(() {
+      todo.backgroundColor = value;
+    });
+    if (todo.id != null) {
+      helper.updateTodo(todo);
+    }
+    else {
+      helper.insertTodo(todo);
+    }
+
+  }*/

@@ -55,7 +55,7 @@ class _ShowQuotesState extends State<ShowQuotes> {
       key: scaffoldKey,
       appBar: AppBar(
         actions: [
-          RaisedButton(
+         populated ? RaisedButton(
               color: darktheme ? Color(0xff0D141A) : null,
               elevation: 0,
               onPressed: () {
@@ -69,7 +69,7 @@ class _ShowQuotesState extends State<ShowQuotes> {
                   style: GoogleFonts.aBeeZee(
                       fontWeight: FontWeight.bold,
                       fontSize: SizeConfig().textSize(context, 2.4),
-                      color: darktheme ? Colors.white : Colors.black))),
+                      color: darktheme ? Colors.white : Colors.black))) :Container(),
         ],
         leading: IconButton(
             icon: Icon(Icons.arrow_back,
