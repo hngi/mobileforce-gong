@@ -32,6 +32,8 @@ dependencies:
   flutter_signin_button:
   rate_my_app:
   launch_review: ^2.0.0
+  data_connection_checker: ^0.3.4
+  uuid: ^2.2.0
 
 
   flutter:
