@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,70 +33,139 @@ class _AddNoteState extends State<AddNote> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
+  void initState() {
+    checkLocked();
+    super.initState();
+  }
+
+  bool _locked = false;
+
+  Future<void> checkLocked() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool isLocked = prefs.getBool(snote.sId) ?? false;
+    setState(() {
+      _locked = isLocked;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print(snote.sId);
     final state = Provider.of<LocalAuth>(context);
-    return WillPopScope(
-      onWillPop: () async {
-        if (snote.title != null || snote.content != null) {
-          String userID =
-              await Provider.of<AuthenticationState>(context, listen: false)
-                  .currentUserId();
-          print(userID);
-          Provider.of<NotesProvider>(context, listen: false).updateNote(
-              userID,
-              _title ?? snote.title,
-              _content ?? snote.content,
-              snote.important,
-              snote);
-        } else if (_title == null && _content == null) {
-          Navigator.pop(context);
-        } else {
-          String userID =
-              await Provider.of<AuthenticationState>(context, listen: false)
-                  .currentUserId();
-          Provider.of<NotesProvider>(context, listen: false)
-              .createNote(userID, _title, _content, false);
-          Navigator.pop(context);
-        }
-        return true;
-      },
-      child: Scaffold(
-        key: scaffoldKey,
-        resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
-        body: Container(
-          padding: EdgeInsets.only(bottom: 20),
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(
-                    left: SizeConfig().xMargin(context, 5.9),
-                    right: SizeConfig().xMargin(context, 5.9),
-                    top: SizeConfig().yMargin(context, 3.0),
-                    bottom: SizeConfig().yMargin(context, 1.6)),
-                width: MediaQuery.of(context).size.width,
-                height: SizeConfig().yMargin(context, 18),
-                color: blue,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GestureDetector(
-                            onTap: () async {
-                              //print(widget.stitle+' '+_title);
-                              if (snote.title != null ||
-                                  snote.content != null) {
+    return Scaffold(
+      key: scaffoldKey,
+      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomPadding: false,
+      body: Container(
+        padding: EdgeInsets.only(bottom: 20),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(
+                  left: SizeConfig().xMargin(context, 5.9),
+                  right: SizeConfig().xMargin(context, 5.9),
+                  top: SizeConfig().yMargin(context, 3.0),
+                  bottom: SizeConfig().yMargin(context, 1.6)),
+              width: MediaQuery.of(context).size.width,
+              height: SizeConfig().yMargin(context, 18),
+              color: blue,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            Get.back();
+                            //print(widget.stitle+' '+_title);
+                            // if (snote.title != null ||
+                            //     snote.content != null) {
+                            //   String userID =
+                            //       await Provider.of<AuthenticationState>(
+                            //               context,
+                            //               listen: false)
+                            //           .currentUserId();
+                            //   print(userID);
+                            //   Provider.of<NotesProvider>(context,
+                            //           listen: false)
+                            //       .updateNote(
+                            //           userID,
+                            //           _title ?? snote.title,
+                            //           _content ?? snote.content,
+                            //           snote.important,
+                            //           snote);
+                            //   Navigator.pop(context);
+                            // } else if (_title == null && _content == null) {
+                            //   Navigator.pop(context);
+                            // } else {
+                            //   String userID =
+                            //       await Provider.of<AuthenticationState>(
+                            //               context,
+                            //               listen: false)
+                            //           .currentUserId();
+                            //   print(userID);
+                            //   Provider.of<NotesProvider>(context,
+                            //           listen: false)
+                            //       .createNote(
+                            //           userID, _title, _content, false);
+                            //   Navigator.pop(context);
+                            // }
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: SizeConfig().yMargin(context, 2.1),
+                                horizontal:
+                                    SizeConfig().xMargin(context, 1.9)),
+                            child: SvgPicture.asset(
+                              'assets/svgs/backarrow.svg',
+                              width: 25,
+                            ),
+                          )),
+                      snote.title.isEmpty
+                          ? SizedBox()
+                          : IconButton(
+                              icon: Icon(Icons.share),
+                              onPressed: () => share(context))
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                        child: Text(
+                            snote.title.isEmpty ? 'New Note' : 'Edit Note',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(
+                                    fontSize:
+                                        SizeConfig().textSize(context, 2.7),
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600)),
+                      ),
+                      IconButton(
+                          icon: Icon(Icons.color_lens), onPressed: () {}),
+                      InkWell(
+                          onTap: () async {
+                            //print(_title);
+                            snote.title = _title;
+                            snote.content = _content;
+                            Provider.of<NotesProvider>(context, listen: false)
+                                .save(snote);
+                            if (snote.title != null ||
+                                snote.content != null) {
+                              if (_title == null && _content == null) {
+                                Navigator.pop(context);
+                              } else {
                                 String userID =
                                     await Provider.of<AuthenticationState>(
                                             context,
                                             listen: false)
                                         .currentUserId();
-                                print(userID);
                                 Provider.of<NotesProvider>(context,
                                         listen: false)
                                     .updateNote(
@@ -104,186 +175,71 @@ class _AddNoteState extends State<AddNote> {
                                         snote.important,
                                         snote);
                                 Navigator.pop(context);
-                              } else if (_title == null && _content == null) {
-                                Navigator.pop(context);
-                              } else {
-                                String userID =
-                                    await Provider.of<AuthenticationState>(
-                                            context,
-                                            listen: false)
-                                        .currentUserId();
-                                print(userID);
-                                Provider.of<NotesProvider>(context,
-                                        listen: false)
-                                    .createNote(
-                                        userID, _title, _content, false);
-                                Navigator.pop(context);
                               }
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: SizeConfig().yMargin(context, 2.1),
-                                  horizontal:
-                                      SizeConfig().xMargin(context, 1.9)),
-                              child: SvgPicture.asset(
-                                'assets/svgs/backarrow.svg',
-                                width: 25,
-                              ),
-                            )),
-                        snote.title == null
-                            ? SizedBox()
-                            : IconButton(
-                                icon: Icon(Icons.share),
-                                onPressed: () => share(context))
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          child: Text(
-                              snote.title.isEmpty ? 'New Note' : 'Edit Note',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6
-                                  .copyWith(
-                                      fontSize:
-                                          SizeConfig().textSize(context, 2.7),
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600)),
-                        ),
-                        IconButton(
-                            icon: Icon(Icons.color_lens), onPressed: () {}),
-                        InkWell(
-                            onTap: () async {
-                              //print(_title);
-                              snote.title = _title;
-                              snote.content = _content;
-                              Provider.of<NotesProvider>(context, listen: false)
-                                  .save(snote);
-                              if (snote.title != null ||
-                                  snote.content != null) {
-                                if (_title == null && _content == null) {
-                                  Navigator.pop(context);
-                                } else {
-                                  String userID =
-                                      await Provider.of<AuthenticationState>(
-                                              context,
-                                              listen: false)
-                                          .currentUserId();
-                                  Provider.of<NotesProvider>(context,
+                            } else if (_title == null && _content == null) {
+                              Navigator.pop(context);
+                            } else {
+                              String userID =
+                                  await Provider.of<AuthenticationState>(
+                                          context,
                                           listen: false)
-                                      .updateNote(
-                                          userID,
-                                          _title ?? snote.title,
-                                          _content ?? snote.content,
-                                          snote.important,
-                                          snote);
-                                  Navigator.pop(context);
-                                }
-                              } else if (_title == null && _content == null) {
-                                Navigator.pop(context);
-                              } else {
-                                String userID =
-                                    await Provider.of<AuthenticationState>(
-                                            context,
-                                            listen: false)
-                                        .currentUserId();
-                                Provider.of<NotesProvider>(context,
-                                        listen: false)
-                                    .createNote(
-                                        userID, _title, _content, false);
-                                Navigator.pop(context);
-                              }
-                            },
-                            child: Container(
-                              child: Text('Save',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline6
-                                      .copyWith(
-                                          fontSize: SizeConfig()
-                                              .textSize(context, 2.1),
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w300)),
-                            )),
-                      ],
-                    )
-                  ],
-                ),
+                                      .currentUserId();
+                              Provider.of<NotesProvider>(context,
+                                      listen: false)
+                                  .createNote(
+                                      userID, _title, _content, false);
+                              Navigator.pop(context);
+                            }
+                          },
+                          child: Container(
+                            child: Text(snote.title.isEmpty ? 'Save' : 'Update',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    .copyWith(
+                                        fontSize: SizeConfig()
+                                            .textSize(context, 2.1),
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w300)),
+                          )),
+                    ],
+                  )
+                ],
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: (MediaQuery.of(context).size.height) -
-                        (MediaQuery.of(context).size.height * 0.15),
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 30, vertical: 20),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Container(
-                                child: Column(
-                                  children: <Widget>[
-                                    TextFormField(
-                                        maxLines: null,
-                                        maxLengthEnforced: false,
-                                        keyboardType: TextInputType.multiline,
-                                        style: TextStyle(
-                                            fontSize: SizeConfig()
-                                                .textSize(context, 3.5)),
-                                        initialValue: snote.title.isEmpty
-                                            ? ""
-                                            : snote.title,
-                                        decoration: InputDecoration(
-                                          hintText: 'Enter Title',
-                                          hintStyle: TextStyle(
-                                              fontSize: SizeConfig()
-                                                  .textSize(context, 3.5),
-                                              fontWeight: FontWeight.w400,
-                                              color: Provider.of<ThemeNotifier>(
-                                                          context,
-                                                          listen: false)
-                                                      .isDarkModeOn
-                                                  ? Colors.grey[400]
-                                                  : Colors.grey[600]),
-                                          contentPadding:
-                                              new EdgeInsets.symmetric(
-                                                  vertical: 10.0,
-                                                  horizontal: 10.0),
-                                          border: InputBorder.none,
-                                          focusedBorder: InputBorder.none,
-                                          enabledBorder: InputBorder.none,
-                                          errorBorder: InputBorder.none,
-                                          disabledBorder: InputBorder.none,
-                                        ),
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _title = value;
-                                          });
-                                        }),
-                                    TextFormField(
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: (MediaQuery.of(context).size.height) -
+                      (MediaQuery.of(context).size.height * 0.15),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 20),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Container(
+                              child: Column(
+                                children: <Widget>[
+                                  TextFormField(
                                       maxLines: null,
-                                      minLines: SizeConfig()
-                                          .yMargin(context, 2.7)
-                                          .round(),
                                       maxLengthEnforced: false,
                                       keyboardType: TextInputType.multiline,
                                       style: TextStyle(
                                           fontSize: SizeConfig()
-                                              .textSize(context, 2.4)),
-                                      initialValue: snote.content.isEmpty
+                                              .textSize(context, 3.5)),
+                                      initialValue: snote.title.isEmpty
                                           ? ""
-                                          : snote.content,
+                                          : snote.title,
                                       decoration: InputDecoration(
-                                        hintText: 'Enter your note here...',
+                                        hintText: 'Enter Title',
                                         hintStyle: TextStyle(
                                             fontSize: SizeConfig()
-                                                .textSize(context, 2.4),
+                                                .textSize(context, 3.5),
+                                            fontWeight: FontWeight.w400,
                                             color: Provider.of<ThemeNotifier>(
                                                         context,
                                                         listen: false)
@@ -292,7 +248,7 @@ class _AddNoteState extends State<AddNote> {
                                                 : Colors.grey[600]),
                                         contentPadding:
                                             new EdgeInsets.symmetric(
-                                                vertical: 20.0,
+                                                vertical: 10.0,
                                                 horizontal: 10.0),
                                         border: InputBorder.none,
                                         focusedBorder: InputBorder.none,
@@ -302,64 +258,136 @@ class _AddNoteState extends State<AddNote> {
                                       ),
                                       onChanged: (value) {
                                         setState(() {
-                                          _content = value;
+                                          _title = value;
                                         });
-                                      },
+                                      }),
+                                  TextFormField(
+                                    maxLines: null,
+                                    minLines: SizeConfig()
+                                        .yMargin(context, 2.7)
+                                        .round(),
+                                    maxLengthEnforced: false,
+                                    keyboardType: TextInputType.multiline,
+                                    style: TextStyle(
+                                        fontSize: SizeConfig()
+                                            .textSize(context, 2.4)),
+                                    initialValue: snote.content.isEmpty
+                                        ? ""
+                                        : snote.content,
+                                    decoration: InputDecoration(
+                                      hintText: 'Enter your note here...',
+                                      hintStyle: TextStyle(
+                                          fontSize: SizeConfig()
+                                              .textSize(context, 2.4),
+                                          color: Provider.of<ThemeNotifier>(
+                                                      context,
+                                                      listen: false)
+                                                  .isDarkModeOn
+                                              ? Colors.grey[400]
+                                              : Colors.grey[600]),
+                                      contentPadding:
+                                          new EdgeInsets.symmetric(
+                                              vertical: 20.0,
+                                              horizontal: 10.0),
+                                      border: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                      enabledBorder: InputBorder.none,
+                                      errorBorder: InputBorder.none,
+                                      disabledBorder: InputBorder.none,
                                     ),
-                                  ],
-                                ),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _content = value;
+                                      });
+                                    },
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ),
-              Container(
-                padding: EdgeInsets.only(
-                  top: 10,
-                  left: 12,
-                  right: 12,
-                  bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            Container(
+              padding: EdgeInsets.only(
+                top: 10,
+                left: 12,
+                right: 12,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              decoration: BoxDecoration(
+                  border: Border(
+                top: BorderSide(
+                  color: lightwhite,
+                  width: 1.0,
                 ),
-                decoration: BoxDecoration(
-                    border: Border(
-                  top: BorderSide(
-                    color: lightwhite,
-                    width: 1.0,
-                  ),
-                )),
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        child: SvgPicture.asset(
-                          'assets/svgs/addimage.svg',
-                          width: 40,
-                        ),
+              )),
+              child: GestureDetector(
+                onTap: () {},
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      child: SvgPicture.asset(
+                        'assets/svgs/addimage.svg',
+                        width: 40,
                       ),
-                      Container(
-                        margin: EdgeInsets.only(left: 15),
-                        child: Text('Add image',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline4
-                                .copyWith(
-                                    fontSize:
-                                        SizeConfig().textSize(context, 1.9))),
-                      ),
-                      Spacer(),
-                      snote.title == null
-                          ? SizedBox()
-                          : IconButton(
-                              icon: Icon(Icons.enhanced_encryption),
-                              onPressed: () async {
-                                await state.checkBiometrics();
-                                await state.getAvailableBiometrics();
-                                bool check = state.canCheckBiometrics;
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 15),
+                      child: Text('Add image',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline4
+                              .copyWith(
+                                  fontSize:
+                                      SizeConfig().textSize(context, 1.9))),
+                    ),
+                    Spacer(),
+                    snote.title.isEmpty
+                        ? SizedBox()
+                        : IconButton(
+                            icon: _locked
+                                ? Icon(Icons.enhanced_encryption)
+                                : Icon(Icons.no_encryption),
+                            onPressed: () async {
+                              await state.checkBiometrics();
+                              await state.getAvailableBiometrics();
+                              bool check = state.canCheckBiometrics;
+                              if (_locked == true) {
+                                if (check == true) {
+                                  await Provider.of<LocalAuth>(context,
+                                          listen: false)
+                                      .authenticate();
+                                  String status = state.successful;
+                                  if (status == 'Successful') {
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
+                                    prefs.setBool(snote.sId, false);
+                                    bool test = prefs.getBool(snote.sId);
+                                    print(test);
+                                    setState(() {
+                                      _locked = false;
+                                    });
+                                    scaffoldKey.currentState.showSnackBar(
+                                        SnackBar(
+                                            backgroundColor: Colors.green,
+                                            content: Text(
+                                                'Lock disabled Successfully')));
+                                  } else {
+                                    scaffoldKey.currentState.showSnackBar(
+                                        SnackBar(
+                                            backgroundColor: Colors.red,
+                                            content: Text(
+                                                'Authorization failed')));
+                                  }
+                                } else {
+                                  //show pin input
+                                }
+                              } else {
                                 if (check == true) {
                                   await Provider.of<LocalAuth>(context,
                                           listen: false)
@@ -371,6 +399,9 @@ class _AddNoteState extends State<AddNote> {
                                     prefs.setBool(snote.sId, true);
                                     bool test = prefs.getBool(snote.sId);
                                     print(test);
+                                    setState(() {
+                                      _locked = true;
+                                    });
                                     scaffoldKey.currentState.showSnackBar(
                                         SnackBar(
                                             backgroundColor: Colors.green,
@@ -380,19 +411,19 @@ class _AddNoteState extends State<AddNote> {
                                     scaffoldKey.currentState.showSnackBar(
                                         SnackBar(
                                             backgroundColor: Colors.red,
-                                            content:
-                                                Text('Authorization failed')));
+                                            content: Text(
+                                                'Authorization failed')));
                                   }
                                 } else {
                                   //show pin input
                                 }
-                              })
-                    ],
-                  ),
+                              }
+                            })
+                  ],
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );

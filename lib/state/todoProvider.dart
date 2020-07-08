@@ -109,11 +109,8 @@ class TodoProvider with ChangeNotifier{
   }
 
   void fetch(String uid) async{
-    await http.post(
-      'http://gonghng.herokuapp.com/todo/user',
-      body: jsonEncode({
-        'userId': uid
-      }),
+   await http.get(
+      'http://gonghng.herokuapp.com/todo/user/$uid',
       headers:headers
     ).then((value) {
       var jsonRes = convert.jsonDecode(value.body) as List;

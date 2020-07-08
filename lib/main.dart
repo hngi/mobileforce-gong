@@ -51,10 +51,10 @@ class MyApp extends StatelessWidget {
                 // locale: DevicePreview.of(context).locale,
                 // builder: DevicePreview.appBuilder,
                 debugShowCheckedModeBanner: false,
-                initialRoute: '/',
-                routes: {
-                  '/notes': (context) => AddNote()
-                },
+                // initialRoute: '/',
+                // routes: {
+                //   '/notes': (context) => AddNote()
+                // },
                 title: 'Gong',
                 theme: Provider.of<ThemeNotifier>(context).currentThemeData,
                 home: SplashScreen()),

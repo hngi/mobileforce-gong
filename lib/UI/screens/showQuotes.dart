@@ -5,7 +5,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:team_mobileforce_gong/models/note.dart';
 import 'package:team_mobileforce_gong/services/quotes/quote.dart';
 import 'package:team_mobileforce_gong/services/quotes/quoteApi.dart';
 import 'package:team_mobileforce_gong/services/quotes/quoteDb.dart';

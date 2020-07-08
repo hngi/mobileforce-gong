@@ -29,11 +29,8 @@ class NotesProvider with ChangeNotifier{
    }
 
   void fetch(String uid) async{
-    await http.post(
-      'http://gonghng.herokuapp.com/notes/user',
-      body: jsonEncode({
-        'userId': uid
-      }),
+    await http.get(
+      'http://gonghng.herokuapp.com/notes/user/$uid',
       headers: headers
     ).then((value){
       var jsonres = convert.jsonDecode(value.body) as List;
@@ -51,12 +48,15 @@ class NotesProvider with ChangeNotifier{
         'title': title,
         'content': content,
         'userID': uid,
-        'important': 'false',
-        'date': dateFormat.format(DateTime.now()).toString()
+        'date': dateFormat.format(DateTime.now()).toString(),
+        'important': important,
       }),
       headers: headers
     ).then((value){
-      fetch(uid);
+      print(value.body);
+      Notes note = new Notes(sId: uid, title: title, content: content, important: important, date: dateFormat.format(DateTime.now()).toString());
+      notes.insert(0, note);
+      notifyListeners();
     });
   }
 
