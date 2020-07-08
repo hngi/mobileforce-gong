@@ -93,7 +93,7 @@ class _ProfileState extends State<Profile> {
               Center(
                 child: InkWell(
                   onTap: () {
-                    getImage();
+                    // getImage();
                   },
                   child: Padding(
                     padding: EdgeInsets.all(16.0),

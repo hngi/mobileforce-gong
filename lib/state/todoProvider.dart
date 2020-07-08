@@ -59,6 +59,16 @@ class TodoProvider with ChangeNotifier{
     }
   }
 
+  // void fetch(String uid) async{
+  //  await http.get(
+  //     'http://gonghng.herokuapp.com/todo/user/$uid',
+  //     headers:headers
+  //   ).then((value) {
+  //     var jsonRes = convert.jsonDecode(value.body) as List;
+  //     todos = jsonRes.map((e) => Todos.fromJson(e)).toList();
+  //   });
+  //     notifyListeners();}
+
   void setVal(String val) {
     value = val;
     notifyListeners();

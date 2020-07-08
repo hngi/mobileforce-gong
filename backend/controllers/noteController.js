@@ -15,7 +15,8 @@ exports.create = (req, res) => {
         content: req.body.content,
         userID: req.body.userID,
         important: req.body.important,
-        date: req.body.date
+        date: req.body.date,
+        noteID: req.body.noteID
     });
 
     // Save Note in the database
@@ -111,41 +112,84 @@ exports.findOneByUser = (req, res) => {
         });
 };
 
-// Update a note identified by the noteId in the request
-exports.update = (req, res) => {
-    // Validate Request
+exports.updateNew = (req, res) => {
     if (!req.body.content && !req.body.title) {
         return res.status(400).send({
             message: "Note content can not be empty"
         });
     }
-    //The {new: true} option in the findByIdAndUpdate() method is used to return the modified document to the then() function instead of the original
-    // Find note and update it with the request body
-    Note.findByIdAndUpdate(req.params.noteId, {
+
+    var query = {noteID: req.body.noteID};
+
+    Note.updateOne(query, {
         title: req.body.title || "Untitled Note",
         content: req.body.content,
         important: req.body.important,
         date: req.body.date,
-        userID: req.body.userID
-    }, { new: true })
-        .then(note => {
-            if (!note) {
-                return res.status(404).send({
-                    message: "Note not found with id " + req.params.noteId
-                });
-            }
-            res.send(note);
-        }).catch(err => {
-            if (err.kind === 'ObjectId') {
-                return res.status(404).send({
-                    message: "Note not found with id " + req.params.noteId
-                });
-            }
-            return res.status(500).send({
-                message: "Error updating note with id " + req.params.noteId
-            });
+        userID: req.body.userID,
+        noteID: req.body.noteID
+    },).then(notes => {
+        res.send(notes);
+    }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred"
         });
-};
+    });
+}
+
+exports.deleteNew = (req, res) => {
+    var query = {noteID: req.body.noteID};
+
+    Note.deleteOne(query).then(note => {
+        if (!note) {
+            return res.status(404).send({
+                message: "Note not found with id " + req.body.noteID
+            });
+        }
+        res.send({ message: "Note deleted successfully!" });
+    }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred"
+        });
+    });
+}
+
+// // Update a note identified by the noteId in the request
+// exports.update = (req, res) => {
+//     // Validate Request
+//     if (!req.body.content && !req.body.title) {
+//         return res.status(400).send({
+//             message: "Note content can not be empty"
+//         });
+//     }
+//     //The {new: true} option in the findByIdAndUpdate() method is used to return the modified document to the then() function instead of the original
+//     // Find note and update it with the request body
+//     Note.findByIdAndUpdate(req.params.noteId, {
+//         title: req.body.title || "Untitled Note",
+//         content: req.body.content,
+//         important: req.body.important,
+//         date: req.body.date,
+//         userID: req.body.userID,
+//         noteID: req.body.noteID
+//     }, { new: true })
+//         .then(note => {
+//             if (!note) {
+//                 return res.status(404).send({
+//                     message: "Note not found with id " + req.params.noteId
+//                 });
+//             }
+//             res.send(note);
+//         }).catch(err => {
+//             if (err.kind === 'ObjectId') {
+//                 return res.status(404).send({
+//                     message: "Note not found with id " + req.params.noteId
+//                 });
+//             }
+//             return res.status(500).send({
+//                 message: "Error updating note with id " + req.params.noteId
+//             });
+//         });
+// };
 
 // Delete a note with the specified noteId in the request
 exports.delete = (req, res) => {

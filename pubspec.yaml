@@ -23,6 +23,7 @@ environment:
 dependencies:
   sqflite: any
   path_provider: any
+
   intl:
   google_fonts:
   http:
@@ -30,12 +31,15 @@ dependencies:
   device_preview:
   google_sign_in:
   flutter_signin_button:
-  rate_my_app:
   launch_review: ^2.0.0
+  get: ^3.2.2
   data_connection_checker: ^0.3.4
   uuid: ^2.2.0
 
-
+  rate_my_app:
+    path: ./rate_my_app
+  
+  
   flutter:
     sdk: flutter
   shared_preferences:
@@ -46,6 +50,9 @@ dependencies:
   image_picker: ^0.6.7+2
   firebase_auth:
   cloud_firestore:
+  local_auth: ^0.4.0+1
+  share: 
+  flutter_local_notifications:
 
 
 dev_dependencies:

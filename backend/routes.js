@@ -27,10 +27,10 @@ router.get('/notes/:noteId', notes.findOne);
 router.get('/notes/user/:userId', notes.findByUser);
 
 // Update a Note with noteId
-router.put('/notes/:noteId', notes.update);
+router.put('/notes', notes.updateNew);
 
 // Delete a Note with noteId
-router.delete('/notes/:noteId', notes.delete);
+router.delete('/notes', notes.deleteNew);
 
 //create a todo
 router.post('/todo', todo.create);
@@ -45,10 +45,10 @@ router.get('/todo/:todoId', todo.findOne);
 router.get('/todo/user/:userId', todo.findOneByUser);
 
 // Update a Note with noteId
-router.put('/todo/:todoId', todo.update);
+router.put('/todo', todo.updateNew);
 
 // Delete a Note with noteId
-router.delete('/todo/:todoId', todo.delete);
+router.delete('/todo', todo.deleteNew);
 
 
 //get quotes from db

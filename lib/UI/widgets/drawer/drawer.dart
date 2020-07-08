@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:team_mobileforce_gong/UI/screens/dispatch_page.dart';
+import 'package:team_mobileforce_gong/UI/screens/showQuotes.dart';
 import 'package:team_mobileforce_gong/UI/screens/show_notes.dart';
 import 'package:team_mobileforce_gong/services/auth/util.dart';
 import 'package:team_mobileforce_gong/services/navigation/app_navigation/navigation.dart';
@@ -93,15 +94,17 @@ class _HomeDrawerState extends State<HomeDrawer> {
               //   thickness: 1,
               //   color: Color.fromRGBO(9, 132, 227, 0.4),
               // ),
-              createDrawerBodyItem(context: context, text: 'See Quotes'),
-              Divider(
-                thickness: 1,
-                color: Color.fromRGBO(9, 132, 227, 0.4),
-              ),
-              createDrawerBodyItem(
-                context: context,
-                text: 'Auto System', /* onTap: () => LaunchReview.launch()*/
-              ),
+              createDrawerBodyItem(context: context, text: 'See Quotes', onTap: (){
+                Navigation().pushTo(context, ShowQuotes());
+              }),
+              // Divider(
+              //   thickness: 1,
+              //   color: Color.fromRGBO(9, 132, 227, 0.4),
+              // ),
+              // createDrawerBodyItem(
+              //   context: context,
+              //   text: 'Auto System', /* onTap: () => LaunchReview.launch()*/
+              // ),
               Divider(
                 thickness: 1,
                 color: Color.fromRGBO(9, 132, 227, 0.4),
@@ -124,32 +127,21 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   context: context,
                   text: 'Rate Us',
                   onTap: () async {
-                    if (darktheme == true) {
-                      Provider.of<ThemeNotifier>(context, listen: false)
-                          .switchTheme(!Provider.of<ThemeNotifier>(context,
-                                  listen: false)
-                              .isDarkModeOn);
-                      final prefs = await SharedPreferences.getInstance();
-                      await prefs.setBool('changed', true);
-                    }
-
                     Navigation().pushTo(
                         context,
                         RateMyAppBuilder(
                           builder: builder,
                           onInitialized: (context, rateMyApp) async {
-                            await rateMyApp.showRateDialog(context);
-                            final prefs = await SharedPreferences.getInstance();
-                            bool check =  prefs.getBool('changed');
-                            if (check == true) {
-                              Provider.of<ThemeNotifier>(context, listen: false)
-                                  .switchTheme(!Provider.of<ThemeNotifier>(
-                                          context,
-                                          listen: false)
-                                      .isDarkModeOn);
-                              await prefs.setBool('changed', false);
-                            }
-
+                            await rateMyApp.showRateDialog(context,
+                            
+                            dialogStyle: DialogStyle(
+                              titleStyle: GoogleFonts.montserrat(
+                                color: darktheme ? Colors.white : Colors.black
+                              )
+                            ),
+                                dialogColor: darktheme
+                                    ? Color(0xff0D141A)
+                                    : Colors.white );
                             Navigator.pop(context);
                           },
                         ));
@@ -181,7 +173,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   Widget createDrawerFooter(BuildContext context) {
     return Container(
-      color: blue,
+      color: darktheme ? Color(0xff0D141A) : blue,
       height: config.yMargin(context, 15),
       child: Container(),
     );
@@ -196,10 +188,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
         child: Text(
           text,
           style: GoogleFonts.roboto(
-            fontStyle: FontStyle.normal,
-            color: darktheme ? Colors.white : Color(0xff312E2E),
-            fontSize: config.textSize(context, 2.3),
-            fontWeight: FontWeight.w600),
+              fontStyle: FontStyle.normal,
+              color: darktheme ? Colors.white : Color(0xff312E2E),
+              fontSize: config.textSize(context, 2.3),
+              fontWeight: FontWeight.w600),
           textAlign: TextAlign.left,
         ),
       ),
@@ -210,8 +202,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
   Widget createDrawerHeader(BuildContext context) {
     return Container(
       //height: config.yMargin(context, 18),
-      color: Theme.of(context).scaffoldBackgroundColor,
-      padding: EdgeInsets.only(top: config.yMargin(context, 5), bottom: config.xMargin(context, 1.8)),
+      color: darktheme ? Color(0xff0D141A) : blue,
+      padding: EdgeInsets.only(
+          top: config.yMargin(context, 5),
+          bottom: config.xMargin(context, 1.8)),
       child: Center(
         child: Column(
           children: <Widget>[
@@ -227,24 +221,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
             ),
             Text(
               widget.username ?? 'User',
-              style: Theme.of(context).textTheme.headline6.copyWith(fontSize: config.textSize(context, 3), fontWeight: FontWeight.w600),
+              style: Theme.of(context).textTheme.headline6.copyWith(
+                  fontSize: config.textSize(context, 3),
+                  fontWeight: FontWeight.w600),
             )
-            // RichText(
-            //   text: TextSpan(
-            //       text: username ?? 'User',
-            //       style: GoogleFonts.roboto(
-            //           fontSize: 16,
-            //           fontWeight: FontWeight.bold,
-            //           color: Color(0xffFBFBF8)),
-            //       children: <TextSpan>[
-            //         TextSpan(
-            //             text: ' Mercy',
-            //             style: GoogleFonts.roboto(
-            //                 fontSize: 16,
-            //                 fontWeight: FontWeight.w400,
-            //                 color: Color(0xffFBFBF8)))
-            //       ]),
-            // ),
           ],
         ),
       ),

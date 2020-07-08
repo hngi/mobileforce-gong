@@ -219,7 +219,7 @@ Future<String> signInWithGoogle() async {
   } catch (e) {
     status = AuthStatus.Error;
     error = e.message;
-    SnackBarService.instance.showSnackBarError(error);
+    SnackBarService.instance.showSnackBarError('Server Down. Try again after some time');
 
     print(error);
     return null;

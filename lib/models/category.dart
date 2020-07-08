@@ -6,11 +6,11 @@ class Category {
 
   static List<Category> getData() {
     return <Category>[
-      Category('Category1', 'Category1'),
-      Category('Category2', 'Category2'),
-      Category('Category3', 'Category3'),
-      Category('Category4', 'Category4'),
-      Category('Category5', 'Category5'),
+      Category('Work', 'Work'),
+      Category('Religion', 'Religion'),
+      Category('Utility', 'Utility'),
+      Category('School', 'School'),
+      Category('Others', 'Others'),
     ];
   }
 }

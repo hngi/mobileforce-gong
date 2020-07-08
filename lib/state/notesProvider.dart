@@ -31,6 +31,43 @@ class NotesProvider with ChangeNotifier{
   var uuid = Uuid();
   List<String> img = [];
 
+//    NotesProvider() {
+// //     fetch();
+//   //  getData();
+//    }
+
+  // void fetch(String uid) async{
+  //   await http.get(
+  //     'http://gonghng.herokuapp.com/notes/user/$uid',
+  //     headers: headers
+  //   ).then((value){
+  //     var jsonres = convert.jsonDecode(value.body) as List;
+  //     notes = jsonres.map((e) => Notes.fromJson(e)).toList();
+  //     notifyListeners();
+  //   });
+    
+  // }
+
+  // void createNote(String uid, String title, String content, bool important) async{
+  //   print(title);
+  //   await post(
+  //     'http://gonghng.herokuapp.com/notes',
+  //     body: jsonEncode({
+  //       'title': title,
+  //       'content': content,
+  //       'userID': uid,
+  //       'date': dateFormat.format(DateTime.now()).toString(),
+  //       'important': important,
+  //     }),
+  //     headers: headers
+  //   ).then((value){
+  //     print(value.body);
+  //     Notes note = new Notes(sId: uid, title: title, content: content, important: important, date: dateFormat.format(DateTime.now()).toString());
+  //     notes.insert(0, note);
+  //     notifyListeners();
+  //   });
+  // }
+
   // NotesProvider() {
   //   fetch();
   // }

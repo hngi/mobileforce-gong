@@ -31,8 +31,8 @@ class DispatchPage extends StatelessWidget {
         title: Text(
           name == 'note' ? 'Notes' : 'To-do',
           style: Theme.of(context).textTheme.headline6.copyWith(
-                fontSize: SizeConfig().textSize(context, 3),
-              ),
+            fontSize: SizeConfig().textSize(context, 3),
+          ),
         ),
         leading: GestureDetector(
           onTap: () {
@@ -43,7 +43,7 @@ class DispatchPage extends StatelessWidget {
             child: SvgPicture.asset(
               'assets/svgs/backarrow.svg',
               color: Provider.of<ThemeNotifier>(context, listen: false)
-                      .isDarkModeOn
+                  .isDarkModeOn
                   ? Colors.white
                   : Colors.black,
             ),
@@ -65,7 +65,7 @@ class DispatchPage extends StatelessWidget {
                 'assets/svgs/delete.svg',
                 width: 18,
                 color: Provider.of<ThemeNotifier>(context, listen: false)
-                        .isDarkModeOn
+                    .isDarkModeOn
                     ? Colors.white
                     : Colors.black,
               ),
@@ -85,8 +85,8 @@ class DispatchPage extends StatelessWidget {
               child: Text(
                 'Click the + button Below to get started',
                 style: Theme.of(context).textTheme.headline6.copyWith(
-                      fontSize: SizeConfig().textSize(context, 2.1),
-                    ),
+                  fontSize: SizeConfig().textSize(context, 2.1),
+                ),
               ),
             ),
             Container(
@@ -106,10 +106,10 @@ class DispatchPage extends StatelessWidget {
                       child: Text(
                         'No Activities Yet',
                         style: Theme.of(context).textTheme.headline6.copyWith(
-                              fontSize: SizeConfig().textSize(context, 3),
-                              fontWeight: FontWeight.bold,
-                              color: blue,
-                            ),
+                          fontSize: SizeConfig().textSize(context, 3),
+                          fontWeight: FontWeight.bold,
+                          color: blue,
+                        ),
                       ),
                     ),
                     Container(
@@ -132,9 +132,9 @@ class DispatchPage extends StatelessWidget {
         child: Icon(Icons.add),
         onPressed: () => name == 'note'
             ? Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => AddNote()))
+            .push(MaterialPageRoute(builder: (context) => AddNote(snote :new Notes.noID("", "", "", 1))))
             : Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => AddTodo())),
+            .push(MaterialPageRoute(builder: (context) => AddTodo(stodo: new Todos.noID("", "", "", false, false, 1)))),
       ),
     );
   }
