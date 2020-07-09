@@ -132,7 +132,7 @@ class NotesProvider with ChangeNotifier{
     });
   }
 
-  void updateNote(String uid, String title, String content, bool important, Notes note) async {
+  void updateNote(String uid, String title, String content, bool important, Notes note, int color) async {
     
     int index = notes.indexOf(note);
     String id = notes[index].sId;
@@ -148,6 +148,7 @@ class NotesProvider with ChangeNotifier{
       uploaded: note.uploaded,
       shouldUpdate: true
     );
+    unote.color = color;
     await GongDbhelper().updateNote(unote).then((value){
       notes[index].title = title;
       notes[index].content = content;
@@ -173,6 +174,31 @@ class NotesProvider with ChangeNotifier{
     setSelect();
     deletes = [];
     deleteDataFunc();
+  }
+
+  Color getBackgroundColor(int backgroundColor) {
+    switch (backgroundColor) {
+      case 1:
+        return Colors.white;
+        break;
+      case 2:
+        return Colors.red[300];
+        break;
+      case 3:
+        return Colors.yellow[500];
+        break;
+      case 4:
+        return Colors.green[300];
+        break;
+      case 5:
+        return Colors.orange[300];
+        break;
+      case 6:
+        return Colors.purple[200];
+        break;
+      default:
+        return Colors.white;
+    }
   }
 
   void createDataFunc() {

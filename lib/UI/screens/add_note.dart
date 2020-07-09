@@ -17,6 +17,20 @@ import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/util/styles/color.dart';
 
+
+final List<String> choices = const <String> [
+  'Green',
+  'Purple',
+  'Orange',
+  "Yellow",
+  "Red",
+];
+
+const green= 'Green';
+const purple = 'Purple';
+const orange = 'Orange';
+const yellow = "Yellow";
+const red = "Red";
 class AddNote extends StatefulWidget {
   final String stitle;
   final String scontent;
@@ -58,6 +72,7 @@ class _AddNoteState extends State<AddNote> {
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<LocalAuth>(context);
+    var model = Provider.of<NotesProvider>(context);
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
@@ -179,7 +194,7 @@ class _AddNoteState extends State<AddNote> {
                                           _title ?? snote.title,
                                           _content ?? snote.content,
                                           snote.important,
-                                          snote);
+                                          snote,snote.color);
                                   Navigator.pop(context);
                                 }
                               } else if (_title == null && _content == null) {
@@ -217,6 +232,7 @@ class _AddNoteState extends State<AddNote> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Container(
+                    color: model.getBackgroundColor(snote.color),
                     width: MediaQuery.of(context).size.width,
                     height: (MediaQuery.of(context).size.height) -
                         (MediaQuery.of(context).size.height * 0.15),
@@ -365,6 +381,18 @@ class _AddNoteState extends State<AddNote> {
                       //                   SizeConfig().textSize(context, 1.9))),
                       // ),
                       Spacer(),
+                      PopupMenuButton<String>(
+                        icon: Icon(Icons.color_lens),
+                        onSelected: select,
+                        itemBuilder: (BuildContext context) {
+                          return choices.map((String choice){
+                            return PopupMenuItem<String>(
+                              value: choice,
+                              child: Text(choice),
+                            );
+                          }).toList();
+                        },
+                      ),
                       snote.title.isEmpty
                           ? SizedBox()
                           : IconButton(
@@ -552,24 +580,35 @@ class _AddNoteState extends State<AddNote> {
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
-  Color getBackgroundColor(int backgroundColor) {
-    switch (backgroundColor) {
-      case 1:
-        return Colors.white;
+
+  void select (String value) async {
+    switch (value) {
+      case red:
+        changeColor(2);
         break;
-      case 2:
-        return Colors.red;
+      case yellow:
+        changeColor(3);
         break;
-      case 3:
-        return Colors.yellow;
+      case green:
+        changeColor(4);
         break;
-      case 4:
-        return Colors.lightBlue;
+      case orange:
+        changeColor(5);
+        break;
+      case purple:
+        changeColor(6);
         break;
       default:
-        return Colors.white;
     }
   }
+
+  void changeColor(int color)  async{
+    snote.color = color;
+    String userID = await Provider.of<AuthenticationState>(context, listen: false).currentUserId();
+    Provider.of<NotesProvider>(context, listen: false).updateNote(
+        userID, _title ?? snote.title, _content ?? snote.content, snote.important, snote,color);
+  }
+
 }
 
 //This method deals with changing backgroundColor of the Note.
