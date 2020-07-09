@@ -8,12 +8,11 @@ class Notes {
   bool uploaded;
   bool shouldUpdate;
 
-  //sqLite uses integer to represent ID;
   int id;
-  int backgroundColor;
+  int color;
 
-  Notes.withID(this.id,this.date,this.title,this.content,this.backgroundColor);
-  Notes.noID(this.title,this.content,this.date,this.backgroundColor);
+  Notes.withID(this.id,this.date,this.title,this.content,this.color);
+  Notes.noID(this.title,this.content,this.date,this.color);
   Notes(
       {this.sId,
       this.title,
@@ -22,6 +21,7 @@ class Notes {
       this.important,
       this.date,
       this.uploaded,
+        this.color,
       this.shouldUpdate});
 
   Notes.fromJson(Map<String, dynamic> json) {
@@ -31,18 +31,20 @@ class Notes {
     userID = json['userID'];
     important = json['important'] == 1 ? true : json['important'] == 0 ? false : json['important'];
     date = json['date'];
+    color = json['color'];
     uploaded = json['uploaded'] == 1 ? true : json['uploaded'] == 0 ? false : json['uploaded'];
     shouldUpdate = json['shouldUpdate'] == 1 ? true : json['shouldUpdate'] == 0 ? false : json['shouldUpdate'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    var data = new Map<String, dynamic>();
     data['_id'] = this.sId;
     data['title'] = this.title;
     data['content'] = this.content;
     data['userID'] = this.userID;
     data['important'] = this.important ? 1 : 0;
     data['date'] = this.date;
+    data['color'] = this.color;
     data['uploaded'] = this.uploaded ? 1 : 0;
     data['shouldUpdate'] = this.shouldUpdate ? 1 : 0;
     return data;
@@ -52,7 +54,7 @@ class Notes {
     var map = Map<String, dynamic>();
     map["title"] = title;
     map["description"] = content;
-    map["backgroundcolor"] = backgroundColor;
+    map["backgroundcolor"] = color;
     map["date"] = date;
     if (id != null) {
       map["id"] = id;
@@ -65,6 +67,6 @@ class Notes {
     this.title = o["title"];
     this.content = o["description"];
     this.date = o["date"];
-    this.backgroundColor = o["backgroundcolor"];
+    this.color = o["backgroundcolor"];
   }
 }
