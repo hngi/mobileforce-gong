@@ -17,7 +17,7 @@ class GongDbhelper {
   String colDate = "date";
   String colUpload = "uploaded";
   String colUpdate = "shouldUpdate";
-  String colBackgroundColor = "backgroundcolor";
+  String colColor = "color";
 
   String tblTodos = "todos";
   String colTime = "time";
@@ -69,12 +69,13 @@ class GongDbhelper {
       $colPid INTEGER PRIMARY KEY,
       $colId TEXT, 
       $colTitle TEXT,
-      $colContent TEXT,
+      $colContent TEXT, 
       $colUserID TEXT,
       $colImportant INTEGER,
       $colDate TEXT,
       $colUpload INTEGER,
-      $colUpdate INTEGER)
+      $colUpdate INTEGER,
+      $colColor INTEGER)
       '''
     );
     await db.execute(
@@ -84,6 +85,7 @@ class GongDbhelper {
       $colId TEXT, 
       $colTitle TEXT,
       $colContent TEXT,
+      $colColor INTEGER,
       $colUserID TEXT,
       $colImportant INTEGER,
       $colDate TEXT,

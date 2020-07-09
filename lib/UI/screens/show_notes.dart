@@ -109,6 +109,7 @@ class _ShowNotesState extends State<ShowNotes> {
                             ? EdgeInsets.only(bottom: 30)
                             : EdgeInsets.zero,
                         child: Card(
+                          color: model.getBackgroundColor(notes[index].color),
                           elevation: 0,
                           margin: EdgeInsets.only(bottom: 10),
                           shape: RoundedRectangleBorder(
