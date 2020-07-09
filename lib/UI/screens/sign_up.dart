@@ -167,16 +167,16 @@ class _SignUpPageState extends State<SignUpPage> {
                               fontFamily: "Gilroy",
                               decoration: TextDecoration.underline))))
             ]),
-            SizedBox(height: config.yMargin(context, 2)),
-            GestureDetector(
-              onTap: (){
-                Navigation().pushToAndReplace(context, HomePage());
-              },
-                          child: Text(
-                'Continue as free user.',
-                style: TextStyle(fontFamily: "Gilroy", color: Colors.blue),
-              ),
-            ),
+            // SizedBox(height: config.yMargin(context, 2)),
+            // GestureDetector(
+            //   onTap: (){
+            //     Navigation().pushToAndReplace(context, HomePage());
+            //   },
+            //               child: Text(
+            //     'Continue as free user.',
+            //     style: TextStyle(fontFamily: "Gilroy", color: Colors.blue),
+            //   ),
+            // ),
           ],
         ),
       ),
@@ -213,7 +213,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     _emailPasswordWidget(),
                     SizedBox(height: config.yMargin(context, 3)),
                     _submitButton(),
-                    SizedBox(height: config.yMargin(context, 3)),
+                    SizedBox(height: config.yMargin(context, 2)),
                     _freeUserAccountLabel(),
                     SignInButton(
                       Buttons.Google,

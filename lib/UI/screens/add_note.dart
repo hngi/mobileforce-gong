@@ -513,7 +513,12 @@ class _AddNoteState extends State<AddNote> {
                                                         'Authorization failed')));
                                           }
                                         } else {
-                                          //show pin input
+                                          scaffoldKey.currentState
+                                                .showSnackBar(SnackBar(
+                                                    backgroundColor:
+                                                        Colors.red,
+                                                    content: Text(
+                                                        'Oops, Biometrics isn\'t enabled on your device')));
                                         }
                                       } else {
                                         if (check == true) {
@@ -546,7 +551,12 @@ class _AddNoteState extends State<AddNote> {
                                                         'Authorization failed')));
                                           }
                                         } else {
-                                          //show pin input
+                                          scaffoldKey.currentState
+                                                .showSnackBar(SnackBar(
+                                                    backgroundColor:
+                                                        Colors.red,
+                                                    content: Text(
+                                                        'Oops, Biometrics isn\'t enabled on your device')));
                                         }
                                       }
                                     })
