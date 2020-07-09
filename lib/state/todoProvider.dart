@@ -83,14 +83,14 @@ class TodoProvider with ChangeNotifier{
       deleteDataFunc();
     });
 
-    // await http.get(
-    //   'http://gonghng.herokuapp.com/todo/user/$uid',
-    //   headers:headers
-    // ).then((value){
-    //   var jsonRes = convert.jsonDecode(value.body) as List;
-    //   todos = jsonRes.map((e) => Todos.fromJson(e)).toList();
-    //   notifyListeners();
-    // });
+    await http.get(
+      'http://gonghng.herokuapp.com/todo/user/$uid',
+      headers:headers
+    ).then((value){
+      var jsonRes = convert.jsonDecode(value.body) as List;
+      todos = jsonRes.map((e) => Todos.fromJson(e)).toList();
+      notifyListeners();
+    });
   }
 
   void createTodo(String title, String category, String uid, String content, DateTime date, TimeOfDay time) async {

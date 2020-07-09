@@ -102,14 +102,14 @@ class NotesProvider with ChangeNotifier{
       deleteDataFunc();
     });
 
-    // await http.get(
-    //   'http://gonghng.herokuapp.com/notes/user/$uid',
-    //   headers: headers
-    // ).then((value){
-    //   var jsonres = convert.jsonDecode(value.body) as List;
-    //   notes = jsonres.map((e) => Notes.fromJson(e)).toList();
-    //   notifyListeners();
-    // });
+    await http.get(
+      'http://gonghng.herokuapp.com/notes/user/$uid',
+      headers: headers
+    ).then((value){
+      var jsonres = convert.jsonDecode(value.body) as List;
+      notes = (jsonres.map((e) => Notes.fromJson(e)).toList());
+      notifyListeners();
+    });
   }
 
   void createNote(String uid, String title, String content, bool important,int color) async{
@@ -177,10 +177,10 @@ class NotesProvider with ChangeNotifier{
     deleteDataFunc();
   }
 
-  Color getBackgroundColor(int backgroundColor) {
+  Color getBackgroundColor(int backgroundColor, bool dark) {
     switch (backgroundColor) {
       case 1:
-        return Colors.white;
+        return dark ? Colors.black : Colors.white;
         break;
       case 2:
         return Colors.red[300];
@@ -198,7 +198,7 @@ class NotesProvider with ChangeNotifier{
         return Colors.purple[200];
         break;
       default:
-        return Colors.white;
+        return dark ? Colors.black : Colors.white;
     }
   }
 

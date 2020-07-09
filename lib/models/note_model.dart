@@ -32,8 +32,8 @@ class Notes {
     important = json['important'] == 1 ? true : json['important'] == 0 ? false : json['important'];
     date = json['date'];
     color = json['color'];
-    uploaded = json['uploaded'] == 1 ? true : json['uploaded'] == 0 ? false : json['uploaded'];
-    shouldUpdate = json['shouldUpdate'] == 1 ? true : json['shouldUpdate'] == 0 ? false : json['shouldUpdate'];
+    uploaded = json['uploaded'] == 1 ? true : json['uploaded'] == 0 ? false : json['uploaded'] ?? false;
+    shouldUpdate = json['shouldUpdate'] == 1 ? true : json['shouldUpdate'] == 0 ? false : json['shouldUpdate'] ?? false;
   }
 
   Map<String, dynamic> toJson() {

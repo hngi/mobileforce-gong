@@ -223,15 +223,15 @@ class _LoginPageState extends State<LoginPage> {
                               decoration: TextDecoration.underline))))
             ]),
             SizedBox(height: config.yMargin(context, 2)),
-            GestureDetector(
-              onTap: () {
-                Navigation().pushToAndReplace(context, HomeWrapper());
-              },
-              child: Text(
-                'Continue as free user.',
-                style: TextStyle(fontFamily: "Gilroy", color: Colors.blue),
-              ),
-            ),
+            // GestureDetector(
+            //   onTap: () {
+            //     Navigation().pushToAndReplace(context, HomeWrapper());
+            //   },
+            //   child: Text(
+            //     'Continue as free user.',
+            //     style: TextStyle(fontFamily: "Gilroy", color: Colors.blue),
+            //   ),
+            // ),
           ],
         ),
       ),
