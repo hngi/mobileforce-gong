@@ -208,7 +208,7 @@ class _AddNoteState extends State<AddNote> {
                                 Provider.of<NotesProvider>(context,
                                         listen: false)
                                     .createNote(
-                                        userID, _title, _content, false);
+                                        userID, _title, _content, false,snote.color);
                                 Navigator.pop(context);
                               }
                             },

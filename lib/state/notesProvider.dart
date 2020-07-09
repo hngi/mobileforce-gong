@@ -112,7 +112,7 @@ class NotesProvider with ChangeNotifier{
     // });
   }
 
-  void createNote(String uid, String title, String content, bool important) async{
+  void createNote(String uid, String title, String content, bool important,int color) async{
     print(uuid.v4());
     Notes note = new Notes(
       sId: uuid.v4(),
@@ -124,6 +124,7 @@ class NotesProvider with ChangeNotifier{
       uploaded: false,
       shouldUpdate: false
     );
+    note.color = color;
     await GongDbhelper().insertNote(note).then((value){
       notes.insert(0, note);
       notifyListeners();
