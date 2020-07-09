@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
@@ -17,8 +18,7 @@ import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/util/styles/color.dart';
 
-
-final List<String> choices = const <String> [
+final List<String> choices = const <String>[
   'Green',
   'Purple',
   'Orange',
@@ -26,11 +26,12 @@ final List<String> choices = const <String> [
   "Red",
 ];
 
-const green= 'Green';
+const green = 'Green';
 const purple = 'Purple';
 const orange = 'Orange';
 const yellow = "Yellow";
 const red = "Red";
+
 class AddNote extends StatefulWidget {
   final String stitle;
   final String scontent;
@@ -68,11 +69,12 @@ class _AddNoteState extends State<AddNote> {
       _locked = isLocked;
     });
   }
-
+  var darktheme;
   @override
   Widget build(BuildContext context) {
     final state = Provider.of<LocalAuth>(context);
     var model = Provider.of<NotesProvider>(context);
+    darktheme = Provider.of<ThemeNotifier>(context).isDarkModeOn ?? false;
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
@@ -194,7 +196,8 @@ class _AddNoteState extends State<AddNote> {
                                           _title ?? snote.title,
                                           _content ?? snote.content,
                                           snote.important,
-                                          snote,snote.color);
+                                          snote,
+                                          snote.color);
                                   Navigator.pop(context);
                                 }
                               } else if (_title == null && _content == null) {
@@ -207,8 +210,8 @@ class _AddNoteState extends State<AddNote> {
                                         .currentUserId();
                                 Provider.of<NotesProvider>(context,
                                         listen: false)
-                                    .createNote(
-                                        userID, _title, _content, false,snote.color);
+                                    .createNote(userID, _title, _content, false,
+                                        snote.color);
                                 Navigator.pop(context);
                               }
                             },
@@ -232,7 +235,7 @@ class _AddNoteState extends State<AddNote> {
               Expanded(
                 child: SingleChildScrollView(
                   child: Container(
-                    color: model.getBackgroundColor(snote.color),
+                    color: model.getBackgroundColor(snote.color, darktheme),
                     width: MediaQuery.of(context).size.width,
                     height: (MediaQuery.of(context).size.height) -
                         (MediaQuery.of(context).size.height * 0.15),
@@ -380,12 +383,12 @@ class _AddNoteState extends State<AddNote> {
                       //               fontSize:
                       //                   SizeConfig().textSize(context, 1.9))),
                       // ),
-                      Spacer(),
+
                       PopupMenuButton<String>(
                         icon: Icon(Icons.color_lens),
                         onSelected: select,
                         itemBuilder: (BuildContext context) {
-                          return choices.map((String choice){
+                          return choices.map((String choice) {
                             return PopupMenuItem<String>(
                               value: choice,
                               child: Text(choice),
@@ -393,13 +396,11 @@ class _AddNoteState extends State<AddNote> {
                           }).toList();
                         },
                       ),
+                      Spacer(),
                       snote.title.isEmpty
                           ? SizedBox()
-                          : IconButton(
-                              icon: _locked
-                                  ? Icon(Icons.enhanced_encryption)
-                                  : Icon(Icons.no_encryption),
-                              onPressed: () async {
+                          : GestureDetector(
+                              onTap: () async {
                                 await state.checkBiometrics();
                                 await state.getAvailableBiometrics();
                                 bool check = state.canCheckBiometrics;
@@ -464,7 +465,93 @@ class _AddNoteState extends State<AddNote> {
                                     //show pin input
                                   }
                                 }
-                              })
+                              },
+                              child: Row(children: <Widget>[
+                                Text(
+                                  _locked ? 'Unlock Note' : 'Lock Note',
+                                  style: GoogleFonts.aBeeZee(
+                                    color: darktheme ? Colors.white : Colors.black,
+                                      fontSize:
+                                          SizeConfig().textSize(context, 2)),
+                                ),
+                                IconButton(
+                                    icon: _locked
+                                        ? Icon(Icons.enhanced_encryption)
+                                        : Icon(Icons.no_encryption),
+                                    onPressed: () async {
+                                      await state.checkBiometrics();
+                                      await state.getAvailableBiometrics();
+                                      bool check = state.canCheckBiometrics;
+                                      if (_locked == true) {
+                                        if (check == true) {
+                                          await Provider.of<LocalAuth>(context,
+                                                  listen: false)
+                                              .authenticate();
+                                          String status = state.successful;
+                                          if (status == 'Successful') {
+                                            final prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            prefs.setBool(snote.sId, false);
+                                            bool test =
+                                                prefs.getBool(snote.sId);
+                                            print(test);
+                                            setState(() {
+                                              _locked = false;
+                                            });
+                                            scaffoldKey.currentState
+                                                .showSnackBar(SnackBar(
+                                                    backgroundColor:
+                                                        Colors.green,
+                                                    content: Text(
+                                                        'Lock disabled Successfully')));
+                                          } else {
+                                            scaffoldKey.currentState
+                                                .showSnackBar(SnackBar(
+                                                    backgroundColor: Colors.red,
+                                                    content: Text(
+                                                        'Authorization failed')));
+                                          }
+                                        } else {
+                                          //show pin input
+                                        }
+                                      } else {
+                                        if (check == true) {
+                                          await Provider.of<LocalAuth>(context,
+                                                  listen: false)
+                                              .authenticate();
+                                          String status = state.successful;
+                                          if (status == 'Successful') {
+                                            final prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            prefs.setBool(snote.sId, true);
+                                            bool test =
+                                                prefs.getBool(snote.sId);
+                                            print(test);
+                                            setState(() {
+                                              _locked = true;
+                                            });
+                                            scaffoldKey.currentState
+                                                .showSnackBar(SnackBar(
+                                                    backgroundColor:
+                                                        Colors.green,
+                                                    content: Text(
+                                                        'Note locked successful')));
+                                          } else {
+                                            scaffoldKey.currentState
+                                                .showSnackBar(SnackBar(
+                                                    backgroundColor: Colors.red,
+                                                    content: Text(
+                                                        'Authorization failed')));
+                                          }
+                                        } else {
+                                          //show pin input
+                                        }
+                                      }
+                                    })
+                              ]),
+                            )
                     ],
                   ),
                 ),
@@ -580,8 +667,7 @@ class _AddNoteState extends State<AddNote> {
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
-
-  void select (String value) async {
+  void select(String value) async {
     switch (value) {
       case red:
         changeColor(2);
@@ -602,13 +688,19 @@ class _AddNoteState extends State<AddNote> {
     }
   }
 
-  void changeColor(int color)  async{
+  void changeColor(int color) async {
     snote.color = color;
-    String userID = await Provider.of<AuthenticationState>(context, listen: false).currentUserId();
+    String userID =
+        await Provider.of<AuthenticationState>(context, listen: false)
+            .currentUserId();
     Provider.of<NotesProvider>(context, listen: false).updateNote(
-        userID, _title ?? snote.title, _content ?? snote.content, snote.important, snote,color);
+        userID,
+        _title ?? snote.title,
+        _content ?? snote.content,
+        snote.important,
+        snote,
+        color);
   }
-
 }
 
 //This method deals with changing backgroundColor of the Note.

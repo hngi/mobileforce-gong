@@ -177,10 +177,10 @@ class NotesProvider with ChangeNotifier{
     deleteDataFunc();
   }
 
-  Color getBackgroundColor(int backgroundColor) {
+  Color getBackgroundColor(int backgroundColor, bool dark) {
     switch (backgroundColor) {
       case 1:
-        return Colors.white;
+        return dark ? Colors.black : Colors.white;
         break;
       case 2:
         return Colors.red[300];
@@ -198,7 +198,7 @@ class NotesProvider with ChangeNotifier{
         return Colors.purple[200];
         break;
       default:
-        return Colors.white;
+        return dark ? Colors.black : Colors.white;
     }
   }
 

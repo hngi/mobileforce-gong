@@ -53,6 +53,8 @@ dependencies:
   local_auth: ^0.4.0+1
   share: 
   flutter_local_notifications:
+  simple_animations:
+  supercharged:
 
 
 dev_dependencies:
