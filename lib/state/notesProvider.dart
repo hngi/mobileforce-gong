@@ -103,9 +103,11 @@ class NotesProvider with ChangeNotifier {
           .then((value) async {
         var jsonres = convert.jsonDecode(value.body) as List;
         List<Notes> notess = (jsonres.map((e) => Notes.fromJson2(e)).toList());
-        for (int i = 0; i < notess.length; i++) {
-          print(notess[i].sId);
-          GongDbhelper().insertNoteFromDb(notess[i]);
+        if (notess.isNotEmpty) {
+          for (int i = 0; i < notess.length; i++) {
+            print(notess[i].sId);
+            GongDbhelper().insertNoteFromDb(notess[i]);
+          }
         }
 
         await GongDbhelper().getNotes().then((value) {

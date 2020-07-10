@@ -93,10 +93,11 @@ class TodoProvider with ChangeNotifier {
           .then((value) async {
         var jsonRes = convert.jsonDecode(value.body) as List;
         List<Todos> todoss = (jsonRes.map((e) => Todos.fromJson2(e)).toList());
-        for (int i = 0; i < todoss.length; i++) {
-          GongDbhelper().insertTodoFromDb(todoss[i]);
+        if (todoss.isNotEmpty) {
+          for (int i = 0; i < todoss.length; i++) {
+            GongDbhelper().insertTodoFromDb(todoss[i]);
+          }
         }
-
         await GongDbhelper().getTodos().then((value) {
           todos = value.map((e) => Todos.fromJson(e)).toList();
           notifyListeners();
@@ -112,8 +113,6 @@ class TodoProvider with ChangeNotifier {
       updateDataFunc();
       deleteDataFunc();
     });
-
-    
   }
 
   void createTodo(String title, String category, String uid, String content,
