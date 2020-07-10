@@ -10,30 +10,32 @@ exports.create = (req, res) => {
     }
 
     // Create a Note
-    const note = new Note({
-        title: req.body.title || "Untitled Note",
-        content: req.body.content,
-        userID: req.body.userID,
-        important: req.body.important,
-        date: req.body.date,
-        noteID: req.body.noteID
-    });
 
-    // Save Note in the database
-    note.save()
-        .then(data => {
-            res.status(200).send(data);
-        }).catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while creating the Note."
-            });
-        });
-};
+
+    Note.findOne({ noteID: req.body.noteID },
+        function (err, note) {
+            if (err) return res.status(500).send('Error on the server');
+            if (note) return res.status(400).send('Note already exists')
+
+            Note.create({
+                title: req.body.title || "Untitled Note",
+                content: req.body.content,
+                userID: req.body.userID,
+                important: req.body.important,
+                date: req.body.date,
+                noteID: req.body.noteID
+            },
+                function (err, note) {
+                    if (err) return res.status(500).send("There was a problem registering the note.")
+                    res.status(200).send(note);
+                });
+        })
+}
 
 
 // Retrieve and return all notes from the database.
 exports.findAll = (req, res) => {
-    Note.find(null, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
+    Note.find(null, { createdAt: 0, updatedAt: 0, __v: 0 }).sort('-createdAt')
         .then(notes => {
             res.send(notes);
         }).catch(err => {
@@ -45,8 +47,8 @@ exports.findAll = (req, res) => {
 
 
 exports.findImportant = (req, res) => {
-    var query = {userID: req.body.userId, important: true};
-    Note.find(query, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
+    var query = { userID: req.body.userId, important: true };
+    Note.find(query, { createdAt: 0, updatedAt: 0, __v: 0 }).sort('-createdAt')
         .then(notes => {
             res.send(notes);
         }).catch(err => {
@@ -58,8 +60,8 @@ exports.findImportant = (req, res) => {
 
 
 exports.findByUser = (req, res) => {
-    var query = {userID: req.params.userId};
-    Note.find(query, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
+    var query = { userID: req.params.userId };
+    Note.find(query, { createdAt: 0, updatedAt: 0, __v: 0 }).sort('-createdAt')
         .then(notes => {
             res.send(notes);
         }).catch(err => {
@@ -71,7 +73,7 @@ exports.findByUser = (req, res) => {
 
 // Find a single note with a noteId
 exports.findOne = (req, res) => {
-    Note.findById(req.params.noteId, {createdAt: 0, updatedAt: 0, __v: 0})
+    Note.findById(req.params.noteId, { createdAt: 0, updatedAt: 0, __v: 0 })
         .then(note => {
             if (!note) {
                 return res.status(404).send({
@@ -92,7 +94,7 @@ exports.findOne = (req, res) => {
 };
 
 exports.findOneByUser = (req, res) => {
-    Note.findById(req.params.userId, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
+    Note.findById(req.params.userId, { createdAt: 0, updatedAt: 0, __v: 0 }).sort('-createdAt')
         .then(note => {
             if (!note) {
                 return res.status(404).send({
@@ -119,7 +121,7 @@ exports.updateNew = (req, res) => {
         });
     }
 
-    var query = {noteID: req.body.noteID};
+    var query = { noteID: req.body.noteID };
 
     Note.updateOne(query, {
         title: req.body.title || "Untitled Note",
@@ -128,7 +130,7 @@ exports.updateNew = (req, res) => {
         date: req.body.date,
         userID: req.body.userID,
         noteID: req.body.noteID
-    },).then(notes => {
+    }).then(notes => {
         res.send(notes);
     }).catch(err => {
         res.status(500).send({
@@ -138,7 +140,7 @@ exports.updateNew = (req, res) => {
 }
 
 exports.deleteNew = (req, res) => {
-    var query = {noteID: req.body.noteID};
+    var query = { noteID: req.body.noteID };
 
     Note.deleteOne(query).then(note => {
         if (!note) {

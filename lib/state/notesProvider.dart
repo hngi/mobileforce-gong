@@ -17,10 +17,13 @@ import 'dart:convert' as convert;
 import 'package:team_mobileforce_gong/util/GongDbhelper.dart';
 import 'package:uuid/uuid.dart';
 
-class NotesProvider with ChangeNotifier{
+class NotesProvider with ChangeNotifier {
   List<Notes> notes = [];
   var dateFormat = DateFormat("dd/MM/yy");
-  Map<String,String> headers = {'Content-type': 'application/json','Accept': 'application/json'};
+  Map<String, String> headers = {
+    'Content-type': 'application/json',
+    'Accept': 'application/json'
+  };
   String error;
   bool select = false;
   List<Notes> deletes = [];
@@ -45,7 +48,7 @@ class NotesProvider with ChangeNotifier{
   //     notes = jsonres.map((e) => Notes.fromJson(e)).toList();
   //     notifyListeners();
   //   });
-    
+
   // }
 
   // void createNote(String uid, String title, String content, bool important) async{
@@ -93,81 +96,93 @@ class NotesProvider with ChangeNotifier{
     notifyListeners();
   }
 
-  void fetch(String uid) async{
+  void fetch(String uid, bool newUser) async {
+    if (newUser == true) {
+      await http
+          .get('http://gonghng.herokuapp.com/notes/user/$uid', headers: headers)
+          .then((value) async {
+        var jsonres = convert.jsonDecode(value.body) as List;
+        List<Notes> notess = (jsonres.map((e) => Notes.fromJson2(e)).toList());
+        if (notess.isNotEmpty) {
+          for (int i = 0; i < notess.length; i++) {
+            print(notess[i].sId);
+            GongDbhelper().insertNoteFromDb(notess[i]);
+          }
+        }
+
+        await GongDbhelper().getNotes().then((value) {
+          notes = value.map((e) => Notes.fromJson(e)).toList();
+          notifyListeners();
+        }).then((value) {});
+      });
+    }
+
     await GongDbhelper().getNotes().then((value) {
       notes = value.map((e) => Notes.fromJson(e)).toList();
-    }).then((value){
+      notifyListeners();
+    }).then((value) {
       createDataFunc();
       updateDataFunc();
       deleteDataFunc();
     });
-
-    await http.get(
-      'http://gonghng.herokuapp.com/notes/user/$uid',
-      headers: headers
-    ).then((value){
-      var jsonres = convert.jsonDecode(value.body) as List;
-      notes = (jsonres.map((e) => Notes.fromJson(e)).toList());
-      notifyListeners();
-    });
   }
 
-  void createNote(String uid, String title, String content, bool important,int color) async{
+  void createNote(String uid, String title, String content, bool important,
+      int color) async {
     print(uuid.v4());
     Notes note = new Notes(
-      sId: uuid.v4(),
-      title: title,
-      content: content,
-      userID: uid,
-      important: important,
-      date: dateFormat.format(DateTime.now()).toString(),
-      uploaded: false,
-      shouldUpdate: false
-    );
+        sId: uuid.v4(),
+        title: title,
+        content: content,
+        userID: uid,
+        important: important,
+        date: dateFormat.format(DateTime.now()).toString(),
+        uploaded: false,
+        shouldUpdate: false);
     note.color = color;
-    await GongDbhelper().insertNote(note).then((value){
+    await GongDbhelper().insertNote(note).then((value) {
       notes.insert(0, note);
       notifyListeners();
-    }).then((value){
+    }).then((value) {
       createDataFunc();
     });
   }
 
-  void updateNote(String uid, String title, String content, bool important, Notes note, int color) async {
-    
+  void updateNote(String uid, String title, String content, bool important,
+      Notes note, int color) async {
     int index = notes.indexOf(note);
     String id = notes[index].sId;
     //print(id);
     //print(index);
     Notes unote = new Notes(
-      sId: note.sId,
-      title: title,
-      content: content,
-      userID: uid,
-      important: important,
-      date: note.date,
-      uploaded: note.uploaded,
-      shouldUpdate: true
-    );
+        sId: note.sId,
+        title: title,
+        content: content,
+        userID: uid,
+        important: important,
+        date: note.date,
+        uploaded: note.uploaded,
+        shouldUpdate: true);
     unote.color = color;
-    await GongDbhelper().updateNote(unote).then((value){
+    await GongDbhelper().updateNote(unote).then((value) {
       notes[index].title = title;
       notes[index].content = content;
-      notes[index].important =important;
+      notes[index].important = important;
       notifyListeners();
-    }).then((value){
+    }).then((value) {
       updateDataFunc();
     });
   }
+
   void deleteNote() async {
-    for(var note in deletes) {
+    for (var note in deletes) {
       //print(note.sId);
       String id = note.sId;
       int index = notes.indexOf(note);
 
       await GongDbhelper().insertDeleteNote(note);
 
-      await GongDbhelper().deleteNote(id).then((value){
+      await GongDbhelper().deleteNote(id).then((value) {
         notes.removeAt(index);
         notifyListeners();
       });
@@ -203,36 +218,37 @@ class NotesProvider with ChangeNotifier{
   }
 
   void createDataFunc() {
-    createListener = DataConnectionChecker().onStatusChange.listen((event) async {
-      switch(event) {
+    createListener =
+        DataConnectionChecker().onStatusChange.listen((event) async {
+      switch (event) {
         case DataConnectionStatus.connected:
-          for(var n in notes) {
-            if(!n.uploaded) {
-              await post(
-                'http://gonghng.herokuapp.com/notes',
-                body: jsonEncode({
-                  'noteID': n.sId,
-                  'title': n.title,
-                  'content': n.content,
-                  'userID': n.userID,
-                  'date': n.date,
-                  'important': n.important
-                }),
-                headers: headers
-              ).then((value)async {
-                Notes unote = new Notes(
-                  sId: n.sId,
-                  title: n.title,
-                  content: n.content,
-                  userID: n.userID,
-                  important: n.important,
-                  date: n.date,
-                  uploaded: true,
-                  shouldUpdate: n.shouldUpdate
-                );
-                await GongDbhelper().updateNote(unote);
+          for (var n in notes) {
+            if (!n.uploaded) {
+              await post('http://gonghng.herokuapp.com/notes',
+                      body: jsonEncode({
+                        'noteID': n.sId,
+                        'title': n.title,
+                        'content': n.content,
+                        'userID': n.userID,
+                        'date': n.date,
+                        'important': n.important
+                      }),
+                      headers: headers)
+                  .then((value) async {
+                if (value.statusCode == 200) {
+                  Notes unote = new Notes(
+                      sId: n.sId,
+                      title: n.title,
+                      content: n.content,
+                      userID: n.userID,
+                      important: n.important,
+                      date: n.date,
+                      uploaded: true,
+                      shouldUpdate: n.shouldUpdate);
+                  await GongDbhelper().updateNote(unote);
 
-                notes[notes.indexOf(n)].uploaded = true;
+                  notes[notes.indexOf(n)].uploaded = true;
+                }
               });
             }
           }
@@ -241,10 +257,10 @@ class NotesProvider with ChangeNotifier{
           break;
         case DataConnectionStatus.disconnected:
           int check = 0;
-          for(var n in notes) {
-            if(!n.uploaded) check+=1;
+          for (var n in notes) {
+            if (!n.uploaded) check += 1;
           }
-          if(check == 0) {
+          if (check == 0) {
             createListener.cancel();
           }
           break;
@@ -253,32 +269,32 @@ class NotesProvider with ChangeNotifier{
   }
 
   void updateDataFunc() {
-    updateListener = DataConnectionChecker().onStatusChange.listen((event) async {
-      switch(event) {
+    updateListener =
+        DataConnectionChecker().onStatusChange.listen((event) async {
+      switch (event) {
         case DataConnectionStatus.connected:
-          for(var n in notes) {
-            if(n.shouldUpdate) {
-              await http.put(
-                'http://gonghng.herokuapp.com/notes',
-                body: jsonEncode({
-                  //'reminderId': todos[index].sId,
-                  "noteID": n.sId,
-                  'title': n.title,
-                  'content': n.content,
-                  'important': n.important
-                }),
-                headers: headers
-              ).then((value) async {
+          for (var n in notes) {
+            if (n.shouldUpdate) {
+              await http
+                  .put('http://gonghng.herokuapp.com/notes',
+                      body: jsonEncode({
+                        //'reminderId': todos[index].sId,
+                        "noteID": n.sId,
+                        'title': n.title,
+                        'content': n.content,
+                        'important': n.important
+                      }),
+                      headers: headers)
+                  .then((value) async {
                 Notes unote = new Notes(
-                  sId: n.sId,
-                  title: n.title,
-                  userID: n.userID,
-                  content: n.content,
-                  important: n.important,
-                  date: n.date,
-                  uploaded: n.uploaded,
-                  shouldUpdate: false
-                );
+                    sId: n.sId,
+                    title: n.title,
+                    userID: n.userID,
+                    content: n.content,
+                    important: n.important,
+                    date: n.date,
+                    uploaded: n.uploaded,
+                    shouldUpdate: false);
                 await GongDbhelper().updateNote(unote);
 
                 notes[notes.indexOf(n)].shouldUpdate = false;
@@ -290,10 +306,10 @@ class NotesProvider with ChangeNotifier{
           break;
         case DataConnectionStatus.disconnected:
           int check = 0;
-          for(var n in notes) {
-            if(n.shouldUpdate) check+=1;
+          for (var n in notes) {
+            if (n.shouldUpdate) check += 1;
           }
-          if(check == 0) {
+          if (check == 0) {
             updateListener.cancel();
           }
           break;
@@ -302,20 +318,22 @@ class NotesProvider with ChangeNotifier{
   }
 
   void deleteDataFunc() async {
-    await GongDbhelper().getDeleteTodos().then((value){
+    await GongDbhelper().getDeleteTodos().then((value) {
       deletes = value.map((e) => Notes.fromJson(e)).toList();
-    }).then((value){
-      deleteListener = DataConnectionChecker().onStatusChange.listen((event) async {
-        switch(event) {
+    }).then((value) {
+      deleteListener =
+          DataConnectionChecker().onStatusChange.listen((event) async {
+        switch (event) {
           case DataConnectionStatus.connected:
-            if(deletes.length > 0) {
-              for(var n in deletes) {
-                final request = http.Request('DELETE', Uri.parse('http://gonghng.herokuapp.com/notes'));
+            if (deletes.length > 0) {
+              for (var n in deletes) {
+                final request = http.Request(
+                    'DELETE', Uri.parse('http://gonghng.herokuapp.com/notes'));
                 request.headers.addAll(headers);
                 request.body = jsonEncode({"noteID": n.sId});
                 await request.send().then((value) async {
                   print(value);
-                  await GongDbhelper().deleteStoreTodo(n.sId).then((value){
+                  await GongDbhelper().deleteStoreTodo(n.sId).then((value) {
                     deletes.removeAt(deletes.indexOf(n));
                   });
                 });
@@ -325,7 +343,7 @@ class NotesProvider with ChangeNotifier{
             notifyListeners();
             break;
           case DataConnectionStatus.disconnected:
-            if(deletes.length == 0) {
+            if (deletes.length == 0) {
               deleteListener.cancel();
             }
             break;

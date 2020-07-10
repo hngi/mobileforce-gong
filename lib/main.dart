@@ -17,7 +17,6 @@ import 'services/notifications/notifications.dart';
 import 'services/quotes/quoteState.dart';
 import 'state/authProvider.dart';
 
-
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 NotificationAppLaunchDetails notificationAppLaunchDetails;
@@ -28,16 +27,25 @@ Future<void> main() async {
   await NotificationManager().initNotifications();
 
   runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => ChangeNotifierProvider<ThemeNotifier>(
+    ChangeNotifierProvider<ThemeNotifier>(
       child: MyApp(),
       create: (BuildContext context) {
         return ThemeNotifier();
       },
     ),
-    )
   );
+
+  // runApp(
+  //   DevicePreview(
+  //     enabled: !kReleaseMode,
+  //     builder: (context) => ChangeNotifierProvider<ThemeNotifier>(
+  //     child: MyApp(),
+  //     create: (BuildContext context) {
+  //       return ThemeNotifier();
+  //     },
+  //   ),
+  //   )
+  // );
 }
 
 var navigationKey = GlobalKey<NavigatorState>();
@@ -57,16 +65,16 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => LocalAuth())
           ],
           child: GetMaterialApp(
-                locale: DevicePreview.of(context).locale,
-                builder: DevicePreview.appBuilder,
-                debugShowCheckedModeBanner: false,
-                // initialRoute: '/',
-                // routes: {
-                //   '/notes': (context) => AddNote()
-                // },
-                title: 'Gong',
-                theme: Provider.of<ThemeNotifier>(context).currentThemeData,
-                home: SplashScreen()),
+              // locale: DevicePreview.of(context).locale,
+              // builder: DevicePreview.appBuilder,
+              debugShowCheckedModeBanner: false,
+              // initialRoute: '/',
+              // routes: {
+              //   '/notes': (context) => AddNote()
+              // },
+              title: 'Gong',
+              theme: Provider.of<ThemeNotifier>(context).currentThemeData,
+              home: SplashScreen()),
         );
       },
     );

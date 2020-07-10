@@ -13,6 +13,7 @@ import 'package:team_mobileforce_gong/state/authProvider.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/util/styles/color.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../screens/profile.dart';
 import '../rate.dart';
@@ -94,17 +95,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
               //   thickness: 1,
               //   color: Color.fromRGBO(9, 132, 227, 0.4),
               // ),
-              createDrawerBodyItem(context: context, text: 'See Quotes', onTap: (){
-                Navigation().pushTo(context, ShowQuotes());
-              }),
-              // Divider(
-              //   thickness: 1,
-              //   color: Color.fromRGBO(9, 132, 227, 0.4),
-              // ),
-              // createDrawerBodyItem(
-              //   context: context,
-              //   text: 'Auto System', /* onTap: () => LaunchReview.launch()*/
-              // ),
+              createDrawerBodyItem(
+                  context: context,
+                  text: 'See Quotes',
+                  onTap: () {
+                    Navigation().pushTo(context, ShowQuotes());
+                  }),
+
               Divider(
                 thickness: 1,
                 color: Color.fromRGBO(9, 132, 227, 0.4),
@@ -133,19 +130,26 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           builder: builder,
                           onInitialized: (context, rateMyApp) async {
                             await rateMyApp.showRateDialog(context,
-                            
-                            dialogStyle: DialogStyle(
-                              titleStyle: GoogleFonts.montserrat(
-                                color: darktheme ? Colors.white : Colors.black
-                              )
-                            ),
+                                dialogStyle: DialogStyle(
+                                    titleStyle: GoogleFonts.montserrat(
+                                        color: darktheme
+                                            ? Colors.white
+                                            : Colors.black)),
                                 dialogColor: darktheme
                                     ? Color(0xff0D141A)
-                                    : Colors.white );
+                                    : Colors.white);
                             Navigator.pop(context);
                           },
                         ));
                   }),
+              // Divider(
+              //   thickness: 1,
+              //   color: Color.fromRGBO(9, 132, 227, 0.4),
+              // ),
+              // createDrawerBodyItem(
+              //   context: context,
+              //   text: 'Contact', onTap: () => launch(_emailLaunchUri.toString())
+              // ),
               Divider(
                 thickness: 1,
                 color: Color.fromRGBO(9, 132, 227, 0.4),
@@ -167,6 +171,11 @@ class _HomeDrawerState extends State<HomeDrawer> {
       ],
     ));
   }
+
+  final Uri _emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: 'hello@hng.tech',
+      queryParameters: {'subject': 'Gong Feedback/Complaints'});
 
   static Widget buildProgressIndicator(BuildContext context) =>
       const Center(child: CircularProgressIndicator());
@@ -215,7 +224,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   border: Border.all(color: Colors.white, width: 3),
                   shape: BoxShape.circle),
               child: CircleAvatar(
-                backgroundImage: AssetImage('assets/images/Ellipse 14 (1).png'),
+                backgroundImage: AssetImage('assets/images/images.jpg'),
                 radius: 30,
               ),
             ),

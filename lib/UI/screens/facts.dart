@@ -5,6 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:team_mobileforce_gong/UI/screens/home_page.dart';
 import 'package:team_mobileforce_gong/services/quotes/quote.dart';
 import 'package:team_mobileforce_gong/services/quotes/quoteApi.dart';
 import 'package:team_mobileforce_gong/services/quotes/quoteDb.dart';
@@ -145,7 +146,7 @@ class _FactsState extends State<Facts> {
         leading: IconButton(
             icon: Icon(Icons.arrow_back,
                 color: darktheme ? Colors.white : Colors.black),
-            onPressed: () => Get.back()),
+            onPressed: () => Get.to(HomePage(justLoggedIn: false))),
         title: Text(
             widget.quoteType == QuoteType.Facts
                 ? 'Saved Facts'

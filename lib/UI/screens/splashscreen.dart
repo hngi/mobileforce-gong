@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 if (currentUser == null)
                   {navigation.pushToAndReplace(context, Onboarding())}
                 else
-                  {navigation.pushToAndReplace(context, HomeWrapper())}
+                  {navigation.pushToAndReplace(context, HomeWrapper(justLoggedIn: false,))}
               })
           .catchError((e) => print(e));
     });

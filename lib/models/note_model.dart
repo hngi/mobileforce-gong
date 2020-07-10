@@ -7,6 +7,7 @@ class Notes {
   String date;
   bool uploaded;
   bool shouldUpdate;
+  String noteID;
 
   int id;
   int color;
@@ -21,11 +22,25 @@ class Notes {
       this.important,
       this.date,
       this.uploaded,
+      this.noteID,
         this.color,
       this.shouldUpdate});
 
   Notes.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
+    title = json['title'];
+    content = json['content'];
+    userID = json['userID'];
+    important = json['important'] == 1 ? true : json['important'] == 0 ? false : json['important'];
+    date = json['date'];
+    color = json['color'];
+    noteID = json['noteID'];
+    uploaded = json['uploaded'] == 1 ? true : json['uploaded'] == 0 ? false : json['uploaded'] ?? false;
+    shouldUpdate = json['shouldUpdate'] == 1 ? true : json['shouldUpdate'] == 0 ? false : json['shouldUpdate'] ?? false;
+  }
+
+  Notes.fromJson2(Map<String, dynamic> json) {
+    sId = json['noteID'];
     title = json['title'];
     content = json['content'];
     userID = json['userID'];
