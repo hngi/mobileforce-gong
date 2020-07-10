@@ -127,6 +127,35 @@ class NotesProvider with ChangeNotifier {
     });
   }
 
+    Future<bool> searchNotes(String query) async{
+    final notesFuture =  GongDbhelper().searchNotes(query);
+    List<Notes> noteList = List<Notes>();
+    notesFuture.then((result) {
+      print(" "+ result.length.toString() + "Length of notes");
+      for (int i = 0; i < result.length; i++) {
+        noteList.add(Notes.fromJson(result[i]));
+
+      }
+      if(noteList != null && noteList.length > 0 ){
+        notes = noteList;
+        return true;
+      }else{
+        return false;
+      }
+    });
+  }
+
+  void getNotes() async{
+    await GongDbhelper().getNotes().then((value) {
+      notes = value.map((e) => Notes.fromJson(e)).toList();
+      notifyListeners();
+    }).then((value) {
+      createDataFunc();
+      updateDataFunc();
+      deleteDataFunc();
+    });
+  }
+
   void createNote(String uid, String title, String content, bool important,
       int color) async {
     print(uuid.v4());

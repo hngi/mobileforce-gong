@@ -1,3 +1,4 @@
+import 'package:flappy_search_bar/search_bar_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -6,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:team_mobileforce_gong/UI/screens/add_note.dart';
 import 'package:team_mobileforce_gong/models/note_model.dart';
 import 'package:team_mobileforce_gong/UI/screens/add_todo.dart';
+import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:team_mobileforce_gong/services/localAuth/lockNotes.dart';
 import 'package:team_mobileforce_gong/services/navigation/app_navigation/navigation.dart';
 import 'package:team_mobileforce_gong/services/navigation/page_transitions/more_animations.dart';
@@ -25,6 +27,10 @@ class ShowNotes extends StatefulWidget {
 
 class _ShowNotesState extends State<ShowNotes> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final TextEditingController _filter = new TextEditingController();
+  Icon _searchIcon = new Icon(Icons.search);
+  Widget _Title = new SizedBox();
+  bool showNotes = true;
   var darktheme;
   @override
   Widget build(BuildContext context) {
@@ -47,8 +53,42 @@ class _ShowNotesState extends State<ShowNotes> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Expanded(
-                child: ListView.builder(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(width: 10.0,),
+                  IconButton(icon: _searchIcon, onPressed: (){
+                    setState(() {
+                      if (this._searchIcon.icon == Icons.search) {
+                        this._searchIcon = new Icon(Icons.close);
+                        this._Title = new TextField(
+                          autofocus: true,
+                          onChanged: (value) async{
+                            if(_filter.text.isEmpty){
+                              model.getNotes();
+                            }
+                            if(value.length > 1)
+                              model.searchNotes(value);
+                          },
+                          controller: _filter,
+                          decoration: new InputDecoration(
+                              hintText: 'Search...'
+                          ),
+                        );
+                      } else {
+                        this._searchIcon = new Icon(Icons.search);
+                        this._Title = new SizedBox();
+                      /*  filteredNames = names;*/
+                        model.getNotes();
+                        _filter.clear();
+                      }
+                    });
+                  }),
+                  Expanded(child: _Title),
+                ],
+              ),
+             showNotes ? Expanded(
+                child:ListView.builder(
                   itemCount: notes.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
@@ -263,12 +303,19 @@ class _ShowNotesState extends State<ShowNotes> {
                       ),
                     );
                   },
-                ),
-              )
+                )
+              ) : Center(
+                 child: Text("No results found",
+                   style: TextStyle(
+                     fontSize: 30.0,
+                   ),)
+             ),
             ],
           ),
         ),
       ),
     );
   }
+
+
 }

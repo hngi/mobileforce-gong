@@ -52,13 +52,13 @@ class GongDbhelper {
     return dbNotes;
   }
 
-  // Future<List> searchNotes(String query) async
-  // {
-  //   Database db = await this.db;
-  //   var result = await db.rawQuery
-  //     ("SELECT * FROM $tblNotes WHERE $colContent LIKE '%$query%' UNION  SELECT * FROM $tblNotes WHERE $colTitle LIKE '%$query%' ");
-  //   return result;
-  // }
+   Future<List> searchNotes(String query) async
+   {
+     Database db = await this.db;
+     var result = await db.rawQuery
+       ("SELECT * FROM $tblNotes WHERE $colContent LIKE '%$query%' UNION  SELECT * FROM $tblNotes WHERE $colTitle LIKE '%$query%' ");
+     return result;
+   }
 
   void _createDb(Database db, int newVersion) async {
     await db.execute('''
