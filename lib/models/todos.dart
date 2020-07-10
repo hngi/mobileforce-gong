@@ -43,8 +43,21 @@ class Todos {
     date = json['date'];
     category = json['category'];
     content = json['content'];
-    uploaded = json['uploaded'] == 1 ? true : json['uploaded'] == 0 ? false : json['uploaded'] ?? false;
-    shouldUpdate = json['shouldUpdate'] == 1 ? true : json['shouldUpdate'] == 0 ? false : json['shouldUpdate'] ?? false;
+    uploaded = json['uploaded'] == 1 ? true : json['uploaded'] == 0 ? false : json['uploaded'] ?? true;
+    shouldUpdate = json['shouldUpdate'] == 1 ? true : json['shouldUpdate'] == 0 ? false : json['shouldUpdate'] ?? true;
+  }
+
+  Todos.fromJson2(Map<String, dynamic> json) {
+    sId = json['todoID'];
+    title = json['title'];
+    userID = json['userID'];
+    time = json['time'];
+    completed = json['completed'] == 1 ? true : json['completed'] == 0 ? false : json['completed'];
+    date = json['date'];
+    category = json['category'];
+    content = json['content'];
+    uploaded = json['uploaded'] == 1 ? true : json['uploaded'] == 0 ? false : json['uploaded'] ?? true;
+    shouldUpdate = json['shouldUpdate'] == 1 ? true : json['shouldUpdate'] == 0 ? false : json['shouldUpdate'] ?? true;
   }
 
   Map<String, dynamic> toJson() {

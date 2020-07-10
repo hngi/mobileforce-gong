@@ -54,9 +54,9 @@ class _LoginPageState extends State<LoginPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: config.yMargin(context, 5)),
+                    SizedBox(height: config.yMargin(context, 6)),
                     _logo(context),
-                    SizedBox(height: config.yMargin(context, 1)),
+                    SizedBox(height: config.yMargin(context, 4)),
                     _signInText(context),
                     SizedBox(height: config.yMargin(context, 2)),
                     _emailPasswordWidget(),

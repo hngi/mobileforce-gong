@@ -10,33 +10,35 @@ exports.create = (req, res) => {
     }
 
     // Create a Todo
-    const todo = new Todo({
-        title: req.body.title,
-        content: req.body.content,
-        userID: req.body.userID,
-        category: req.body.category,
-        time: req.body.time,
-        completed: req.body.completed,
-        date: req.body.date,
-        todoID: req.body.todoID
-    });
 
-    // Save todo in the database
-    todo.save()
-        .then(data => {
-            res.status(200).send(data);
-        }).catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while creating the todo."
-            });
-        });
-};
+    Todo.findOne({ todoID: req.body.todoID },
+        function (err, todo) {
+            if (err) return res.status(500).send('Error on the server');
+            if (todo) return res.status(400).send('Todo already exists')
+
+            Todo.create({
+                title: req.body.title,
+                content: req.body.content,
+                userID: req.body.userID,
+                category: req.body.category,
+                time: req.body.time,
+                completed: req.body.completed,
+                date: req.body.date,
+                todoID: req.body.todoID
+            },
+                function (err, todo) {
+                    if (err) return res.status(500).send("There was a problem registering the Todo.")
+                    res.status(200).send(todo);
+                });
+
+        })
+}
 
 
 
 exports.findImportant = (req, res) => {
-    var query = {userID: req.params.userId, important: true};
-    Todo.find(query, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
+    var query = { userID: req.params.userId, important: true };
+    Todo.find(query, { createdAt: 0, updatedAt: 0, __v: 0 }).sort('-createdAt')
         .then(todos => {
             res.send(todos);
         }).catch(err => {
@@ -48,7 +50,7 @@ exports.findImportant = (req, res) => {
 
 // Find a single todo with a todoId
 exports.findOne = (req, res) => {
-    Todo.findById(req.params.todoId, {createdAt: 0, updatedAt: 0, __v: 0})
+    Todo.findById(req.params.todoId, { createdAt: 0, updatedAt: 0, __v: 0 })
         .then(todo => {
             if (!todo) {
                 return res.status(404).send({
@@ -69,8 +71,8 @@ exports.findOne = (req, res) => {
 };
 
 exports.findOneByUser = (req, res) => {
-    var query = {userID: req.params.userId};
-    Todo.find(query, {createdAt: 0, updatedAt: 0, __v: 0}).sort('-createdAt')
+    var query = { userID: req.params.userId };
+    Todo.find(query, { createdAt: 0, updatedAt: 0, __v: 0 }).sort('-createdAt')
         .then(todos => {
             res.send(todos);
         }).catch(err => {
@@ -88,7 +90,7 @@ exports.updateNew = (req, res) => {
         });
     }
 
-    var query = {todoID: req.body.todoID};
+    var query = { todoID: req.body.todoID };
 
     Todo.updateOne(query, {
         title: req.body.title,
@@ -97,7 +99,7 @@ exports.updateNew = (req, res) => {
         date: req.body.date,
         time: req.body.time,
         completed: req.body.completed
-    },).then(todo => {
+    }).then(todo => {
         res.send(todo);
     }).catch(err => {
         res.status(500).send({
@@ -107,7 +109,7 @@ exports.updateNew = (req, res) => {
 }
 
 exports.deleteNew = (req, res) => {
-    var query = {todoID: req.body.todoID};
+    var query = { todoID: req.body.todoID };
 
     Todo.deleteOne(query).then(todo => {
         if (!todo) {

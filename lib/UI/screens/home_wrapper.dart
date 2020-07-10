@@ -9,6 +9,9 @@ import '../widgets/quotesTab/quoteTab.dart';
 import '../../services/navigation/page_transitions/animations.dart';
 
 class HomeWrapper extends StatelessWidget {
+  final bool justLoggedIn;
+
+  const HomeWrapper({Key key, @required this.justLoggedIn}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +19,7 @@ class HomeWrapper extends StatelessWidget {
         onWillPop: () => Navigation().pop(context),
         child: Stack(
           children: [
-            HomePage(),
+            HomePage(justLoggedIn: justLoggedIn,),
             Align(
                 alignment: Alignment.bottomCenter,
                 child: Visibility(

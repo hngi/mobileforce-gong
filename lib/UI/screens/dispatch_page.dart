@@ -36,7 +36,7 @@ class DispatchPage extends StatelessWidget {
         ),
         leading: GestureDetector(
           onTap: () {
-            Navigation().pushFrom(context, HomePage());
+            Navigation().pushFrom(context, HomePage(justLoggedIn: false,));
           },
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),

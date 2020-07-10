@@ -18,7 +18,7 @@ void gotoHomeScreen(BuildContext context) {
         // var user = Provider.of<AuthenticationState>(context, listen: false).exposeUser();
         // Navigator.push(context, 
         //       MaterialPageRoute(builder: (context) => HomeWrapper()));
-        Navigation().pushToAndReplace(context, HomeWrapper());
+        Navigation().pushToAndReplace(context, HomeWrapper(justLoggedIn: true,));
       }
   });
 }

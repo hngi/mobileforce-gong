@@ -27,9 +27,9 @@ class _ProfileState extends State<Profile> {
   }
 
   String phoneNumber = "+2348066701121";
-  String email = 'olakunle Temitayo';
-  String desc = 'This is a bit description about myself';
-  String name = 'Tayo Olakunle';
+  String email = 'user@user.com';
+  String desc = "";
+  String name = 'User';
   String address = 'Ago Palace Way surulere Lagos';
   String img;
 
@@ -105,7 +105,7 @@ class _ProfileState extends State<Profile> {
                         image: DecorationImage(
                             fit: BoxFit.cover,
                             image: AssetImage(
-                              'assets/images/Ellipse 14 (1).png',
+                              'assets/images/images.jpg',
                             )),
                         shape: BoxShape.circle,
                         border: Border.all(
@@ -135,7 +135,7 @@ class _ProfileState extends State<Profile> {
               ),
               Center(
                 child: Text(
-                  desc,
+                  "",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, color: kGrey),
                 ),

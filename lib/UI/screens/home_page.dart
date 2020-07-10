@@ -28,6 +28,10 @@ import 'show_notes.dart';
 import 'sign_in.dart';
 
 class HomePage extends StatefulWidget {
+  final bool justLoggedIn;
+
+  const HomePage({Key key, @required this.justLoggedIn}) : super(key: key);
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -49,8 +53,8 @@ class _HomePageState extends State<HomePage> {
               })
             })
         .then((value) {
-      Provider.of<NotesProvider>(context, listen: false).fetch(uid);
-      Provider.of<TodoProvider>(context, listen: false).fetch(uid);
+      Provider.of<NotesProvider>(context, listen: false).fetch(uid, widget.justLoggedIn);
+      Provider.of<TodoProvider>(context, listen: false).fetch(uid, widget.justLoggedIn);
     });
   }
 

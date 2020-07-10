@@ -60,11 +60,8 @@ class GongDbhelper {
   //   return result;
   // }
 
-
-  void _createDb(Database db, int newVersion) async
-  {
-    await db.execute(
-      '''
+  void _createDb(Database db, int newVersion) async {
+    await db.execute('''
       CREATE TABLE $tblNotes(
       $colPid INTEGER PRIMARY KEY,
       $colId TEXT, 
@@ -76,10 +73,8 @@ class GongDbhelper {
       $colUpload INTEGER,
       $colUpdate INTEGER,
       $colColor INTEGER)
-      '''
-    );
-    await db.execute(
-      '''
+      ''');
+    await db.execute('''
       CREATE TABLE $tbldeleteNotes(
       $colPid INTEGER PRIMARY KEY,
       $colId TEXT, 
@@ -91,11 +86,9 @@ class GongDbhelper {
       $colDate TEXT,
       $colUpload INTEGER,
       $colUpdate INTEGER)
-      '''
-    );
+      ''');
 
-    await db.execute(
-      '''
+    await db.execute('''
       CREATE TABLE $tblTodos(
       $colPid INTEGER PRIMARY KEY,
       $colId TEXT, 
@@ -108,10 +101,8 @@ class GongDbhelper {
       $colCategory TEXT,
       $colUpload INTEGER,
       $colUpdate INTEGER)
-      '''
-    );
-    await db.execute(
-      '''
+      ''');
+    await db.execute('''
       CREATE TABLE $tbldeleteTodos(
       $colPid INTEGER PRIMARY KEY,
       $colId TEXT, 
@@ -124,15 +115,16 @@ class GongDbhelper {
       $colCategory TEXT,
       $colUpload INTEGER,
       $colUpdate INTEGER)
-      '''
-    );
+      ''');
   }
 
   Future<List> getNotes() async {
     Database db = await this.db;
-    var result = await db.rawQuery("SELECT * FROM $tblNotes order by $colPid DESC");// order by $colId ASC
+    var result = await db.rawQuery(
+        "SELECT * FROM $tblNotes order by $colPid DESC"); // order by $colId ASC
     return result;
   }
+
   // Future<List> getUpdateNotes() async {
   //   Database db = await this.db;
   //   var result = await db.rawQuery("SELECT * FROM $tblupdateNotes order by $colPid DESC");
@@ -140,15 +132,18 @@ class GongDbhelper {
   // }
   Future<List> getDeleteNotes() async {
     Database db = await this.db;
-    var result = await db.rawQuery("SELECT * FROM $tbldeleteNotes order by $colPid DESC");
+    var result = await db
+        .rawQuery("SELECT * FROM $tbldeleteNotes order by $colPid DESC");
     return result;
   }
 
   Future<List> getTodos() async {
     Database db = await this.db;
-    var result = await db.rawQuery("SELECT * FROM $tblTodos order by $colPid DESC");// order by $colId ASC
+    var result = await db.rawQuery(
+        "SELECT * FROM $tblTodos order by $colPid DESC"); // order by $colId ASC
     return result;
   }
+
   // Future<List> getUpdateTodos() async {
   //   Database db = await this.db;
   //   var result = await db.rawQuery("SELECT * FROM $tblupdateTodos order by $colPid DESC");// order by $colId ASC
@@ -156,16 +151,33 @@ class GongDbhelper {
   // }
   Future<List> getDeleteTodos() async {
     Database db = await this.db;
-    var result = await db.rawQuery("SELECT * FROM $tbldeleteTodos order by $colPid DESC");// order by $colId ASC
+    var result = await db.rawQuery(
+        "SELECT * FROM $tbldeleteTodos order by $colPid DESC"); // order by $colId ASC
     return result;
   }
 
   Future<int> insertNote(Notes note) async {
     print(note);
     Database db = await this.db;
-    var result = await db.insert(tblNotes, note.toJson());
+    var result = await db.insert(tblNotes, note.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
     return result;
   }
+
+  Future<int> insertNoteFromDb(Notes note) async {
+    print(note);
+    Database db = await this.db;
+    var check = await db.rawQuery(
+      "SELECT * FROM $tblNotes WHERE $colId = ?", [note.sId ?? 'feel']
+    );
+    if (check.isEmpty) {
+      var result = await db.insert(tblNotes, note.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+      return result;
+    }
+    return null;
+  }
+
   // Future<int> insertUpdateNote(Notes note) async {
   //   Database db = await this.db;
   //   var result = await db.insert(tblupdateNotes, note.toJson());
@@ -179,9 +191,25 @@ class GongDbhelper {
 
   Future<int> insertTodo(Todos todo) async {
     Database db = await this.db;
-    var result = await db.insert(tblTodos, todo.toJson());
+    var result = await db.insert(tblTodos, todo.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
     return result;
   }
+
+  Future<int> insertTodoFromDb(Todos todo) async {
+    print(todo);
+    Database db = await this.db;
+    var check = await db.rawQuery(
+      "SELECT * FROM $tblTodos WHERE $colId = ?", [todo.sId ?? 'feel']
+    );
+    if (check.isEmpty) {
+      var result = await db.insert(tblTodos, todo.toJson(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+      return result;
+    }
+    return null;
+  }
+
   // Future<int> insertUpdateTodo(Todos todo) async {
   //   Database db = await this.db;
   //   var result = await db.insert(tblupdateTodos, todo.toJson());
@@ -196,8 +224,7 @@ class GongDbhelper {
   Future<int> getCount() async {
     Database db = await this.db;
     var result = Sqflite.firstIntValue(
-        await db.rawQuery("select count (*) from $tblNotes")
-    );
+        await db.rawQuery("select count (*) from $tblNotes"));
     return result;
   }
 
@@ -218,28 +245,32 @@ class GongDbhelper {
   Future<int> deleteNote(String id) async {
     int result;
     var db = await this.db;
-    result = await db.rawDelete('DELETE FROM $tblNotes WHERE $colId = ?', ['$id']);
+    result =
+        await db.rawDelete('DELETE FROM $tblNotes WHERE $colId = ?', ['$id']);
     return result;
   }
 
   Future<int> deleteStoreNote(String id) async {
     int result;
     var db = await this.db;
-    result = await db.rawDelete('DELETE FROM $tbldeleteNotes WHERE $colId = ?', ['$id']);
+    result = await db
+        .rawDelete('DELETE FROM $tbldeleteNotes WHERE $colId = ?', ['$id']);
     return result;
   }
 
   Future<int> deleteTodo(String id) async {
     int result;
     var db = await this.db;
-    result = await db.rawDelete('DELETE FROM $tblTodos WHERE $colId = ?', ['$id']);
+    result =
+        await db.rawDelete('DELETE FROM $tblTodos WHERE $colId = ?', ['$id']);
     return result;
   }
 
   Future<int> deleteStoreTodo(String id) async {
     int result;
     var db = await this.db;
-    result = await db.rawDelete('DELETE FROM $tbldeleteTodos WHERE $colId = ?', ['$id']);
+    result = await db
+        .rawDelete('DELETE FROM $tbldeleteTodos WHERE $colId = ?', ['$id']);
     return result;
   }
 }
