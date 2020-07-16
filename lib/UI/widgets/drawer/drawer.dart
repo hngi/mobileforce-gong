@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -131,7 +130,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           onInitialized: (context, rateMyApp) async {
                             await rateMyApp.showRateDialog(context,
                                 dialogStyle: DialogStyle(
-                                    titleStyle: GoogleFonts.montserrat(
+                                    titleStyle: TextStyle(
                                         color: darktheme
                                             ? Colors.white
                                             : Colors.black)),
@@ -196,7 +195,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
         padding: EdgeInsets.only(top: config.yMargin(context, 2.5)),
         child: Text(
           text,
-          style: GoogleFonts.roboto(
+          style: TextStyle(
               fontStyle: FontStyle.normal,
               color: darktheme ? Colors.white : Color(0xff312E2E),
               fontSize: config.textSize(context, 2.3),
@@ -265,7 +264,7 @@ class _DrawerItemState extends State<DrawerItem> {
         title: Padding(
           padding: EdgeInsets.only(left: 68.0, top: 14),
           child: Text(this.widget.text,
-              style: GoogleFonts.roboto(
+              style: TextStyle(
                   fontStyle: FontStyle.normal,
                   color: Color(0xff312E2E),
                   fontSize: config.textSize(context, 4.7),

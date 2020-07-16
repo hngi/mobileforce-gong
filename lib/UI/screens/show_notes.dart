@@ -30,7 +30,6 @@ class _ShowNotesState extends State<ShowNotes> {
   final TextEditingController _filter = new TextEditingController();
   Icon _searchIcon = new Icon(Icons.search);
   Widget _Title = new SizedBox();
-  bool showNotes = true;
   var darktheme;
   @override
   Widget build(BuildContext context) {
@@ -67,7 +66,7 @@ class _ShowNotesState extends State<ShowNotes> {
                             if(_filter.text.isEmpty){
                               model.getNotes();
                             }
-                            if(value.length > 1)
+                            if(value.length > 0)
                               model.searchNotes(value);
                           },
                           controller: _filter,
@@ -78,7 +77,7 @@ class _ShowNotesState extends State<ShowNotes> {
                       } else {
                         this._searchIcon = new Icon(Icons.search);
                         this._Title = new SizedBox();
-                      /*  filteredNames = names;*/
+                        /*  filteredNames = names;*/
                         model.getNotes();
                         _filter.clear();
                       }
@@ -87,31 +86,15 @@ class _ShowNotesState extends State<ShowNotes> {
                   Expanded(child: _Title),
                 ],
               ),
-             showNotes ? Expanded(
-                child:ListView.builder(
-                  itemCount: notes.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onLongPress: () {
-                        model.select ? print('') : model.setSelect();
-                      },
-                      onLongPressEnd: (details) {
-                        if (model.deletes.indexOf(notes[index]) == -1) {
-                          model.addDelete(notes[index]);
-                        } else {
-                          if (model.deletes.length == 1) {
-                            model.removeDeletes(
-                                model.deletes.indexOf(notes[index]));
-                            model.setSelect();
-                          } else {
-                            model.removeDeletes(
-                                model.deletes.indexOf(notes[index]));
-                          }
-                        }
-                      },
-                      onTap: () async {
-                        print('I was tapped');
-                        if (model.select) {
+              model.showNotes ? Expanded(
+                  child:ListView.builder(
+                    itemCount: notes.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onLongPress: () {
+                          model.select ? print('') : model.setSelect();
+                        },
+                        onLongPressEnd: (details) {
                           if (model.deletes.indexOf(notes[index]) == -1) {
                             model.addDelete(notes[index]);
                           } else {
@@ -124,192 +107,214 @@ class _ShowNotesState extends State<ShowNotes> {
                                   model.deletes.indexOf(notes[index]));
                             }
                           }
-                        } else {
-                          final prefs = await SharedPreferences.getInstance();
-                          bool locked = prefs.getBool(notes[index].sId);
-                          print(locked);
-                          print(notes[index].userID);
-                          if (locked == true) {
-                            await state.authenticate();
-                            String status = state.successful;
-                            if (status == 'Successful') {
-                              Get.to(AddNote(
-                                stitle: notes[index].title,
-                                scontent: notes[index].content,
-                                snote: notes[index],
-                                simportant: notes[index].important,
-                              ));
+                        },
+                        onTap: () async {
+                          print('I was tapped');
+                          if (model.select) {
+                            if (model.deletes.indexOf(notes[index]) == -1) {
+                              model.addDelete(notes[index]);
                             } else {
-                              scaffoldKey.currentState.showSnackBar(SnackBar(
-                                  backgroundColor: Colors.red,
-                                  content: Text('Authorization Failed')));
+                              if (model.deletes.length == 1) {
+                                model.removeDeletes(
+                                    model.deletes.indexOf(notes[index]));
+                                model.setSelect();
+                              } else {
+                                model.removeDeletes(
+                                    model.deletes.indexOf(notes[index]));
+                              }
                             }
                           } else {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => AddNote(
-                                      stitle: notes[index].title,
-                                      scontent: notes[index].content,
-                                      snote: notes[index],
-                                      simportant: notes[index].important,
-                                    )));
+                            final prefs = await SharedPreferences.getInstance();
+                            bool locked = prefs.getBool(notes[index].sId);
+                            print(locked);
+                            print(notes[index].userID);
+                            if (locked == true) {
+                              await state.authenticate();
+                              String status = state.successful;
+                              if (status == 'Successful') {
+                                Get.to(AddNote(
+                                  stitle: notes[index].title,
+                                  scontent: notes[index].content,
+                                  snote: notes[index],
+                                  simportant: notes[index].important,
+                                ));
+                              } else {
+                                scaffoldKey.currentState.showSnackBar(SnackBar(
+                                    backgroundColor: Colors.red,
+                                    content: Text('Authorization Failed')));
+                              }
+                            } else {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => AddNote(
+                                    stitle: notes[index].title,
+                                    scontent: notes[index].content,
+                                    snote: notes[index],
+                                    simportant: notes[index].important,
+                                  )));
+                            }
                           }
-                        }
-                      },
-                      child: FadeIn(
-                        delay: index - 0.5,
-                        child: Container(
-                          padding: index == notes.length - 1
-                              ? EdgeInsets.only(bottom: 30)
-                              : EdgeInsets.zero,
-                          child: Card(
-                            color: model.getBackgroundColor(notes[index].color, darktheme),
-                            elevation: 0,
-                            margin: EdgeInsets.only(bottom: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(8),
-                                bottomLeft: Radius.circular(8),
+                        },
+                        child: FadeIn(
+                          delay: index - 0.5,
+                          child: Container(
+                            padding: index == notes.length - 1
+                                ? EdgeInsets.only(bottom: 30)
+                                : EdgeInsets.zero,
+                            child: Card(
+                              color: model.getBackgroundColor(notes[index].color, darktheme),
+                              elevation: 0,
+                              margin: EdgeInsets.only(bottom: 10),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
                               ),
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                    top: 20, left: 20, bottom: 8, right: 20),
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                        left: BorderSide(
-                                            width: 5.0, color: blue))),
-                                child: Row(
-                                  children: <Widget>[
-                                    model.select
-                                        ? Container(
-                                            margin: EdgeInsets.only(right: 10),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(8),
+                                  bottomLeft: Radius.circular(8),
+                                ),
+                                child: Container(
+                                  padding: EdgeInsets.only(
+                                      top: 20, left: 20, bottom: 8, right: 20),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          left: BorderSide(
+                                              width: 5.0, color: blue))),
+                                  child: Row(
+                                    children: <Widget>[
+                                      model.select
+                                          ? Container(
+                                        margin: EdgeInsets.only(right: 10),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                            BorderRadius.circular(50),
+                                            border: Border.all(
+                                                color: blue, width: 1)),
+                                        width: 15,
+                                        height: 15,
+                                        child: Center(
+                                          child: Container(
                                             decoration: BoxDecoration(
                                                 borderRadius:
-                                                    BorderRadius.circular(50),
-                                                border: Border.all(
-                                                    color: blue, width: 1)),
-                                            width: 15,
-                                            height: 15,
-                                            child: Center(
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50),
-                                                    color: model.deletes
-                                                                .indexOf(notes[
-                                                                    index]) ==
-                                                            -1
-                                                        ? Colors.white
-                                                        : blue),
-                                                width: 10,
-                                                height: 10,
+                                                BorderRadius.circular(
+                                                    50),
+                                                color: model.deletes
+                                                    .indexOf(notes[
+                                                index]) ==
+                                                    -1
+                                                    ? Colors.white
+                                                    : blue),
+                                            width: 10,
+                                            height: 10,
+                                          ),
+                                        ),
+                                      )
+                                          : SizedBox(),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Container(
+                                              child: Text(
+                                                notes[index].title ?? '',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6
+                                                    .copyWith(
+                                                  fontFamily: model.getTextFont(notes[index].font),
+                                                    fontSize: SizeConfig().textSize(
+                                                        context, 2.5),
+                                                    color: blue,
+                                                    fontWeight:
+                                                    FontWeight.w500),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
-                                          )
-                                        : SizedBox(),
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Container(
-                                            child: Text(
-                                              notes[index].title ?? '',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline6
-                                                  .copyWith(
-                                                      fontSize: SizeConfig()
-                                                          .textSize(
-                                                              context, 2.5),
-                                                      color: blue,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
+                                            SizedBox(
+                                              height: 8,
                                             ),
-                                          ),
-                                          SizedBox(
-                                            height: 8,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: <Widget>[
-                                              Flexible(
-                                                child: Text(
-                                                  notes[index].content ?? '',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline6
-                                                      .copyWith(
-                                                        fontSize: SizeConfig()
-                                                            .textSize(
-                                                                context, 2.2),
-                                                                color: darktheme ? Colors.white : Colors.black
-                                                      ),
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                              Column(
-                                                children: <Widget>[
-                                                  !notes[index].uploaded ||
-                                                          notes[index]
-                                                              .shouldUpdate
-                                                      ? Container(
-                                                          child:
-                                                              SvgPicture.asset(
-                                                            'assets/svgs/upload.svg',
-                                                            width: 15,
-                                                            color:
-                                                                Colors.black45,
-                                                          ),
-                                                        )
-                                                      : SizedBox(),
-                                                  Container(
-                                                    child: Text(
-                                                        notes[index].date ?? '',
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .headline6
-                                                            .copyWith(
-                                                                fontSize: SizeConfig()
-                                                                    .textSize(
-                                                                        context,
-                                                                        1.6))),
+                                            Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                              children: <Widget>[
+                                                Flexible(
+                                                  child: Text(
+                                                    notes[index].content ?? '',
+                                                    style: Theme.of(context)
+                                                        .textTheme.headline6
+                                                        .copyWith(
+                                                        fontFamily: model.getTextFont(notes[index].font),
+                                                        fontSize: SizeConfig().textSize(context, 2.2),
+                                                        color: darktheme ? Colors.white : Colors.black
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                    TextOverflow.ellipsis,
                                                   ),
-                                                ],
-                                              ),
-                                            ],
-                                          )
-                                        ],
+                                                ),
+                                                Column(
+                                                  children: <Widget>[
+                                                    !notes[index].uploaded ||
+                                                        notes[index]
+                                                            .shouldUpdate
+                                                        ? Container(
+                                                      child:
+                                                      SvgPicture.asset(
+                                                        'assets/svgs/upload.svg',
+                                                        width: 15,
+                                                        color:
+                                                        Colors.black45,
+                                                      ),
+                                                    )
+                                                        : SizedBox(),
+                                                    Container(
+                                                      child: Text(
+                                                          notes[index].date ?? '',
+                                                          style: Theme.of(context)
+                                                              .textTheme
+                                                              .headline6
+                                                              .copyWith(
+                                                              fontFamily: model.getTextFont(notes[index].font),
+                                                              fontSize: SizeConfig()
+                                                                  .textSize(
+                                                                  context,
+                                                                  1.6))),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                )
-              ) : Center(
-                 child: Text("No results found",
-                   style: TextStyle(
-                     fontSize: 30.0,
-                   ),)
-             ),
+                      );
+                    },
+                  )
+              ) : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: 10.0),
+                  Center(
+                      child: Text("No results found",
+                        style: TextStyle(
+                            fontSize: 20.0,
+                            fontFamily: "Shadows"
+                        ),)
+                  ),
+                ],
+              )
             ],
           ),
         ),

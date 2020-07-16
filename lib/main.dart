@@ -68,6 +68,7 @@ class MyApp extends StatelessWidget {
               // locale: DevicePreview.of(context).locale,
               // builder: DevicePreview.appBuilder,
               debugShowCheckedModeBanner: false,
+
               // initialRoute: '/',
               // routes: {
               //   '/notes': (context) => AddNote()

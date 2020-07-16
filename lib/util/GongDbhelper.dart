@@ -18,6 +18,7 @@ class GongDbhelper {
   String colUpload = "uploaded";
   String colUpdate = "shouldUpdate";
   String colColor = "color";
+  String colFont = 'font';
 
   String tblTodos = "todos";
   String colTime = "time";
@@ -60,6 +61,14 @@ class GongDbhelper {
      return result;
    }
 
+  Future<List> searchTodo(String query) async
+  {
+    Database db = await this.db;
+    var result = await db.rawQuery
+      ("SELECT * FROM $tblNotes WHERE $colContent LIKE '%$query%' UNION  SELECT * FROM $tblNotes WHERE $colTitle LIKE '%$query%' ");
+    return result;
+  }
+
   void _createDb(Database db, int newVersion) async {
     await db.execute('''
       CREATE TABLE $tblNotes(
@@ -72,6 +81,7 @@ class GongDbhelper {
       $colDate TEXT,
       $colUpload INTEGER,
       $colUpdate INTEGER,
+      $colFont INTEGER,
       $colColor INTEGER)
       ''');
     await db.execute('''
@@ -80,6 +90,7 @@ class GongDbhelper {
       $colId TEXT, 
       $colTitle TEXT,
       $colContent TEXT,
+      $colFont INTEGER,
       $colColor INTEGER,
       $colUserID TEXT,
       $colImportant INTEGER,

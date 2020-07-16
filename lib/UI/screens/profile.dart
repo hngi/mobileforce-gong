@@ -8,7 +8,25 @@ import 'package:provider/provider.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/util/const/constFile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:team_mobileforce_gong/models/CustomPopUpMenu.dart';
 
+
+
+final List<CustomPopupMenu> choices =[
+  CustomPopupMenu(title: "Cedarville", style: TextStyle(fontFamily: "Cedarville")),
+  CustomPopupMenu(title: "ComicNeue", style: TextStyle(fontFamily: "ComicNeue")),
+  CustomPopupMenu(title: "Gilroy", style: TextStyle(fontFamily: "Gilroy")),
+  CustomPopupMenu(title: "Montserrat", style: TextStyle(fontFamily: "Montserrat")),
+  CustomPopupMenu(title: "Shadows", style: TextStyle(fontFamily: "Shadows"))
+];
+
+
+const Cedarville = 'Cedarville';
+const ComicNeue = 'ComicNeue';
+const Gilroy = 'Orange';
+const Montserrat = "Montserrat";
+const Shadows = "Shadows";
 class Profile extends StatefulWidget {
   @override
   _ProfileState createState() => _ProfileState();
@@ -53,20 +71,37 @@ class _ProfileState extends State<Profile> {
   }
 
   var darktheme;
+  Icon _fabIcon = new Icon(Icons.edit);
+  Widget _DisplayName(String name){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Display Name',
+          style: TextStyle(
+              fontSize: 18,
+              color: kBlack,
+              fontWeight: FontWeight.bold),
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        Text(name,
+          style: TextStyle(fontSize: 18, color: kGrey),
+        ),
+        Divider(
+          color: kGrey,
+          thickness: 1,
+        )],
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
     darktheme = Provider.of<ThemeNotifier>(context).isDarkModeOn ?? false;
     return Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {},
-      //   child: Icon(
-      //     Icons.edit,
-      //     color: Colors.white,
-      //   ),
-      //   foregroundColor: kPrimaryColor,
-      // ),
-      body: SafeArea(
+       body: SafeArea(
         child: Container(
           color: darktheme ? Color(0xff0D141A) : Color(0xffFAFAFA),
           child: Column(
@@ -158,24 +193,7 @@ class _ProfileState extends State<Profile> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Display Name',
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: kBlack,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          name,
-                          style: TextStyle(fontSize: 18, color: kGrey),
-                        ),
-                        Divider(
-                          color: kGrey,
-                          thickness: 1,
-                        ),
+                       _DisplayName(name),
                         SizedBox(
                           height: 24,
                         ),
@@ -198,26 +216,8 @@ class _ProfileState extends State<Profile> {
                           thickness: 1,
                         ),
                         SizedBox(
-                          height: 24,
+                          height: 20,
                         ),
-                        // Text(
-                        //   'Address',
-                        //   style: TextStyle(
-                        //       fontSize: 18,
-                        //       color: kBlack,
-                        //       fontWeight: FontWeight.bold),
-                        // ),
-                        // SizedBox(
-                        //   height: 8,
-                        // ),
-                        // Text(
-                        //   address,
-                        //   style: TextStyle(fontSize: 18, color: kGrey),
-                        // ),
-                        // Divider(
-                        //   color: kGrey,
-                        //   thickness: 1,
-                        // ),
                       ],
                     ),
                   ),
@@ -229,4 +229,5 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
+
 }
