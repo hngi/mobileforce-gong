@@ -33,47 +33,7 @@ class NotesProvider with ChangeNotifier {
   StreamSubscription<DataConnectionStatus> deleteListener;
   var uuid = Uuid();
   List<String> img = [];
-
-//    NotesProvider() {
-// //     fetch();
-//   //  getData();
-//    }
-
-  // void fetch(String uid) async{
-  //   await http.get(
-  //     'http://gonghng.herokuapp.com/notes/user/$uid',
-  //     headers: headers
-  //   ).then((value){
-  //     var jsonres = convert.jsonDecode(value.body) as List;
-  //     notes = jsonres.map((e) => Notes.fromJson(e)).toList();
-  //     notifyListeners();
-  //   });
-
-  // }
-
-  // void createNote(String uid, String title, String content, bool important) async{
-  //   print(title);
-  //   await post(
-  //     'http://gonghng.herokuapp.com/notes',
-  //     body: jsonEncode({
-  //       'title': title,
-  //       'content': content,
-  //       'userID': uid,
-  //       'date': dateFormat.format(DateTime.now()).toString(),
-  //       'important': important,
-  //     }),
-  //     headers: headers
-  //   ).then((value){
-  //     print(value.body);
-  //     Notes note = new Notes(sId: uid, title: title, content: content, important: important, date: dateFormat.format(DateTime.now()).toString());
-  //     notes.insert(0, note);
-  //     notifyListeners();
-  //   });
-  // }
-
-  // NotesProvider() {
-  //   fetch();
-  // }
+  bool showNotes = true;
 
   void addimg(String data) {
     img.add(data);
@@ -127,13 +87,43 @@ class NotesProvider with ChangeNotifier {
     });
   }
 
+  Future<bool> searchNotes(String query) async{
+    final notesFuture =  GongDbhelper().searchNotes(query);
+    List<Notes> noteList = List<Notes>();
+    notesFuture.then((result) {
+      print(" "+ result.length.toString() + "Length of notes");
+      for (int i = 0; i < result.length; i++) {
+        noteList.add(Notes.fromJson(result[i]));
+      };
+      if(noteList != null && noteList.length > 0 ){
+        notes = noteList;
+        showNotes =  true;
+      }else{
+        showNotes =  false;
+      }
+    });
+  }
+
+  void getNotes() async{
+    await GongDbhelper().getNotes().then((value) {
+      notes = value.map((e) => Notes.fromJson(e)).toList();
+      notifyListeners();
+    }).then((value) {
+      createDataFunc();
+      updateDataFunc();
+      deleteDataFunc();
+    });
+    showNotes = true;
+  }
+
   void createNote(String uid, String title, String content, bool important,
-      int color) async {
+      int color,int font) async {
     print(uuid.v4());
     Notes note = new Notes(
         sId: uuid.v4(),
         title: title,
         content: content,
+        font: font,
         userID: uid,
         important: important,
         date: dateFormat.format(DateTime.now()).toString(),
@@ -161,6 +151,7 @@ class NotesProvider with ChangeNotifier {
         userID: uid,
         important: important,
         date: note.date,
+        font: note.font,
         uploaded: note.uploaded,
         shouldUpdate: true);
     unote.color = color;
@@ -201,16 +192,16 @@ class NotesProvider with ChangeNotifier {
         return Colors.red[300];
         break;
       case 3:
-        return Colors.yellow[500];
+        return dark ? Colors.yellow[800] :Colors.yellow[400];
         break;
       case 4:
-        return Colors.green[300];
+        return dark? Colors.green[400] : Colors.green[300];
         break;
       case 5:
-        return Colors.orange[300];
+        return dark? Colors.orange[500] : Colors.orange[300];
         break;
       case 6:
-        return Colors.purple[200];
+        return dark? Colors.purple[300] : Colors.purple[200];
         break;
       default:
         return dark ? Colors.black : Colors.white;
@@ -220,11 +211,11 @@ class NotesProvider with ChangeNotifier {
   void createDataFunc() {
     createListener =
         DataConnectionChecker().onStatusChange.listen((event) async {
-      switch (event) {
-        case DataConnectionStatus.connected:
-          for (var n in notes) {
-            if (!n.uploaded) {
-              await post('http://gonghng.herokuapp.com/notes',
+          switch (event) {
+            case DataConnectionStatus.connected:
+              for (var n in notes) {
+                if (!n.uploaded) {
+                  await post('http://gonghng.herokuapp.com/notes',
                       body: jsonEncode({
                         'noteID': n.sId,
                         'title': n.title,
@@ -234,49 +225,49 @@ class NotesProvider with ChangeNotifier {
                         'important': n.important
                       }),
                       headers: headers)
-                  .then((value) async {
-                if (value.statusCode == 200) {
-                  Notes unote = new Notes(
-                      sId: n.sId,
-                      title: n.title,
-                      content: n.content,
-                      userID: n.userID,
-                      important: n.important,
-                      date: n.date,
-                      uploaded: true,
-                      shouldUpdate: n.shouldUpdate);
-                  await GongDbhelper().updateNote(unote);
+                      .then((value) async {
+                    if (value.statusCode == 200) {
+                      Notes unote = new Notes(
+                          sId: n.sId,
+                          title: n.title,
+                          content: n.content,
+                          userID: n.userID,
+                          important: n.important,
+                          date: n.date,
+                          uploaded: true,
+                          shouldUpdate: n.shouldUpdate);
+                      await GongDbhelper().updateNote(unote);
 
-                  notes[notes.indexOf(n)].uploaded = true;
+                      notes[notes.indexOf(n)].uploaded = true;
+                    }
+                  });
                 }
-              });
-            }
+              }
+              createListener.cancel();
+              notifyListeners();
+              break;
+            case DataConnectionStatus.disconnected:
+              int check = 0;
+              for (var n in notes) {
+                if (!n.uploaded) check += 1;
+              }
+              if (check == 0) {
+                createListener.cancel();
+              }
+              break;
           }
-          createListener.cancel();
-          notifyListeners();
-          break;
-        case DataConnectionStatus.disconnected:
-          int check = 0;
-          for (var n in notes) {
-            if (!n.uploaded) check += 1;
-          }
-          if (check == 0) {
-            createListener.cancel();
-          }
-          break;
-      }
-    });
+        });
   }
 
   void updateDataFunc() {
     updateListener =
         DataConnectionChecker().onStatusChange.listen((event) async {
-      switch (event) {
-        case DataConnectionStatus.connected:
-          for (var n in notes) {
-            if (n.shouldUpdate) {
-              await http
-                  .put('http://gonghng.herokuapp.com/notes',
+          switch (event) {
+            case DataConnectionStatus.connected:
+              for (var n in notes) {
+                if (n.shouldUpdate) {
+                  await http
+                      .put('http://gonghng.herokuapp.com/notes',
                       body: jsonEncode({
                         //'reminderId': todos[index].sId,
                         "noteID": n.sId,
@@ -285,36 +276,36 @@ class NotesProvider with ChangeNotifier {
                         'important': n.important
                       }),
                       headers: headers)
-                  .then((value) async {
-                Notes unote = new Notes(
-                    sId: n.sId,
-                    title: n.title,
-                    userID: n.userID,
-                    content: n.content,
-                    important: n.important,
-                    date: n.date,
-                    uploaded: n.uploaded,
-                    shouldUpdate: false);
-                await GongDbhelper().updateNote(unote);
+                      .then((value) async {
+                    Notes unote = new Notes(
+                        sId: n.sId,
+                        title: n.title,
+                        userID: n.userID,
+                        content: n.content,
+                        important: n.important,
+                        date: n.date,
+                        uploaded: n.uploaded,
+                        shouldUpdate: false);
+                    await GongDbhelper().updateNote(unote);
 
-                notes[notes.indexOf(n)].shouldUpdate = false;
-              });
-            }
+                    notes[notes.indexOf(n)].shouldUpdate = false;
+                  });
+                }
+              }
+              updateListener.cancel();
+              notifyListeners();
+              break;
+            case DataConnectionStatus.disconnected:
+              int check = 0;
+              for (var n in notes) {
+                if (n.shouldUpdate) check += 1;
+              }
+              if (check == 0) {
+                updateListener.cancel();
+              }
+              break;
           }
-          updateListener.cancel();
-          notifyListeners();
-          break;
-        case DataConnectionStatus.disconnected:
-          int check = 0;
-          for (var n in notes) {
-            if (n.shouldUpdate) check += 1;
-          }
-          if (check == 0) {
-            updateListener.cancel();
-          }
-          break;
-      }
-    });
+        });
   }
 
   void deleteDataFunc() async {
@@ -323,32 +314,56 @@ class NotesProvider with ChangeNotifier {
     }).then((value) {
       deleteListener =
           DataConnectionChecker().onStatusChange.listen((event) async {
-        switch (event) {
-          case DataConnectionStatus.connected:
-            if (deletes.length > 0) {
-              for (var n in deletes) {
-                final request = http.Request(
-                    'DELETE', Uri.parse('http://gonghng.herokuapp.com/notes'));
-                request.headers.addAll(headers);
-                request.body = jsonEncode({"noteID": n.sId});
-                await request.send().then((value) async {
-                  print(value);
-                  await GongDbhelper().deleteStoreTodo(n.sId).then((value) {
-                    deletes.removeAt(deletes.indexOf(n));
-                  });
-                });
-              }
+            switch (event) {
+              case DataConnectionStatus.connected:
+                if (deletes.length > 0) {
+                  for (var n in deletes) {
+                    final request = http.Request(
+                        'DELETE', Uri.parse('http://gonghng.herokuapp.com/notes'));
+                    request.headers.addAll(headers);
+                    request.body = jsonEncode({"noteID": n.sId});
+                    await request.send().then((value) async {
+                      print(value);
+                      await GongDbhelper().deleteStoreTodo(n.sId).then((value) {
+                        deletes.removeAt(deletes.indexOf(n));
+                      });
+                    });
+                  }
+                }
+                deleteListener.cancel();
+                notifyListeners();
+                break;
+              case DataConnectionStatus.disconnected:
+                if (deletes.length == 0) {
+                  deleteListener.cancel();
+                }
+                break;
             }
-            deleteListener.cancel();
-            notifyListeners();
-            break;
-          case DataConnectionStatus.disconnected:
-            if (deletes.length == 0) {
-              deleteListener.cancel();
-            }
-            break;
-        }
-      });
+          });
     });
+  }
+  String getTextFont(int font)
+  {
+    switch(font){
+      case 1:
+        return "Shadows";
+        break;
+      case 2:
+        return 'Cedarville';
+        break;
+      case 3:
+        return 'Montserrat';
+        break;
+      case 4:
+        return 'ComicNeue';
+        break;
+      case 5:
+        return 'Gilroy';
+        break;
+      default:
+        return 'Gilroy';
+        break;
+    }
+
   }
 }

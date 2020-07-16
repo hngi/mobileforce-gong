@@ -7,48 +7,47 @@ enum MyThemes {light, dark}
 class ThemeNotifier with ChangeNotifier {
   bool isDarkModeOn = false;
   static final List<ThemeData> themeData = [
-      ThemeData(
+    ThemeData(
+      //brightness: Brightness.dark,
         primaryColor: Colors.blue,
-        canvasColor: Colors.white,
+        //primarySwatch: paleWhite,
         appBarTheme: AppBarTheme(
-          color: paleWhite,
-          brightness: Brightness.light
+            color: paleWhite,
+            brightness: Brightness.light
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        //primarySwatch: Colors.transparent,
         scaffoldBackgroundColor: paleWhite,
         textTheme: TextTheme(
-          headline4: TextStyle(color: lighttext),
-          headline6: TextStyle(color: Colors.black)
+            headline4: TextStyle(color: lighttext),
+            headline6: TextStyle(color: Colors.black)
         ),
-        cardColor: Colors.white,
-        cardTheme: CardTheme(color: Colors.white),
+        //accentColor: Colors.transparent,
+        //highlightColor: Colors.transparent,
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
         fontFamily: 'Gilroy'
-      ),
-      ThemeData(
+    ),
+    ThemeData(
+      //brightness: Brightness.light,
         primaryColor: Colors.blue,
-        canvasColor: Colors.black,
         appBarTheme: AppBarTheme(
-          color: Color(0xff0D141A),
-          brightness: Brightness.dark
+            color: Color(0xff0D141A),
+            brightness: Brightness.dark
         ),
-        unselectedWidgetColor: Colors.white,
         scaffoldBackgroundColor: Color(0xff0D141A),
+        //accentColor: Colors.transparent,
         textTheme: TextTheme(
-          headline4: TextStyle(color: paleWhite),
-          subtitle1: TextStyle(color: paleWhite),
-          headline5: TextStyle(color: Colors.white),
-          headline6: TextStyle(color: Colors.white)
+            headline4: TextStyle(color: paleWhite),
+            subtitle1: TextStyle(color: paleWhite),
+            headline6: TextStyle(color: Colors.white)
         ),
         iconTheme: IconThemeData(
           color: Colors.white,
         ),
-        cardColor: Colors.black,
-        cardTheme: CardTheme(color: Colors.black),
         fontFamily: 'Gilroy'
-      ),
+    ),
   ];
 
   MyThemes _currentTheme = MyThemes.light;
