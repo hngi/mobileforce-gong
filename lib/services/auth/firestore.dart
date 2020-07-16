@@ -84,17 +84,17 @@ Future<void> updateProfile(
 }
 
 getUsersData(UserNotifier userNotifier, String uid) async {
-  QuerySnapshot snapshot = await _firestore
+  DocumentSnapshot snapshot = await _firestore
       .collection('userData')
-      .where('uid', isEqualTo: uid)
-      .getDocuments();
+      .document(uid).get();
+      
 
-  List<Users> _usersList = [];
-
-  snapshot.documents.forEach((document) async {
-    Users user = Users.fromMap(document.data);
-    _usersList.add(user);
-  });
+  List<Users> _usersList = [Users(
+    email : snapshot['email'],
+    photoUrl : snapshot['photoUrl'],
+    uid : snapshot['uid'],
+    name : snapshot['username']
+  )];
 
   userNotifier.userProfileData = _usersList;
 }
