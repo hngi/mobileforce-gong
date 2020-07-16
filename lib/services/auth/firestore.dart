@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import '../auth/model.dart';
 
-Firestore  _firestore = Firestore.instance;
+Firestore _firestore = Firestore.instance;
 
 Future<bool> addProfilePicture(String uid, File photo) async {
   final FirebaseUser user = await FirebaseAuth.instance.currentUser();
@@ -63,9 +63,7 @@ Future<bool> addProfilePicture(String uid, File photo) async {
   return user != null;
 }
 
-
-Future<void> updateProfile(
-    String uid, String username) async {
+Future<void> updateProfile(String uid, String username) async {
   _firestore
       .collection('userData')
       .where('uid', isEqualTo: uid)
@@ -84,17 +82,16 @@ Future<void> updateProfile(
 }
 
 getUsersData(UserNotifier userNotifier, String uid) async {
-  DocumentSnapshot snapshot = await _firestore
-      .collection('userData')
-      .document(uid).get();
-      
+  var snap =
+      await Firestore.instance.collection('userData').document(uid).get();
 
-  List<Users> _usersList = [Users(
-    email : snapshot['email'],
-    photoUrl : snapshot['photoUrl'],
-    uid : snapshot['uid'],
-    name : snapshot['username']
-  )];
+  DocumentSnapshot snapshot = snap;
+  List<Users> _usersList = [];
+  _usersList.add(Users(
+      email: snapshot['email'],
+      photoUrl: snapshot['photoUrl'],
+      uid: snapshot['uid'],
+      name: snapshot['username']));
 
   userNotifier.userProfileData = _usersList;
 }
