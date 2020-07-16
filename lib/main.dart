@@ -10,6 +10,7 @@ import 'package:team_mobileforce_gong/services/localAuth/lockNotes.dart';
 import 'package:team_mobileforce_gong/state/notesProvider.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/state/todoProvider.dart';
+import 'services/auth/userState.dart';
 
 import 'UI/screens/add_note.dart';
 import 'UI/screens/splashscreen.dart';
@@ -62,7 +63,8 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => QuoteState()),
             ChangeNotifierProvider(create: (_) => NotesProvider()),
             ChangeNotifierProvider(create: (_) => TodoProvider()),
-            ChangeNotifierProvider(create: (_) => LocalAuth())
+            ChangeNotifierProvider(create: (_) => LocalAuth()),
+            ChangeNotifierProvider(create: (_) => UserNotifier()),
           ],
           child: GetMaterialApp(
               // locale: DevicePreview.of(context).locale,
