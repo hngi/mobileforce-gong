@@ -118,6 +118,7 @@ class _HomePageState extends State<HomePage> {
               title: Text(
                 'Hey ${username ?? 'There'}',
                 style: Theme.of(context).textTheme.headline6.copyWith(
+                      fontFamily:  "Montserrat",
                       fontSize: SizeConfig().textSize(context, 3),
                     ),
               ),
