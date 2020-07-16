@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,11 +27,12 @@ class _ProfileState extends State<Profile> {
 
   Future getImage() async {
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
-
-    setState(() {
-      _image = File(pickedFile.path);
-    });
-    addProfilePicture(uid, _image);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+      addProfilePicture(uid, _image);
+    }
   }
 
   String phoneNumber = "+2348066701121";
@@ -79,6 +81,10 @@ class _ProfileState extends State<Profile> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => Get.bottomSheet(
             Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      topRight: Radius.circular(15))),
               height: SizeConfig().yMargin(context, 30),
               child: Wrap(
                 children: <Widget>[
@@ -90,51 +96,76 @@ class _ProfileState extends State<Profile> {
                       child: Text(
                         'Change Display Name',
                         style: GoogleFonts.aBeeZee(
-                          color: darktheme ? Colors.white : Colors.black,
+                            color: darktheme ? Colors.white : Colors.black,
                             fontSize: SizeConfig().textSize(context, 3),
                             fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: SizeConfig().yMargin(context, 8),
-                  ),
+                  // SizedBox(
+                  //   height: SizeConfig().yMargin(context, 8),
+                  // ),
                   Form(
                     key: formKey,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                      child: TextFormField(
-                        controller: _name,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18.0, vertical: 18),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.grey[100],
+                            borderRadius: BorderRadius.circular(15)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                          child: TextFormField(
+                            controller: _name,
+                            decoration: InputDecoration(
+                                border: InputBorder.none, hintText: name),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                   Align(
                       alignment: Alignment.centerRight,
                       child: FlatButton(
-                          onPressed: () {
-                            final form = formKey.currentState;
-                            if (_name.text != null) {
-                              form.save();
-                              updateProfile(uid, _name.text).then((value) {
-                                Get.snackbar(
-                                    'Success', 'Display name changed successfully',
-                                    backgroundColor: Colors.green);
-                                Get.to(Profile());
-                              });
+                          onPressed: () async {
+                            bool connected =
+                                await DataConnectionChecker().hasConnection;
+                            print(connected);
+                            if (connected) {
+                              final form = formKey.currentState;
+                              print(_name.text);
+                              if (_name.text.length > 0) {
+                                form.save();
+                                updateProfile(uid, _name.text).then((value) {
+                                  Get.snackbar('Success',
+                                      'Display name changed successfully',
+                                      backgroundColor: Colors.green);
+                                  Future.delayed(Duration(seconds: 2))
+                                      .then((value) => Get.to(Profile()));
+                                });
+                              }
+                              Get.snackbar(
+                                  'Error', 'You can\'t submit an empty form',
+                                  backgroundColor: Colors.red);
+                            } else {
+                              Get.snackbar('Network Error',
+                                  'Could not be processed due to poor network',
+                                  backgroundColor: Colors.red);
                             }
-                            Get.snackbar(
-                                'Error', 'You can\'t submit an empty form',
-                                backgroundColor: Colors.red);
                           },
-                          child: Text('Update', style: GoogleFonts.aBeeZee(
-                          color: darktheme ? Colors.white : Colors.black,
-                            fontSize: SizeConfig().textSize(context, 2),
-                            fontWeight: FontWeight.bold),)))
+                          child: Text(
+                            'Update',
+                            style: GoogleFonts.aBeeZee(
+                                color: darktheme ? Colors.white : Colors.black,
+                                fontSize: SizeConfig().textSize(context, 2),
+                                fontWeight: FontWeight.bold),
+                          )))
                 ],
               ),
             ),
-            backgroundColor: darktheme ? Color(0xff0D141A) : Colors.white
-            ),
+            elevation: 10,
+            backgroundColor: darktheme ? Color(0xff0D141A) : Colors.white),
         child: Icon(
           Icons.edit,
           color: Colors.white,
@@ -159,7 +190,9 @@ class _ProfileState extends State<Profile> {
                           IconButton(
                               icon: Icon(Icons.arrow_back),
                               onPressed: () {
-                                Get.off(HomePage(justLoggedIn: false,));
+                                Get.off(HomePage(
+                                  justLoggedIn: false,
+                                ));
                               }),
                           Center(
                             child: Text(
