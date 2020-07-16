@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -42,13 +43,14 @@ class _HomePageState extends State<HomePage> {
 
   String username;
   String uid;
+  String username2;
 
   Future<void> getUser() async {
     await FirebaseAuth.instance
         .currentUser()
         .then((user) => {
               setState(() {
-                username = user.displayName;
+                
                 uid = user.uid;
               })
             })
@@ -58,12 +60,32 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> docSnapshot() async {
+    await FirebaseAuth.instance.currentUser().then((user) {
+      setState(() {
+        uid = user.uid;
+        username2 = user.uid;
+      });
+    });
+    var something =
+        await Firestore.instance.collection('userData').document(uid).get();
+    DocumentSnapshot doc = something;
+    print(doc);
+    if (doc['uid'] == uid) {
+      setState(() {
+        username = doc['username'];
+      });
+    }
+    print(doc);
+  }
+
   List<Quote> quotes = [];
   List<Quote> facts = [];
 
   @override
   void initState() {
     getUser();
+    docSnapshot();
     SchedulerBinding.instance.addPostFrameCallback((_) {
       QuotesDatabase.db.getAllClients().then((value) => {
             for (int i = 0; i < value.length; i++)
@@ -96,6 +118,7 @@ class _HomePageState extends State<HomePage> {
               title: Text(
                 'Hey ${username ?? 'There'}',
                 style: Theme.of(context).textTheme.headline6.copyWith(
+                      fontFamily:  "Montserrat",
                       fontSize: SizeConfig().textSize(context, 3),
                     ),
               ),

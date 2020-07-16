@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:rate_my_app/rate_my_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +13,8 @@ import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/util/styles/color.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../screens/profile.dart';
 import '../rate.dart';
@@ -32,6 +33,36 @@ class _HomeDrawerState extends State<HomeDrawer> {
   var darktheme;
   SizeConfig config = SizeConfig();
   WidgetBuilder builder = buildProgressIndicator;
+  String uid;
+  String photoUrl;
+  String usernamee;
+
+  
+
+  Future<void> docSnapshot() async {
+    await FirebaseAuth.instance.currentUser().then((user) {
+      setState(() {
+        uid = user.uid;
+      });
+    });
+    var something =
+        await Firestore.instance.collection('userData').document(uid).get();
+    DocumentSnapshot doc = something;
+    print(doc);
+    if (doc['uid'] == uid) {
+      setState(() {
+        photoUrl = doc['photoUrl'];
+        usernamee = doc['username'];
+      });
+    }
+    print(doc);
+  }
+
+  @override
+  void initState() {
+    docSnapshot();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,37 +95,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 thickness: 1,
                 color: Color.fromRGBO(9, 132, 227, 0.4),
               ),
-              // createDrawerBodyItem(
-              //     context: context,
-              //     text: 'View All Notes',
-              //     onTap: () => Navigation().pushTo(
-              //         context,
-              //         DispatchPage(
-              //           username: widget.username,
-              //           name: 'note',
-              //         ))),
-              // Divider(
-              //   thickness: 1,
-              //   color: Color.fromRGBO(9, 132, 227, 0.4),
-              // ),
-              // createDrawerBodyItem(
-              //     context: context,
-              //     text: 'View To-Dos',
-              //     onTap: () => Navigation().pushTo(
-              //         context,
-              //         DispatchPage(
-              //           username: widget.username,
-              //           name: 'todo',
-              //         ))),
-              // Divider(
-              //   thickness: 1,
-              //   color: Color.fromRGBO(9, 132, 227, 0.4),
-              // ),
-              // createDrawerBodyItem(context: context, text: 'View Categories'),
-              // Divider(
-              //   thickness: 1,
-              //   color: Color.fromRGBO(9, 132, 227, 0.4),
-              // ),
+              // 
               createDrawerBodyItem(
                   context: context,
                   text: 'See Quotes',
@@ -131,7 +132,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           onInitialized: (context, rateMyApp) async {
                             await rateMyApp.showRateDialog(context,
                                 dialogStyle: DialogStyle(
-                                    titleStyle: GoogleFonts.montserrat(
+                                    titleStyle: TextStyle(
                                         color: darktheme
                                             ? Colors.white
                                             : Colors.black)),
@@ -196,7 +197,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
         padding: EdgeInsets.only(top: config.yMargin(context, 2.5)),
         child: Text(
           text,
-          style: GoogleFonts.roboto(
+          style: TextStyle(
               fontStyle: FontStyle.normal,
               color: darktheme ? Colors.white : Color(0xff312E2E),
               fontSize: config.textSize(context, 2.3),
@@ -224,7 +225,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   border: Border.all(color: Colors.white, width: 3),
                   shape: BoxShape.circle),
               child: CircleAvatar(
-                backgroundImage: AssetImage('assets/images/images.jpg'),
+                backgroundImage: photoUrl == null
+                    ? AssetImage('assets/images/images.jpg')
+                    : NetworkImage(photoUrl),
                 radius: 30,
               ),
             ),
@@ -265,7 +268,7 @@ class _DrawerItemState extends State<DrawerItem> {
         title: Padding(
           padding: EdgeInsets.only(left: 68.0, top: 14),
           child: Text(this.widget.text,
-              style: GoogleFonts.roboto(
+              style: TextStyle(
                   fontStyle: FontStyle.normal,
                   color: Color(0xff312E2E),
                   fontSize: config.textSize(context, 4.7),

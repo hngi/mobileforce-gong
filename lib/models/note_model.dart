@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Notes {
   String sId;
   String title;
@@ -11,6 +13,7 @@ class Notes {
 
   int id;
   int color;
+  int font;
 
   Notes.withID(this.id,this.date,this.title,this.content,this.color);
   Notes.noID(this.title,this.content,this.date,this.color);
@@ -24,6 +27,7 @@ class Notes {
       this.uploaded,
       this.noteID,
         this.color,
+        this.font,
       this.shouldUpdate});
 
   Notes.fromJson(Map<String, dynamic> json) {
@@ -34,9 +38,12 @@ class Notes {
     important = json['important'] == 1 ? true : json['important'] == 0 ? false : json['important'];
     date = json['date'];
     color = json['color'];
+    font = json['font'];
     noteID = json['noteID'];
     uploaded = json['uploaded'] == 1 ? true : json['uploaded'] == 0 ? false : json['uploaded'] ?? false;
     shouldUpdate = json['shouldUpdate'] == 1 ? true : json['shouldUpdate'] == 0 ? false : json['shouldUpdate'] ?? false;
+    font = json['font'];
+
   }
 
   Notes.fromJson2(Map<String, dynamic> json) {
@@ -47,6 +54,7 @@ class Notes {
     important = json['important'] == 1 ? true : json['important'] == 0 ? false : json['important'];
     date = json['date'];
     color = json['color'];
+    font = json['font'];
     uploaded = json['uploaded'] == 1 ? true : json['uploaded'] == 0 ? false : json['uploaded'] ?? false;
     shouldUpdate = json['shouldUpdate'] == 1 ? true : json['shouldUpdate'] == 0 ? false : json['shouldUpdate'] ?? false;
   }
@@ -60,28 +68,10 @@ class Notes {
     data['important'] = this.important ? 1 : 0;
     data['date'] = this.date;
     data['color'] = this.color;
+    data['font'] = this.font;
     data['uploaded'] = this.uploaded ? 1 : 0;
     data['shouldUpdate'] = this.shouldUpdate ? 1 : 0;
     return data;
   }
 
-  Map <String, dynamic> toMap(){
-    var map = Map<String, dynamic>();
-    map["title"] = title;
-    map["description"] = content;
-    map["backgroundcolor"] = color;
-    map["date"] = date;
-    if (id != null) {
-      map["id"] = id;
-    }
-    return map;
-  }
-
-  Notes.fromObject(dynamic o) {
-    this.id = o["id"];
-    this.title = o["title"];
-    this.content = o["description"];
-    this.date = o["date"];
-    this.color = o["backgroundcolor"];
-  }
 }

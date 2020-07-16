@@ -1,36 +1,54 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:team_mobileforce_gong/models/note_model.dart';
 import 'package:team_mobileforce_gong/services/localAuth/lockNotes.dart';
 import 'package:team_mobileforce_gong/state/authProvider.dart';
+import 'package:team_mobileforce_gong/models/CustomPopUpMenu.dart';
 import 'package:team_mobileforce_gong/state/notesProvider.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/util/styles/color.dart';
 
-final List<String> choices = const <String>[
-  'Green',
-  'Purple',
-  'Orange',
-  "Yellow",
-  "Red",
+//final List<String> colorChoices = const <String>['Green', 'Purple', 'Orange', "Yellow", "Red",];
+
+final List<CustomPopupMenu> colorChoices =[
+  CustomPopupMenu(title: "Green", style: TextStyle(color: Colors.green[300])),
+  CustomPopupMenu(title: "Purple", style: TextStyle(color:  Colors.purple[200])),
+  CustomPopupMenu(title: "Orange", style: TextStyle(color: Colors.orange[300])),
+  CustomPopupMenu(title: "Yellow", style: TextStyle(color: Colors.yellow[600])),
+  CustomPopupMenu(title: "Red", style: TextStyle(color: Colors.red[300])),
+  CustomPopupMenu(title: "Default", style: TextStyle(color: Colors.black)),
 ];
+
+
+
+
 
 const green = 'Green';
 const purple = 'Purple';
 const orange = 'Orange';
 const yellow = "Yellow";
 const red = "Red";
+const defaultColor = "Default";
+
+final List<CustomPopupMenu> choices =[
+  CustomPopupMenu(title: "Cedarville", style: TextStyle(fontFamily: "Cedarville")),
+  CustomPopupMenu(title: "ComicNeue", style: TextStyle(fontFamily: "ComicNeue")),
+  CustomPopupMenu(title: "Gilroy", style: TextStyle(fontFamily: "Gilroy")),
+  CustomPopupMenu(title: "Montserrat", style: TextStyle(fontFamily: "Montserrat")),
+  CustomPopupMenu(title: "Shadows", style: TextStyle(fontFamily: "Shadows"))
+];
+
+const Cedarville = 'Cedarville';
+const ComicNeue = 'ComicNeue';
+const Gilroy = 'Orange';
+const Montserrat = "Montserrat";
+const Shadows = "Shadows";
 
 class AddNote extends StatefulWidget {
   final String stitle;
@@ -104,39 +122,6 @@ class _AddNoteState extends State<AddNote> {
                         GestureDetector(
                             onTap: () {
                               Get.back();
-                              //print(widget.stitle+' '+_title);
-                              // if (snote.title != null ||
-                              //     snote.content != null) {
-                              //   String userID =
-                              //       await Provider.of<AuthenticationState>(
-                              //               context,
-                              //               listen: false)
-                              //           .currentUserId();
-                              //   print(userID);
-                              //   Provider.of<NotesProvider>(context,
-                              //           listen: false)
-                              //       .updateNote(
-                              //           userID,
-                              //           _title ?? snote.title,
-                              //           _content ?? snote.content,
-                              //           snote.important,
-                              //           snote);
-                              //   Navigator.pop(context);
-                              // } else if (_title == null && _content == null) {
-                              //   Navigator.pop(context);
-                              // } else {
-                              //   String userID =
-                              //       await Provider.of<AuthenticationState>(
-                              //               context,
-                              //               listen: false)
-                              //           .currentUserId();
-                              //   print(userID);
-                              //   Provider.of<NotesProvider>(context,
-                              //           listen: false)
-                              //       .createNote(
-                              //           userID, _title, _content, false);
-                              //   Navigator.pop(context);
-                              // }
                             },
                             child: Container(
                               padding: EdgeInsets.symmetric(
@@ -170,15 +155,8 @@ class _AddNoteState extends State<AddNote> {
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600)),
                         ),
-                        // IconButton(
-                        //     icon: Icon(Icons.color_lens), onPressed: () {}),
                         InkWell(
                             onTap: () async {
-                              //print(_title);
-                              // snote.title = _title;
-                              // snote.content = _content;
-                              // Provider.of<NotesProvider>(context, listen: false)
-                              //     .save(snote);
                               if (widget.stitle != null ||
                                   widget.scontent != null) {
                                 if (_title == null && _content == null) {
@@ -196,8 +174,7 @@ class _AddNoteState extends State<AddNote> {
                                           _title ?? snote.title,
                                           _content ?? snote.content,
                                           snote.important,
-                                          snote,
-                                          snote.color);
+                                          snote,snote.color);
                                   Navigator.pop(context);
                                 }
                               } else if (_title == null && _content == null) {
@@ -211,7 +188,7 @@ class _AddNoteState extends State<AddNote> {
                                 Provider.of<NotesProvider>(context,
                                         listen: false)
                                     .createNote(userID, _title, _content, false,
-                                        snote.color);
+                                        snote.color,snote.font);
                                 Navigator.pop(context);
                               }
                             },
@@ -258,6 +235,7 @@ class _AddNoteState extends State<AddNote> {
                                             keyboardType:
                                                 TextInputType.multiline,
                                             style: TextStyle(
+                                                fontFamily: model.getTextFont(snote.font),
                                                 fontSize: SizeConfig()
                                                     .textSize(context, 2.4)),
                                             initialValue: widget.stitle == null
@@ -269,6 +247,7 @@ class _AddNoteState extends State<AddNote> {
                                                   fontSize: SizeConfig()
                                                       .textSize(context, 3.5),
                                                   fontWeight: FontWeight.w400,
+                                                  fontFamily: model.getTextFont(snote.font),
                                                   color:
                                                       Provider.of<ThemeNotifier>(
                                                                   context,
@@ -294,13 +273,11 @@ class _AddNoteState extends State<AddNote> {
                                         Expanded(
                                           child: TextFormField(
                                             maxLines: null,
-                                            minLines: SizeConfig()
-                                                .yMargin(context, 2.7)
-                                                .round(),
+                                            minLines: SizeConfig().yMargin(context, 2.7).round(),
                                             maxLengthEnforced: false,
-                                            keyboardType:
-                                                TextInputType.multiline,
+                                            keyboardType: TextInputType.multiline,
                                             style: TextStyle(
+                                                fontFamily: model.getTextFont(snote.font),
                                                 fontSize: SizeConfig()
                                                     .textSize(context, 2.4)),
                                             initialValue: snote.content.isEmpty
@@ -310,6 +287,7 @@ class _AddNoteState extends State<AddNote> {
                                               hintText:
                                                   'Enter your note here...',
                                               hintStyle: TextStyle(
+                                                  fontFamily: model.getTextFont(snote.font),
                                                   fontSize: SizeConfig()
                                                       .textSize(context, 2.4),
                                                   color:
@@ -386,12 +364,27 @@ class _AddNoteState extends State<AddNote> {
 
                       PopupMenuButton<String>(
                         icon: Icon(Icons.color_lens),
-                        onSelected: select,
+                        onSelected: selectColor,
                         itemBuilder: (BuildContext context) {
-                          return choices.map((String choice) {
+                          return colorChoices.map((CustomPopupMenu choice) {
                             return PopupMenuItem<String>(
-                              value: choice,
-                              child: Text(choice),
+                              value: choice.title,
+                              child: Text(choice.title,
+                              style: choice.style,),
+                            );
+                          }).toList();
+                        },
+                      ),
+                      SizedBox(width: 10),
+                      PopupMenuButton<String>(
+                        onSelected: selectFont,
+                        icon: Icon(Icons.font_download),
+                        tooltip: "Select Font",
+                        itemBuilder: (BuildContext context) {
+                          return choices.map((CustomPopupMenu choice) {
+                            return PopupMenuItem<String>(
+                              value: choice.title,
+                              child: Text(choice.title,style: choice.style,),
                             );
                           }).toList();
                         },
@@ -567,104 +560,6 @@ class _AddNoteState extends State<AddNote> {
                 ),
               )
             ],
-            // Container(
-            //   padding: EdgeInsets.only(top: 10, left: 12, right: 12, bottom: MediaQuery.of(context).viewInsets.bottom,),
-            //   decoration: BoxDecoration(
-            //     border: Border(
-            //       top: BorderSide(
-            //         color: lightwhite,
-            //         width: 1.0,
-            //       ),
-            //     )
-            //   ),
-            //   child: GestureDetector(
-            //     onTap: () {
-            //       scaffoldKey.currentState.showBottomSheet(
-            //         (context) => Container(
-            //           height: 100,
-            //           child: Column(
-            //             children: <Widget>[
-            //               GestureDetector(
-            //                 onTap: () {
-            //                   Navigator.pop(context);
-            //                   ImagePicker().getImage(source: ImageSource.camera).then((value)async {
-            //                     Uint8List data = await value.readAsBytes();
-            //                     print(data);
-            //                     setState(() {
-            //                       model.img.add(base64Encode(data));
-            //                       print(Base64Decoder().convert(model.img[0]).toString());
-            //                       //print(img.toString());
-            //                     });
-            //                   });
-            //                 },
-            //                 child: Container(
-            //                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            //                   child: Row(
-            //                     children: <Widget>[
-            //                       SvgPicture.asset(
-            //                         'assets/svgs/camera.svg',
-            //                         width: 20,
-            //                       ),
-            //                       Container(
-            //                         child: Text(
-            //                           'Take Photo'
-            //                         ),
-            //                       )
-            //                     ],
-            //                   ),
-            //                 ),
-            //               ),
-            //               GestureDetector(
-            //                 onTap: () {
-            //                   Navigator.pop(context);
-            //                   ImagePicker().getImage(source: ImageSource.gallery).then((value)async {
-            //                     Uint8List data = await value.readAsBytes();
-            //                     setState(() {
-            //                       model.img.add(base64Encode(data));
-            //                     });
-            //                   });
-            //                 },
-            //                 child: Container(
-            //                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            //                   child: Row(
-            //                     children: <Widget>[
-            //                       SvgPicture.asset(
-            //                         'assets/svgs/gallery.svg',
-            //                         width: 20
-            //                       ),
-            //                       Container(
-            //                         child: Text(
-            //                           'Select from gallery'
-            //                         ),
-            //                       )
-            //                     ],
-            //                   ),
-            //                 ),
-            //               )
-            //             ],
-            //           ),
-            //         )
-            //       );
-            //     },
-            //     child: Row(
-            //       children: <Widget>[
-            //         Container(
-            //           child: SvgPicture.asset(
-            //             'assets/svgs/addimage.svg',
-            //             width: 40,
-            //           ),
-            //         ),
-            //         Container(
-            //           margin: EdgeInsets.only(left: 15),
-            //           child: Text('Add image',
-            //               style: Theme.of(context).textTheme.headline4.copyWith(
-            //                   fontSize: SizeConfig().textSize(context, 1.9))),
-            //         )
-            //       ],
-            //     ),
-            //   ),
-            // )
-            // ],
           )),
     );
   }
@@ -677,8 +572,12 @@ class _AddNoteState extends State<AddNote> {
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
 
-  void select(String value) async {
+  void selectColor(String value) async {
+
     switch (value) {
+      case defaultColor:
+        changeColor(1);
+        break;
       case red:
         changeColor(2);
         break;
@@ -698,7 +597,31 @@ class _AddNoteState extends State<AddNote> {
     }
   }
 
+  void selectFont( String value){
+    switch(value){
+      case Shadows:
+        changeFont(1);
+        break;
+      case Cedarville:
+       changeFont(2);
+        break;
+      case Montserrat:
+        changeFont(3);
+        break;
+      case ComicNeue:
+        changeFont(4);
+        break;
+      case Gilroy:
+        changeFont(5);
+        break;
+      default:
+        changeFont(6);
+        break;
+    }
+  }
+
   void changeColor(int color) async {
+
     snote.color = color;
     String userID =
         await Provider.of<AuthenticationState>(context, listen: false)
@@ -708,21 +631,19 @@ class _AddNoteState extends State<AddNote> {
         _title ?? snote.title,
         _content ?? snote.content,
         snote.important,
-        snote,
-        color);
+        snote,snote.color);
+  }
+
+  void changeFont(int font) async{
+    print("Font is $font " );
+    snote.font = font;
+    String userID = await Provider.of<AuthenticationState>(context, listen: false).currentUserId();
+    Provider.of<NotesProvider>(context, listen: false).updateNote(
+        userID,
+        _title ?? snote.title,
+        _content ?? snote.content,
+        snote.important,
+        snote,snote.color);
   }
 }
 
-//This method deals with changing backgroundColor of the Note.
-/*  void changeColor(int value) {
-    setState(() {
-      todo.backgroundColor = value;
-    });
-    if (todo.id != null) {
-      helper.updateTodo(todo);
-    }
-    else {
-      helper.insertTodo(todo);
-    }
-
-  }*/
