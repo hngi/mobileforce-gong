@@ -81,17 +81,23 @@ Future<void> updateProfile(String uid, String username) async {
   });
 }
 
-getUsersData(UserNotifier userNotifier, String uid) async {
-  var snap =
-      await Firestore.instance.collection('userData').document(uid).get();
+getUsersData(UserNotifier userNotifier) async {
+  await FirebaseAuth.instance.currentUser().then((user) async {
+   
+    var snap = await Firestore.instance
+        .collection('userData')
+        .document(user.uid)
+        .get();
 
-  DocumentSnapshot snapshot = snap;
-  List<Users> _usersList = [];
-  _usersList.add(Users(
-      email: snapshot['email'],
-      photoUrl: snapshot['photoUrl'],
-      uid: snapshot['uid'],
-      name: snapshot['username']));
-
-  userNotifier.userProfileData = _usersList;
+    DocumentSnapshot snapshot = snap;
+    print(snapshot['username']);
+    List<Users> _usersList = [];
+    _usersList.add(Users(
+        email: snapshot['email'],
+        photoUrl: snapshot['photoUrl'],
+        uid: snapshot['uid'],
+        name: snapshot['username']));
+    print(_usersList);
+    userNotifier.userProfileData = _usersList;
+  });
 }

@@ -52,7 +52,7 @@ class _ProfileState extends State<Profile> {
     getUser();
     UserNotifier userNotifier =
         Provider.of<UserNotifier>(context, listen: false);
-    getUsersData(userNotifier, uid);
+    getUsersData(userNotifier);
     super.initState();
   }
 
