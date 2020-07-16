@@ -56,6 +56,8 @@ dependencies:
   simple_animations:
   supercharged:
   url_launcher:
+  firebase_storage:
+  
 
 
 dev_dependencies:
