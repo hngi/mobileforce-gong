@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:team_mobileforce_gong/services/auth/userState.dart';
 import 'package:team_mobileforce_gong/services/responsiveness/responsiveness.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/util/const/constFile.dart';
@@ -48,12 +49,9 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     getUser();
-<<<<<<< HEAD
-    UserNotifier userNotifier =
-        Provider.of<UserNotifier>(context, listen: false);
-    getUsersData(userNotifier);
-=======
->>>>>>> 06cc2aaf4539a0919ea56bb1f35048eabc3a9f9d
+    // UserNotifier userNotifier =
+    //     Provider.of<UserNotifier>(context, listen: false);
+    // getUsersData(userNotifier);
     super.initState();
     myFocusNode = new FocusNode();
   }
