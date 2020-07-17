@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,7 @@ import 'package:team_mobileforce_gong/state/notesProvider.dart';
 import 'package:team_mobileforce_gong/state/theme_notifier.dart';
 import 'package:team_mobileforce_gong/state/todoProvider.dart';
 import 'services/auth/userState.dart';
+import 'package:team_mobileforce_gong/state/drawerState.dart';
 
 import 'UI/screens/add_note.dart';
 import 'UI/screens/splashscreen.dart';
@@ -59,6 +61,7 @@ class MyApp extends StatelessWidget {
       builder: (context, value, child) {
         return MultiProvider(
           providers: [
+            Provider(create: (_) => DrawerService()),
             ChangeNotifierProvider(create: (_) => AuthenticationState()),
             ChangeNotifierProvider(create: (_) => QuoteState()),
             ChangeNotifierProvider(create: (_) => NotesProvider()),
@@ -83,3 +86,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+
+

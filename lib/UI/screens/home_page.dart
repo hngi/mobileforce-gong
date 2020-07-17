@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -12,6 +11,7 @@ import 'package:team_mobileforce_gong/models/todos.dart';
 import 'package:team_mobileforce_gong/services/quotes/quote.dart';
 import 'package:team_mobileforce_gong/services/quotes/quoteDb.dart';
 import 'package:team_mobileforce_gong/state/authProvider.dart';
+import 'package:team_mobileforce_gong/state/drawerState.dart';
 import 'package:team_mobileforce_gong/state/notesProvider.dart';
 import 'package:team_mobileforce_gong/UI/screens/onboarding.dart';
 import 'package:team_mobileforce_gong/UI/screens/password_reset_success.dart';
@@ -40,43 +40,41 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   bool open = true;
+  DrawerService _drawerService;
+  String drawerStatus = 'close';
 
   String username;
   String uid;
-  String username2;
+  String img;
 
   Future<void> getUser() async {
     await FirebaseAuth.instance
         .currentUser()
         .then((user) => {
-              setState(() {
-                
-                uid = user.uid;
-              })
-            })
+      setState(() {
+        username = user.displayName;
+        uid = user.uid;
+        img = user.photoUrl;
+      })
+    })
         .then((value) {
       Provider.of<NotesProvider>(context, listen: false).fetch(uid, widget.justLoggedIn);
       Provider.of<TodoProvider>(context, listen: false).fetch(uid, widget.justLoggedIn);
     });
   }
 
-  Future<void> docSnapshot() async {
-    await FirebaseAuth.instance.currentUser().then((user) {
-      setState(() {
-        uid = user.uid;
-        username2 = user.uid;
-      });
+  _listenDrawerService() {
+    _drawerService.status.listen((status) {
+      if(status) {
+        drawerStatus = 'open';
+        print(drawerStatus);
+        getUser();
+      } else {
+        drawerStatus = 'close';
+        getUser();
+      }
+      setState(() { });
     });
-    var something =
-        await Firestore.instance.collection('userData').document(uid).get();
-    DocumentSnapshot doc = something;
-    print(doc);
-    if (doc['uid'] == uid) {
-      setState(() {
-        username = doc['username'];
-      });
-    }
-    print(doc);
   }
 
   List<Quote> quotes = [];
@@ -85,51 +83,56 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     getUser();
-    docSnapshot();
+    _drawerService = Provider.of(context, listen: false);
+    _listenDrawerService();
     SchedulerBinding.instance.addPostFrameCallback((_) {
       QuotesDatabase.db.getAllClients().then((value) => {
-            for (int i = 0; i < value.length; i++)
+        for (int i = 0; i < value.length; i++)
+          {
+            if (value[i].author != 'Facts')
               {
-                if (value[i].author != 'Facts')
-                  {
-                    quotes.add(value[i]),
-                  }
-                else
-                  {
-                    facts.add(value[i]),
-                  }
+                quotes.add(value[i]),
               }
-          });
+            else
+              {
+                facts.add(value[i]),
+              }
+          }
+      });
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
     return WillPopScope(
       onWillPop: ()=> Navigation().pop(context),
-          child: Scaffold(
+      child: Scaffold(
           key: scaffoldKey,
-          drawer: HomeDrawer(
-            username: username,
-          ),
+          drawer: HomeDrawer(username: username,photoUrl: img),
           appBar: AppBar(
               elevation: 0,
               title: Text(
-                'Hey ${username ?? 'There'}',
+                  'Hey ${username ?? 'There'}',
                 style: Theme.of(context).textTheme.headline6.copyWith(
-                      fontFamily:  "Montserrat",
-                      fontSize: SizeConfig().textSize(context, 3),
-                    ),
+                  fontFamily:  "Montserrat",
+                  fontSize: SizeConfig().textSize(context, 3),
+                ),
               ),
               leading: GestureDetector(
-                onTap: () => scaffoldKey.currentState.openDrawer(),
+                onTap: () {
+                  scaffoldKey.currentState.openDrawer();
+                  setState(() {
+                    getUser();
+                  });
+                } ,
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 10),
                   child: SvgPicture.asset(
                     'assets/svgs/ham.svg',
                     color: Provider.of<ThemeNotifier>(context, listen: false)
-                            .isDarkModeOn
+                        .isDarkModeOn
                         ? Colors.white
                         : Colors.black,
                   ),
@@ -140,8 +143,8 @@ class _HomePageState extends State<HomePage> {
                   onTap: () {
                     Provider.of<ThemeNotifier>(context, listen: false)
                         .switchTheme(
-                            !Provider.of<ThemeNotifier>(context, listen: false)
-                                .isDarkModeOn);
+                        !Provider.of<ThemeNotifier>(context, listen: false)
+                            .isDarkModeOn);
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -161,17 +164,17 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Provider.of<NotesProvider>(context).notes.length == 0 &&
-                          Provider.of<TodoProvider>(context).todos.length == 0
+                      Provider.of<TodoProvider>(context).todos.length == 0
                       ? Container(
-                          padding: EdgeInsets.only(
-                              right: MediaQuery.of(context).size.width * 0.2,
-                              bottom: 50),
-                          child: Text(
-                            'Click the + button Below to get started',
-                            style: Theme.of(context).textTheme.headline6.copyWith(
-                                fontSize: SizeConfig().textSize(context, 2.1)),
-                          ),
-                        )
+                    padding: EdgeInsets.only(
+                        right: MediaQuery.of(context).size.width * 0.2,
+                        bottom: 50),
+                    child: Text(
+                      'Click the + button Below to get started',
+                      style: Theme.of(context).textTheme.headline6.copyWith(
+                          fontSize: SizeConfig().textSize(context, 2.1)),
+                    ),
+                  )
                       : SizedBox(),
                   Center(child: newActions(context, facts, quotes))
                 ],
@@ -206,7 +209,7 @@ class _HomePageState extends State<HomePage> {
                                 height: SizeConfig().yMargin(
                                     context,
                                     MediaQuery.of(context).orientation ==
-                                            Orientation.portrait
+                                        Orientation.portrait
                                         ? 70
                                         : 18),
                               ),
@@ -223,12 +226,12 @@ class _HomePageState extends State<HomePage> {
                                           right: SizeConfig().xMargin(context, 4),
                                           top: SizeConfig().yMargin(context, 1.2),
                                           bottom:
-                                              SizeConfig().yMargin(context, 3.7)),
+                                          SizeConfig().yMargin(context, 3.7)),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
                                         color: Provider.of<ThemeNotifier>(context,
-                                                    listen: false)
-                                                .isDarkModeOn
+                                            listen: false)
+                                            .isDarkModeOn
                                             ? Colors.grey.shade900
                                             : Colors.white,
                                       ),
@@ -268,12 +271,12 @@ class _HomePageState extends State<HomePage> {
                                                           .textTheme
                                                           .headline6
                                                           .copyWith(
-                                                              fontSize:
-                                                                  SizeConfig()
-                                                                      .textSize(
-                                                                          context,
-                                                                          1.8),
-                                                              color: blue)),
+                                                          fontSize:
+                                                          SizeConfig()
+                                                              .textSize(
+                                                              context,
+                                                              1.8),
+                                                          color: blue)),
                                                 )
                                               ],
                                             ),
@@ -290,13 +293,13 @@ class _HomePageState extends State<HomePage> {
                                                       builder: (context) =>
                                                           AddTodo(
                                                               stodo:
-                                                                  new Todos.noID(
-                                                                      "",
-                                                                      "",
-                                                                      "",
-                                                                      false,
-                                                                      false,
-                                                                      1))));
+                                                              new Todos.noID(
+                                                                  "",
+                                                                  "",
+                                                                  "",
+                                                                  false,
+                                                                  false,
+                                                                  1))));
                                             },
                                             child: Container(
                                               padding: EdgeInsets.symmetric(
@@ -306,7 +309,7 @@ class _HomePageState extends State<HomePage> {
                                                       .xMargin(context, 1.9)),
                                               child: Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment.start,
+                                                MainAxisAlignment.start,
                                                 children: <Widget>[
                                                   Container(
                                                     child: SvgPicture.asset(
@@ -318,18 +321,18 @@ class _HomePageState extends State<HomePage> {
                                                     margin: EdgeInsets.only(
                                                         left: SizeConfig()
                                                             .xMargin(
-                                                                context, 2.3)),
+                                                            context, 2.3)),
                                                     child: Text('Add To Do',
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .headline6
                                                             .copyWith(
-                                                                fontSize:
-                                                                    SizeConfig()
-                                                                        .textSize(
-                                                                            context,
-                                                                            1.8),
-                                                                color: blue)),
+                                                            fontSize:
+                                                            SizeConfig()
+                                                                .textSize(
+                                                                context,
+                                                                1.8),
+                                                            color: blue)),
                                                   )
                                                 ],
                                               ),
@@ -357,15 +360,15 @@ class _HomePageState extends State<HomePage> {
                                                     .getYSize(context, 50)),
                                             decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(50),
+                                              BorderRadius.circular(50),
                                               color: blue,
                                             ),
                                             child: Center(
                                                 child: SvgPicture.asset(
-                                              'assets/svgs/cancel.svg',
-                                              width: SizeConfig()
-                                                  .xMargin(context, 4),
-                                            )),
+                                                  'assets/svgs/cancel.svg',
+                                                  width: SizeConfig()
+                                                      .xMargin(context, 4),
+                                                )),
                                           ),
                                         ))
                                   ],
@@ -384,63 +387,63 @@ class _HomePageState extends State<HomePage> {
 }
 
 Widget newActions(context, List<Quote> facts, List<Quote> quotes) => Wrap(
-      alignment: WrapAlignment.start,
-      spacing: SizeConfig().xMargin(context, 6),
-      runSpacing: SizeConfig().yMargin(context, 2.1),
-      children: <Widget>[
-        ActionCard(
-          svg: 'assets/svgs/note.svg',
-          title: 'Notes',
-          text: Provider.of<NotesProvider>(context).notes.length != 0
-              ? Provider.of<NotesProvider>(context, listen: true)
-                      .notes
-                      .length
-                      .toString() +
-                  ' saved'
-              : '0 saved',
-          onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => DispatchPage(
-                        name: 'note',
-                      ))),
-        ),
-        ActionCard(
-          svg: 'assets/svgs/todo.svg',
-          title: 'Todo',
-          text: Provider.of<TodoProvider>(context).todos.length != 0
-              ? Provider.of<TodoProvider>(context, listen: true)
-                      .todos
-                      .length
-                      .toString() +
-                  ' Pending'
-              : '0 Pending',
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+  alignment: WrapAlignment.start,
+  spacing: SizeConfig().xMargin(context, 6),
+  runSpacing: SizeConfig().yMargin(context, 2.1),
+  children: <Widget>[
+    ActionCard(
+      svg: 'assets/svgs/note.svg',
+      title: 'Notes',
+      text: Provider.of<NotesProvider>(context).notes.length != 0
+          ? Provider.of<NotesProvider>(context, listen: true)
+          .notes
+          .length
+          .toString() +
+          ' saved'
+          : '0 saved',
+      onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
               builder: (context) => DispatchPage(
-                    name: 'todo',
-                  ))),
-        ),
-        ActionCard(
-          svg: 'assets/svgs/facts.svg',
-          title: 'View Facts',
-          text: '${facts.length} Saved',
-          onPressed: () => Navigation().pushTo(
-              context,
-              Facts(
-                quoteType: QuoteType.Facts,
-              )),
-        ),
-        ActionCard(
-          svg: 'assets/svgs/motivation.svg',
-          title: 'Motivation',
-          text: '${quotes.length} Saved',
-          onPressed: () => Navigation()
-              .pushTo(context, Facts(quoteType: QuoteType.Motivation)),
-        ),
-        // ActionCard(
-        //   svg: 'assets/svgs/calendar.svg',
-        //   title: 'View Reminder',
-        //   text: '12 Saved',
-        // ),
-      ],
-    );
+                name: 'note',
+              ))),
+    ),
+    ActionCard(
+      svg: 'assets/svgs/todo.svg',
+      title: 'Todo',
+      text: Provider.of<TodoProvider>(context).todos.length != 0
+          ? Provider.of<TodoProvider>(context, listen: true)
+          .todos
+          .length
+          .toString() +
+          ' Pending'
+          : '0 Pending',
+      onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => DispatchPage(
+            name: 'todo',
+          ))),
+    ),
+    ActionCard(
+      svg: 'assets/svgs/facts.svg',
+      title: 'View Facts',
+      text: '${facts.length} Saved',
+      onPressed: () => Navigation().pushTo(
+          context,
+          Facts(
+            quoteType: QuoteType.Facts,
+          )),
+    ),
+    ActionCard(
+      svg: 'assets/svgs/motivation.svg',
+      title: 'Motivation',
+      text: '${quotes.length} Saved',
+      onPressed: () => Navigation()
+          .pushTo(context, Facts(quoteType: QuoteType.Motivation)),
+    ),
+    // ActionCard(
+    //   svg: 'assets/svgs/calendar.svg',
+    //   title: 'View Reminder',
+    //   text: '12 Saved',
+    // ),
+  ],
+);

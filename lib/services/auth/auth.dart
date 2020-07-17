@@ -56,6 +56,25 @@ void onAuthenticationChange(Function isLogin) {
   });
 }
 
+Future changeDisplayName(String name)async{
+  FirebaseUser user =  await FirebaseAuth.instance.currentUser();
+  if(user != null){
+    UserUpdateInfo userUpdateInfo = new UserUpdateInfo();
+    userUpdateInfo.displayName = name;
+    user.updateProfile(userUpdateInfo);
+  }
+}
+
+Future DisplayPhoto(String url)async{
+  FirebaseUser user =  await FirebaseAuth.instance.currentUser();
+  if(user != null){
+    UserUpdateInfo userUpdateInfo = new UserUpdateInfo();
+    userUpdateInfo.photoUrl = url;
+    user.updateProfile(userUpdateInfo);
+  }
+}
+
+
 Future<Map<String, String>> signUp(
   String email,
   String password,
