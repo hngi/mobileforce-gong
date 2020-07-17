@@ -268,7 +268,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   }
 
   void navigateToProfile()  async{
-    bool result = await Navigator.push(context,  MaterialPageRoute(builder: (context) => Profile()));
+    bool result = await Navigator.push(context,  MaterialPageRoute(builder: (context) => Profile())) ?? false;
     if(result){
       Future.delayed(Duration(seconds: 2))
           .then((value) {
