@@ -94,7 +94,7 @@ class NotesProvider with ChangeNotifier {
       print(" "+ result.length.toString() + "Length of notes");
       for (int i = 0; i < result.length; i++) {
         noteList.add(Notes.fromJson(result[i]));
-      };
+      }
       if(noteList != null && noteList.length > 0 ){
         notes = noteList;
         showNotes =  true;
