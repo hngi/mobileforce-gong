@@ -30,6 +30,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isloading = false;
 
   SizeConfig config = SizeConfig();
   @override
@@ -61,6 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: config.yMargin(context, 2)),
                     _emailPasswordWidget(),
                     SizedBox(height: config.yMargin(context, 2)),
+                   /* _showCircularProgress(),*/
                     _resetAccountLabel(),
                     _submitButton(),
                     SizedBox(height: config.yMargin(context, 2)),
@@ -153,6 +155,19 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+
+  Widget _showCircularProgress() {
+    if (_isloading) {
+      return Center(child: CircularProgressIndicator(strokeWidth: 1.5,
+        backgroundColor: Colors.white,
+      ));
+    }
+    return Container(
+      height: 0.0,
+      width: 0.0,
+    );
+  }
+  
   Widget _submitButton() {
     return Builder(builder: (BuildContext _context) {
       SnackBarService.instance.buildContext = _context;
@@ -164,29 +179,46 @@ class _LoginPageState extends State<LoginPage> {
               return Container(
                 width: 180.0,
                 height: 50.0,
-                child: status == AuthStatus.Authenticating
-                    ? CircularProgressIndicator()
-                    : RaisedButton(
+                child:RaisedButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         ),
-                        child: new Text('LOG IN',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: "Gilroy",
-                                fontWeight: FontWeight.bold)),
+                        child:  Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('LOG IN',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: "Gilroy",
+                                    fontWeight: FontWeight.bold)),
+                            SizedBox(width: 10.0),
+                            _showCircularProgress(),
+
+                          ],
+                        ),
                         color: Colors.blue,
                         onPressed: () {
+
                           final form = _formKey.currentState;
                           form.save();
                           if (form.validate()) {
+                            setState(() {
+                              _isloading = true;
+                            });
                             try {
-                              state
-                                  .login(_emailController.text,
+                              state.login(_emailController.text,
                                       _passwordController.text)
-                                  .then(
-                                      (signInUser) => gotoHomeScreen(context));
+                                  .then((value) {
+                                    if(!value){
+                                      setState(() {
+                                        _isloading = false;
+                                      });
+                                    }
+                                    gotoHomeScreen(context);});
                             } catch (e) {
+                              setState(() {
+                                _isloading = false;
+                              });
                               print(e);
                             }
                           }

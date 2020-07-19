@@ -29,6 +29,7 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isloading = false;
   void _toLogin() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
@@ -91,6 +92,18 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
+  Widget _showCircularProgress() {
+    if (_isloading) {
+      return Center(child: CircularProgressIndicator(strokeWidth: 1.5,
+        backgroundColor: Colors.white,
+      ));
+    }
+    return Container(
+      height: 0.0,
+      width: 0.0,
+    );
+  }
+
   Widget _submitButton() {
     return Builder(builder: (BuildContext _context) {
       SnackBarService.instance.buildContext = _context;
@@ -103,30 +116,44 @@ class _SignUpPageState extends State<SignUpPage> {
                   return Container(
                     width: 180.0,
                     height: 50.0,
-                    child: status == AuthStatus.Authenticating
-                        ? CircularProgressIndicator()
-                        : RaisedButton(
+                    child: RaisedButton(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0),
                             ),
-                            child: new Text('SIGN UP',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: "Gilroy",
-                                    fontWeight: FontWeight.bold)),
+                            child:  Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('SiGN  UP',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: "Gilroy",
+                                        fontWeight: FontWeight.bold)),
+                                SizedBox(width: 10.0),
+                                _showCircularProgress(),
+
+                              ],
+                            ),
                             color: Colors.blue,
                             onPressed: () {
                               final form = _formKey.currentState;
                               form.save();
                               if (form.validate()) {
+                                setState(() {
+                                  _isloading = true;
+                                });
                                 try {
                                   state
                                       .signup(
                                           _emailController.text,
                                           _passwordController.text,
                                           _usernameController.text)
-                                      .then((signInUser) =>
-                                          gotoHomeScreen(_context));
+                                      .then((signInUser){
+                                        if(signInUser == null){
+                                          setState(() {
+                                            _isloading = false;
+                                          });
+                                        }
+                                          gotoHomeScreen(_context);});
                                   // gotoHomeScreen(context);
                                   // print('signed up');
                                   // Navigator.push(context,

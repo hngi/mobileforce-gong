@@ -148,7 +148,7 @@ class _ProfileState extends State<Profile> {
                                 borderRadius: BorderRadius.circular(15)),
                             child: Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 18.0),
+                              const EdgeInsets.symmetric(horizontal: 18.0),
                               child: TextFormField(
                                 style: TextStyle(
                                     fontSize: 18,
@@ -168,7 +168,7 @@ class _ProfileState extends State<Profile> {
                           child: FlatButton(
                               onPressed: () async {
                                 bool connected =
-                                    await DataConnectionChecker().hasConnection;
+                                await DataConnectionChecker().hasConnection;
                                 print(connected);
                                 if (connected) {
                                   final form = formKey.currentState;
@@ -179,7 +179,7 @@ class _ProfileState extends State<Profile> {
                                       Get.snackbar('Success',
                                           'Display name changed successfully',
                                           backgroundColor: Colors.green);
-                                      
+
                                       Future.delayed(Duration(seconds: 2))
                                           .then((value) => Get.off(Profile(username: nameController.text)));
                                     });
@@ -198,7 +198,7 @@ class _ProfileState extends State<Profile> {
                                 'Update',
                                 style: GoogleFonts.aBeeZee(
                                     color:
-                                        darktheme ? Colors.white : Colors.black,
+                                    darktheme ? Colors.white : Colors.black,
                                     fontSize: SizeConfig().textSize(context, 2),
                                     fontWeight: FontWeight.bold),
                               )))
@@ -250,8 +250,8 @@ class _ProfileState extends State<Profile> {
                                 fit: BoxFit.cover,
                                 image: img == null
                                     ? AssetImage(
-                                        'assets/images/images.jpg',
-                                      )
+                                  'assets/images/images.jpg',
+                                )
                                     : NetworkImage(img)),
                             shape: BoxShape.circle,
                             border: Border.all(
@@ -262,9 +262,9 @@ class _ProfileState extends State<Profile> {
                           child: _image == null
                               ? SizedBox()
                               : Image.file(
-                                  _image,
-                                  fit: BoxFit.cover,
-                                ),
+                            _image,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
@@ -359,7 +359,7 @@ class _ProfileState extends State<Profile> {
   Future uploadFile() async {
     String _uploadedImageUrl = "";
     StorageReference storageReference =
-        FirebaseStorage.instance.ref().child('users/');
+    FirebaseStorage.instance.ref().child('users/');
     StorageUploadTask uploadTask = storageReference.putFile(_image);
     await uploadTask.onComplete;
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
