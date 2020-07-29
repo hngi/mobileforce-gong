@@ -62,18 +62,25 @@ class AuthenticationState with ChangeNotifier {
     return signInWithGoogle();
   }
 
- Future login(
+ Future<bool> login(
     email,
     password,
   ) async {
     try {
-     await signIn(
+      Map<String,String> map = await signIn(
         email,
         password,
       );
+      if(map == null){
+        return false;
+      }else{
+        return true;
+
+      }
       notifyListeners();
     } catch (e) {
       print(e);
+      return false;
     }
   }
 
